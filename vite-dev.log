@@ -1,0 +1,353 @@
+
+> @figma/my-make-file@0.0.1 dev
+> vite --host 127.0.0.1
+
+
+  [32m[1mVITE[22m v6.3.5[39m  [2mready in [0m[1m751[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://127.0.0.1:[1m5173[22m/[39m
+[2m10:42:10 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/error.html[22m
+[2m10:42:10 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/localFileSignInRedirection.html[22m
+[2m10:42:10 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/extension-detection.html[22m
+[2m10:42:10 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/sessionExpired.html[22m
+[2m10:42:10 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/signInAdobeYolo.html[22m
+[2m10:42:10 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/signInHandler.html[22m
+[2m10:42:10 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/viewer.html[22m
+[2m10:42:13 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/check-cookies.html[22m
+[2m10:42:13 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/download-banner.html[22m
+[2m10:42:13 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/express.html[22m
+[2m10:42:13 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/failToast.html[22m
+[2m10:42:13 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/frameUI.html[22m
+[2m10:42:13 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/legacy-options.html[22m
+[2m10:42:13 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/local-fte.html[22m
+[2m10:42:13 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/lsCopy.html[22m
+[2m10:42:13 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/newAssistantPopup.html[22m
+[2m10:42:13 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/options.html[22m
+[2m10:42:13 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/popup.html[22m
+[2m10:42:13 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/preference-page.html[22m
+[2m10:42:13 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/progress.html[22m
+[2m10:42:13 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/searchWidget.html[22m
+[2m10:42:13 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/searchWidgetSkeleton.html[22m
+[2m10:42:13 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/successToast.html[22m
+[2m10:42:13 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/express/expressContextualFTE.html[22m
+[2m10:42:13 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/express/expressHoverCTA.html[22m
+[2m10:42:13 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/express/expressSingleClickCTA.html[22m
+[2m10:42:13 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/express/imageToolsDropdown.html[22m
+[2m10:42:13 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/addWebpage/index.html[22m
+[2m10:42:13 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/toast/toast.html[22m
+[2m10:42:13 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/SidePanel/ActionableCoachmark.html[22m
+[2m10:42:13 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/SidePanel/FABIcon.html[22m
+[2m10:42:13 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/SidePanel/FABViewSettings.html[22m
+[2m10:42:13 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/SidePanel/index.html[22m
+[2m10:42:13 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/SidePanel/sidePanelButton.html[22m
+[2m10:42:13 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/SidePanel/sidePanelUpsellSuccess.html[22m
+[2m10:42:13 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/SidePanel/signInSuccess.html[22m
+[2m10:42:13 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/chromeOS/handler.html[22m
+[2m10:42:13 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/outlook/error-toast.html[22m
+[2m10:42:13 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/popover/popover.html[22m
+[2m10:42:14 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/offscreen/offscreen.html[22m
+[2m10:42:14 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/local-file/local-file-blocking-page.html[22m
+[2m10:42:14 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/local-file/local-file-prompt.html[22m
+[2m10:42:14 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/viewer/error.html[22m
+[2m10:42:14 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/viewer/extension-detection.html[22m
+[2m10:42:14 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/viewer/localFileSignInRedirection.html[22m
+[2m10:42:14 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/viewer/sessionExpired.html[22m
+[2m10:42:14 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/viewer/signInAdobeYolo.html[22m
+[2m10:42:14 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/viewer/signInHandler.html[22m
+[2m10:42:14 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/viewer/viewer.html[22m
+[2m10:42:55 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/error.html[22m
+[2m10:42:55 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/extension-detection.html[22m
+[2m10:42:55 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/localFileSignInRedirection.html[22m
+[2m10:42:55 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/signInAdobeYolo.html[22m
+[2m10:42:55 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/sessionExpired.html[22m
+[2m10:42:55 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/signInHandler.html[22m
+[2m10:42:55 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/viewer.html[22m
+[2m10:42:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/check-cookies.html[22m
+[2m10:42:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/download-banner.html[22m
+[2m10:42:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/express.html[22m
+[2m10:42:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/failToast.html[22m
+[2m10:42:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/frameUI.html[22m
+[2m10:42:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/legacy-options.html[22m
+[2m10:42:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/local-fte.html[22m
+[2m10:42:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/lsCopy.html[22m
+[2m10:42:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/newAssistantPopup.html[22m
+[2m10:42:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/options.html[22m
+[2m10:42:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/popup.html[22m
+[2m10:42:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/preference-page.html[22m
+[2m10:42:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/progress.html[22m
+[2m10:42:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/searchWidget.html[22m
+[2m10:42:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/searchWidgetSkeleton.html[22m
+[2m10:42:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/successToast.html[22m
+[2m10:42:57 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/addWebpage/index.html[22m
+[2m10:42:57 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/express/expressContextualFTE.html[22m
+[2m10:42:57 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/express/expressHoverCTA.html[22m
+[2m10:42:57 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/express/expressSingleClickCTA.html[22m
+[2m10:42:57 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/express/imageToolsDropdown.html[22m
+[2m10:42:57 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/popover/popover.html[22m
+[2m10:42:57 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/chromeOS/handler.html[22m
+[2m10:42:57 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/SidePanel/ActionableCoachmark.html[22m
+[2m10:42:57 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/SidePanel/FABIcon.html[22m
+[2m10:42:57 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/SidePanel/FABViewSettings.html[22m
+[2m10:42:57 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/SidePanel/index.html[22m
+[2m10:42:57 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/SidePanel/sidePanelButton.html[22m
+[2m10:42:57 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/SidePanel/sidePanelUpsellSuccess.html[22m
+[2m10:42:57 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/SidePanel/signInSuccess.html[22m
+[2m10:42:57 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/outlook/error-toast.html[22m
+[2m10:42:57 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/toast/toast.html[22m
+[2m10:42:57 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/offscreen/offscreen.html[22m
+[2m10:42:57 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/local-file/local-file-blocking-page.html[22m
+[2m10:42:57 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/local-file/local-file-prompt.html[22m
+[2m10:42:57 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/viewer/error.html[22m
+[2m10:42:57 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/viewer/extension-detection.html[22m
+[2m10:42:57 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/viewer/localFileSignInRedirection.html[22m
+[2m10:42:57 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/viewer/sessionExpired.html[22m
+[2m10:42:57 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/viewer/signInAdobeYolo.html[22m
+[2m10:42:57 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/viewer/signInHandler.html[22m
+[2m10:42:57 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/viewer/viewer.html[22m
+[2m10:43:53 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/about.html[22m
+[2m10:43:53 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/activate_banner_mb.html[22m
+[2m10:43:53 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/dfd_landing_page.html[22m
+[2m10:43:53 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/foreground_sidebar_main.html[22m
+[2m10:43:53 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/how_it_works.html[22m
+[2m10:43:53 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/iframe_block_page.html[22m
+[2m10:43:53 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/nps_survey.html[22m
+[2m10:43:53 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/page_banner_mb.html[22m
+[2m10:43:53 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/preference.html[22m
+[2m10:43:53 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/settings.html[22m
+[2m10:43:53 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/site_status_block_page.html[22m
+[2m10:43:53 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/site_status_site_report.html[22m
+[2m10:43:53 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/site_status_typosquatting.html[22m
+[2m10:43:53 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/statistics.html[22m
+[2m10:43:53 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/whitelist.html[22m
+[2m10:43:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/balloon_message/advanced_protection_signal.html[22m
+[2m10:43:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/balloon_message/advanced_protection_signal_toast.html[22m
+[2m10:43:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/balloon_message/download_scan_popup.html[22m
+[2m10:43:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/balloon_message/dws.html[22m
+[2m10:43:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/balloon_message/esd_enrolled_detection_toast.html[22m
+[2m10:43:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/balloon_message/esd_enrolled_intro_toast.html[22m
+[2m10:43:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/balloon_message/esd_toast.html[22m
+[2m10:43:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/balloon_message/no_native_toast.html[22m
+[2m10:43:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/topbar/topbar_iframe_block.html[22m
+[2m10:43:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/topright_bar/web_boost_upsell_right.html[22m
+[2m10:43:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/topright_bar/web_boost_upsell_top.html[22m
+[2m10:43:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/sidebar/sidebar_rat_detection.html[22m
+[2m10:43:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/sidebar/sidebar_main/sidebar_esd.html[22m
+[2m10:43:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/sidebar/sidebar_main/sidebar_home.html[22m
+[2m10:43:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/sidebar/sidebar_main/sidebar_main.html[22m
+[2m10:43:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/sidebar/sidebar_main/sidebar_mb.html[22m
+[2m10:43:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/sidebar/sidebar_main/sidebar_mb_faq.html[22m
+[2m10:44:52 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/ghbmnnjooekpmoecnnnilnnbdlolhkhi/1.107.1_0/offscreendocument.html[22m
+[2m10:45:23 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/AnimatedBackground.tsx, /src/styles/index.css[22m
+[2m10:46:01 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/html/craw_window.html[22m
+[2m10:49:50 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/local-file/local-file-blocking-page.html[22m
+[2m10:49:50 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/local-file/local-file-prompt.html[22m
+[2m10:49:50 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/offscreen/offscreen.html[22m
+[2m10:49:50 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/viewer/error.html[22m
+[2m10:49:50 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/viewer/extension-detection.html[22m
+[2m10:49:50 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/viewer/localFileSignInRedirection.html[22m
+[2m10:49:50 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/viewer/sessionExpired.html[22m
+[2m10:49:50 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/viewer/signInAdobeYolo.html[22m
+[2m10:49:50 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/viewer/signInHandler.html[22m
+[2m10:49:50 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/viewer/viewer.html[22m
+[2m10:49:50 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/check-cookies.html[22m
+[2m10:49:50 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/download-banner.html[22m
+[2m10:49:50 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/express.html[22m
+[2m10:49:50 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/failToast.html[22m
+[2m10:49:50 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/frameUI.html[22m
+[2m10:49:50 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/legacy-options.html[22m
+[2m10:49:50 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/local-fte.html[22m
+[2m10:49:50 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/lsCopy.html[22m
+[2m10:49:50 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/newAssistantPopup.html[22m
+[2m10:49:50 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/options.html[22m
+[2m10:49:50 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/popup.html[22m
+[2m10:49:50 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/preference-page.html[22m
+[2m10:49:50 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/progress.html[22m
+[2m10:49:50 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/searchWidget.html[22m
+[2m10:49:50 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/searchWidgetSkeleton.html[22m
+[2m10:49:50 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/successToast.html[22m
+[2m10:49:51 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/addWebpage/index.html[22m
+[2m10:49:51 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/chromeOS/handler.html[22m
+[2m10:49:51 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/express/expressContextualFTE.html[22m
+[2m10:49:51 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/express/expressHoverCTA.html[22m
+[2m10:49:51 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/express/expressSingleClickCTA.html[22m
+[2m10:49:51 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/express/imageToolsDropdown.html[22m
+[2m10:49:51 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/outlook/error-toast.html[22m
+[2m10:49:51 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/popover/popover.html[22m
+[2m10:49:51 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/SidePanel/ActionableCoachmark.html[22m
+[2m10:49:51 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/SidePanel/FABIcon.html[22m
+[2m10:49:51 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/SidePanel/FABViewSettings.html[22m
+[2m10:49:51 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/SidePanel/index.html[22m
+[2m10:49:51 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/SidePanel/sidePanelButton.html[22m
+[2m10:49:51 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/SidePanel/sidePanelUpsellSuccess.html[22m
+[2m10:49:51 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/toast/toast.html[22m
+[2m10:49:51 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/SidePanel/signInSuccess.html[22m
+[2m10:49:52 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/error.html[22m
+[2m10:49:52 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/localFileSignInRedirection.html[22m
+[2m10:49:52 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/extension-detection.html[22m
+[2m10:49:52 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/sessionExpired.html[22m
+[2m10:49:52 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/signInAdobeYolo.html[22m
+[2m10:49:52 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/signInHandler.html[22m
+[2m10:49:52 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/viewer.html[22m
+[2m10:49:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/local-file/local-file-blocking-page.html[22m
+[2m10:49:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/local-file/local-file-prompt.html[22m
+[2m10:49:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/offscreen/offscreen.html[22m
+[2m10:49:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/viewer/error.html[22m
+[2m10:49:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/viewer/extension-detection.html[22m
+[2m10:49:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/viewer/localFileSignInRedirection.html[22m
+[2m10:49:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/viewer/sessionExpired.html[22m
+[2m10:49:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/viewer/signInAdobeYolo.html[22m
+[2m10:49:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/viewer/signInHandler.html[22m
+[2m10:49:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/viewer/viewer.html[22m
+[2m10:49:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/check-cookies.html[22m
+[2m10:49:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/download-banner.html[22m
+[2m10:49:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/express.html[22m
+[2m10:49:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/failToast.html[22m
+[2m10:49:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/frameUI.html[22m
+[2m10:49:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/legacy-options.html[22m
+[2m10:49:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/local-fte.html[22m
+[2m10:49:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/lsCopy.html[22m
+[2m10:49:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/newAssistantPopup.html[22m
+[2m10:49:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/options.html[22m
+[2m10:49:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/popup.html[22m
+[2m10:49:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/preference-page.html[22m
+[2m10:49:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/progress.html[22m
+[2m10:49:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/searchWidget.html[22m
+[2m10:49:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/searchWidgetSkeleton.html[22m
+[2m10:49:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/browser/js/successToast.html[22m
+[2m10:49:55 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/addWebpage/index.html[22m
+[2m10:49:55 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/chromeOS/handler.html[22m
+[2m10:49:55 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/express/expressContextualFTE.html[22m
+[2m10:49:55 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/express/expressHoverCTA.html[22m
+[2m10:49:55 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/express/expressSingleClickCTA.html[22m
+[2m10:49:55 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/express/imageToolsDropdown.html[22m
+[2m10:49:55 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/outlook/error-toast.html[22m
+[2m10:49:55 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/popover/popover.html[22m
+[2m10:49:55 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/SidePanel/ActionableCoachmark.html[22m
+[2m10:49:55 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/SidePanel/FABIcon.html[22m
+[2m10:49:55 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/SidePanel/FABViewSettings.html[22m
+[2m10:49:55 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/SidePanel/index.html[22m
+[2m10:49:55 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/SidePanel/sidePanelButton.html[22m
+[2m10:49:55 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/SidePanel/sidePanelUpsellSuccess.html[22m
+[2m10:49:55 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/SidePanel/signInSuccess.html[22m
+[2m10:49:55 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/resources/toast/toast.html[22m
+[2m10:49:55 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/error.html[22m
+[2m10:49:55 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/extension-detection.html[22m
+[2m10:49:55 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/localFileSignInRedirection.html[22m
+[2m10:49:55 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/signInAdobeYolo.html[22m
+[2m10:49:55 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/sessionExpired.html[22m
+[2m10:49:55 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/signInHandler.html[22m
+[2m10:49:55 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/efaidnbmnnnibpcajpcglclefindmkaj/26.6.3.0_0/viewer.html[22m
+[2m10:49:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/balloon_message/advanced_protection_signal.html[22m
+[2m10:49:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/balloon_message/advanced_protection_signal_toast.html[22m
+[2m10:49:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/balloon_message/download_scan_popup.html[22m
+[2m10:49:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/balloon_message/dws.html[22m
+[2m10:49:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/balloon_message/esd_enrolled_detection_toast.html[22m
+[2m10:49:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/balloon_message/esd_enrolled_intro_toast.html[22m
+[2m10:49:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/balloon_message/esd_toast.html[22m
+[2m10:49:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/balloon_message/no_native_toast.html[22m
+[2m10:49:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/about.html[22m
+[2m10:49:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/activate_banner_mb.html[22m
+[2m10:49:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/dfd_landing_page.html[22m
+[2m10:49:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/topbar/topbar_iframe_block.html[22m
+[2m10:49:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/topright_bar/web_boost_upsell_right.html[22m
+[2m10:49:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/topright_bar/web_boost_upsell_top.html[22m
+[2m10:49:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/sidebar/sidebar_rat_detection.html[22m
+[2m10:49:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/sidebar/sidebar_main/sidebar_esd.html[22m
+[2m10:49:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/sidebar/sidebar_main/sidebar_home.html[22m
+[2m10:49:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/sidebar/sidebar_main/sidebar_main.html[22m
+[2m10:49:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/sidebar/sidebar_main/sidebar_mb.html[22m
+[2m10:49:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/sidebar/sidebar_main/sidebar_mb_faq.html[22m
+[2m10:49:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/foreground_sidebar_main.html[22m
+[2m10:49:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/how_it_works.html[22m
+[2m10:49:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/iframe_block_page.html[22m
+[2m10:49:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/nps_survey.html[22m
+[2m10:49:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/page_banner_mb.html[22m
+[2m10:49:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/preference.html[22m
+[2m10:49:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/settings.html[22m
+[2m10:49:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/site_status_block_page.html[22m
+[2m10:49:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/site_status_site_report.html[22m
+[2m10:49:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/site_status_typosquatting.html[22m
+[2m10:49:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/statistics.html[22m
+[2m10:49:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/fheoggkfdfchfphceeifdbepaooicaho/8.1.0.9425_0/html/whitelist.html[22m
+[2m10:49:57 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/ghbmnnjooekpmoecnnnilnnbdlolhkhi/1.107.1_0/offscreendocument.html[22m
+[2m10:49:57 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mchrome-cdp-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/html/craw_window.html[22m
+[2m11:01:50 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m11:09:23 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m11:09:39 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m11:17:42 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m11:18:11 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m11:22:59 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/AnimatedBackground.tsx, /src/styles/index.css[22m
+[2m11:23:33 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/AnimatedBackground.tsx, /src/styles/index.css[22m
+[2m11:28:13 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/AnimatedBackground.tsx, /src/styles/index.css[22m
+[2m11:28:49 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/AnimatedBackground.tsx, /src/styles/index.css[22m
+[2m11:41:03 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/AnimatedBackground.tsx, /src/styles/index.css[22m
+[2m11:41:04 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/AnimatedBackground.tsx, /src/styles/index.css[22m
+[2m11:41:15 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m11:41:19 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m11:41:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/AnimatedBackground.tsx, /src/styles/index.css[22m
+[2m11:41:57 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/AnimatedBackground.tsx, /src/styles/index.css[22m
+[2m11:42:48 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/AnimatedBackground.tsx, /src/styles/index.css[22m
+[2m11:42:53 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/AnimatedBackground.tsx, /src/styles/index.css[22m
+[2m11:43:05 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/AnimatedBackground.tsx, /src/styles/index.css[22m
+[2m11:43:07 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/AnimatedBackground.tsx, /src/styles/index.css[22m
+[2m11:59:49 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/AnimatedBackground.tsx, /src/styles/index.css[22m
+[2m12:00:20 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m12:00:51 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/AnimatedBackground.tsx, /src/styles/index.css[22m
+[2m12:00:51 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m12:07:38 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/AnimatedBackground.tsx, /src/styles/index.css[22m
+[2m12:13:35 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/AnimatedBackground.tsx, /src/styles/index.css[22m
+[2m12:21:27 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m12:21:34 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m12:23:34 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m12:23:49 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m12:25:40 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m12:26:08 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m12:26:21 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m12:26:45 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m12:26:49 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m12:33:23 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/index.css[22m
+[2m12:33:48 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m12:34:08 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m12:34:08 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/index.css[22m
+[2m12:35:09 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/index.css[22m
+[2m12:35:24 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/index.css[22m
+[2m12:35:38 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m12:35:51 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m12:35:52 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m12:36:05 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m12:52:38 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/index.css[22m
+[2m12:52:45 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/index.css[22m
+[2m12:52:51 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m12:53:23 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m1:03:28 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/App.tsx, /src/styles/index.css[22m
+[2m1:04:05 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m1:04:13 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m1:04:17 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m1:04:17 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/App.tsx, /src/styles/index.css[22m
+[2m1:11:23 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m1:11:45 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m1:13:08 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/App.tsx, /src/styles/index.css[22m
+[2m1:13:40 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/App.tsx, /src/styles/index.css[22m
+[2m1:14:15 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/App.tsx, /src/styles/index.css[22m
+[2m1:14:18 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/App.tsx, /src/styles/index.css[22m
+[2m1:14:27 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/App.tsx, /src/styles/index.css[22m
+[2m1:14:28 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/App.tsx, /src/styles/index.css[22m
+[2m1:15:08 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/App.tsx, /src/styles/index.css[22m
+[2m1:15:37 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/App.tsx, /src/styles/index.css[22m
+[2m1:16:42 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/App.tsx, /src/styles/index.css[22m
+[2m1:16:57 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/App.tsx, /src/styles/index.css[22m
+[2m1:19:01 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m1:19:14 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m1:22:19 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m1:23:08 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m1:25:18 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m1:25:26 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m1:28:41 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m1:28:46 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m1:30:13 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m1:30:20 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m1:30:44 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m1:34:34 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m1:34:55 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m1:37:35 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
+[2m1:37:36 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/AnimatedBackground.css[22m
