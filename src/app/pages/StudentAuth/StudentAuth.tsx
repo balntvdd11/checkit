@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { ChevronRight, RefreshCw, XCircle, GraduationCap, Info } from "lucide-react";
+import { RefreshCw, XCircle, ChevronRight, Info, GraduationCap } from "lucide-react";
 import CheckITLogo from "../../components/shared/CheckITLogo";
 import Card from "../../components/shared/Card";
+import AnimatedBackground from "../../components/common/AnimatedBackground";
 
 // ─── Student Auth Gate ────────────────────────────────────────────────────────
 
@@ -20,14 +21,30 @@ export default function StudentAuthGate({ onSuccess, onBack }: { onSuccess: (ema
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.35 }} className="w-full max-w-md">
+    <div className="min-h-screen landing-page-black flex items-center justify-center p-4 relative overflow-hidden">
+      <AnimatedBackground />
+      <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.35 }} className="w-full max-w-md relative z-10">
         <button onClick={onBack} className="flex items-center gap-1.5 text-sm text-[#7A6268] hover:text-[#0B2A4D] mb-8 transition-colors">
           <ChevronRight size={15} className="rotate-180" /> Back to home
         </button>
 
-        <Card className="p-8 bg-[#020A17] border border-white/10 shadow-[0_32px_80px_rgba(0,0,0,0.35)]">
-          <div className="flex flex-col items-center text-center mb-8">
+        <Card className="p-8 !bg-black border border-white/10 shadow-[0_32px_80px_rgba(0,0,0,0.35)] relative overflow-hidden group premium-border-card">
+          <span className="border-tracer absolute inset-0 pointer-events-none">
+            <svg viewBox="0 0 448 500" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+              <defs>
+                <linearGradient id="tracerGrad-auth" x1="0" x2="1" y1="0" y2="0">
+                  <stop offset="0" stopColor="#F5F7FA" stopOpacity="0.75" />
+                  <stop offset="0.5" stopColor="#D7DEE8" stopOpacity="0.3" />
+                  <stop offset="1" stopColor="#D7DEE8" stopOpacity="0" />
+                </linearGradient>
+                <filter id="glow-auth"><feGaussianBlur stdDeviation="3.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              </defs>
+              <rect x="1" y="1" width="446" height="498" rx="16" ry="16" fill="none" stroke="url(#tracerGrad-auth)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="110 900" pathLength="1000" filter="url(#glow-auth)">
+                <animate attributeName="stroke-dashoffset" from="0" to="1000" dur="5.2s" repeatCount="indefinite" />
+              </rect>
+            </svg>
+          </span>
+          <div className="relative z-10 flex flex-col items-center text-center mb-8">
             <CheckITLogo size="md" />
             <div className="mt-7 w-16 h-16 rounded-2xl bg-[#0B2A4D] flex items-center justify-center shadow-[0_0_15px_rgba(10,42,77,0.35)]">
               <GraduationCap size={28} className="text-white" />

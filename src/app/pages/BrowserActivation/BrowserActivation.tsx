@@ -2,6 +2,7 @@ import { motion } from "motion/react";
 import { AlertTriangle, Lock, Smartphone } from "lucide-react";
 import Card from "../../components/shared/Card";
 import { cn } from "../../lib/utils";
+import AnimatedBackground from "../../components/common/AnimatedBackground";
 import type { Student } from "../../types";
 
 // ─── Browser Activation ───────────────────────────────────────────────────────
@@ -10,10 +11,26 @@ export default function BrowserActivation({ student, hasConflict = false, onActi
   student: Student; hasConflict?: boolean; onActivate: () => void; onCancel: () => void;
 }) {
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.35 }} className="w-full max-w-md">
-        <Card className="p-8 bg-[#020A17] border border-white/10 shadow-[0_32px_80px_rgba(0,0,0,0.35)]">
-          <div className="flex justify-center mb-6">
+    <div className="min-h-screen landing-page-black flex items-center justify-center p-4 relative overflow-hidden">
+      <AnimatedBackground />
+      <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.35 }} className="w-full max-w-md relative z-10">
+        <Card className="p-8 !bg-black border border-white/10 shadow-[0_32px_80px_rgba(0,0,0,0.35)] relative overflow-hidden group premium-border-card">
+          <span className="border-tracer absolute inset-0 pointer-events-none">
+            <svg viewBox="0 0 448 600" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+              <defs>
+                <linearGradient id="tracerGrad-browser" x1="0" x2="1" y1="0" y2="0">
+                  <stop offset="0" stopColor="#F5F7FA" stopOpacity="0.75" />
+                  <stop offset="0.5" stopColor="#D7DEE8" stopOpacity="0.3" />
+                  <stop offset="1" stopColor="#D7DEE8" stopOpacity="0" />
+                </linearGradient>
+                <filter id="glow-browser"><feGaussianBlur stdDeviation="3.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              </defs>
+              <rect x="1" y="1" width="446" height="598" rx="16" ry="16" fill="none" stroke="url(#tracerGrad-browser)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="110 900" pathLength="1000" filter="url(#glow-browser)">
+                <animate attributeName="stroke-dashoffset" from="0" to="1000" dur="5.2s" repeatCount="indefinite" />
+              </rect>
+            </svg>
+          </span>
+          <div className="relative z-10 flex justify-center mb-6">
             <div className="relative">
               <div className={cn("w-20 h-20 rounded-2xl flex items-center justify-center", "bg-white/10")}> 
                 {hasConflict
@@ -27,7 +44,7 @@ export default function BrowserActivation({ student, hasConflict = false, onActi
             </div>
           </div>
 
-          <div className="text-center mb-6">
+          <div className="relative z-10 text-center mb-6">
             <h1 className="text-xl font-bold text-white mb-2">
               {hasConflict ? "Browser Already Activated" : "Activate This Browser"}
             </h1>
@@ -46,7 +63,7 @@ export default function BrowserActivation({ student, hasConflict = false, onActi
           </div>
 
           {!hasConflict && (
-            <div className="mb-6 p-4 bg-white/5 rounded-3xl border border-white/10 flex items-start gap-3">
+            <div className="relative z-10 mb-6 p-4 bg-white/5 rounded-3xl border border-white/10 flex items-start gap-3">
               <Lock size={15} className="text-white mt-0.5 shrink-0" />
               <div>
                 <p className="text-xs font-semibold text-white mb-0.5">Why browser activation?</p>
@@ -57,7 +74,7 @@ export default function BrowserActivation({ student, hasConflict = false, onActi
             </div>
           )}
 
-          <div className="flex flex-col gap-3">
+          <div className="relative z-10 flex flex-col gap-3">
             <button onClick={onActivate}
               className={cn("w-full py-3.5 font-bold rounded-xl transition-colors",
                 hasConflict ? "bg-[var(--secondary)] hover:bg-[#174E7A] text-white" : "bg-white/10 hover:bg-white/20 text-white")}>
@@ -71,7 +88,7 @@ export default function BrowserActivation({ student, hasConflict = false, onActi
             )}
           </div>
 
-          <p className="mt-4 text-center text-xs text-slate-400">
+          <p className="relative z-10 mt-4 text-center text-xs text-slate-400">
             Activating for: <span className="font-semibold text-white">{student.studentId}</span>
           </p>
         </Card>

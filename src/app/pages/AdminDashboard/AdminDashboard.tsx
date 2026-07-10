@@ -18,20 +18,20 @@ export default function AdminDashboard({ onLogout, events, setEvents }: {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <header className="bg-white border-b border-slate-200 px-5 py-3 flex items-center justify-between sticky top-0 z-30 shadow-sm">
+      <header className="bg-[var(--secondary)] px-5 py-3.5 flex items-center justify-between sticky top-0 z-30 shadow-md">
         <div className="flex items-center gap-4">
-          <CheckITLogo size="sm" />
-          <div className="w-px h-6 bg-slate-200 hidden sm:block" />
-          <span className="text-slate-500 font-semibold text-sm hidden sm:block">Admin Portal</span>
+          <CheckITLogo inverted size="sm" />
+          <div className="w-px h-5 bg-white/20 hidden sm:block" />
+          <span className="text-white/50 font-semibold text-sm hidden sm:block">Admin Portal</span>
         </div>
         
         <div className="flex items-center gap-4">
           <div className="hidden md:flex items-center gap-1.5 mr-2">
             <span className="w-2 h-2 rounded-full bg-emerald-500" />
-            <span className="text-xs font-semibold text-slate-600">System Online</span>
+            <span className="text-xs font-semibold text-white/55">System Online</span>
           </div>
-          <button onClick={onLogout} className="flex items-center gap-2 px-3 py-1.5 text-sm font-semibold text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors">
-            <LogOut size={16} /> <span className="hidden sm:inline">Sign out</span>
+          <button onClick={onLogout} className="flex items-center gap-1.5 text-white/55 hover:text-white text-sm transition-colors">
+            <LogOut size={14} /> <span className="hidden sm:inline">Sign out</span>
           </button>
         </div>
       </header>
