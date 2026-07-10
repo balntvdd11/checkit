@@ -35,8 +35,8 @@ export default function CreateEventTab({ events, setEvents }: { events: EventCon
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h2 className="text-xl font-bold text-slate-800">Event Management</h2>
-          <p className="text-sm text-slate-500 mt-1">Create and manage institutional events and seminars</p>
+          <h2 className="text-xl font-bold text-white">Event Management</h2>
+          <p className="text-sm text-white mt-1">Create and manage institutional events and seminars</p>
         </div>
         <button onClick={() => { setShowEventForm(!showEventForm); setCreatedEvent(null); }}
           className="px-5 py-2.5 bg-[var(--primary)] hover:bg-[#A61831] text-white font-semibold rounded-xl transition-colors shadow-sm text-sm">

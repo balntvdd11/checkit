@@ -47,7 +47,7 @@ export default function DashboardTab() {
         </Card>
       </div>
 
-      <h3 className="text-lg font-bold text-slate-800 mt-8 mb-4">Today's Sessions</h3>
+      <h3 className="text-lg font-bold text-white mt-8 mb-4">Today's Sessions</h3>
       <Card className="border border-slate-100 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">

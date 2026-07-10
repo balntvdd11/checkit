@@ -17,7 +17,7 @@ export default function StudentsTab() {
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
-        <h2 className="text-xl font-bold text-slate-800">Student Directory</h2>
+        <h2 className="text-xl font-bold text-white">Student Directory</h2>
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <div className="relative flex-1 sm:w-64">
             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />

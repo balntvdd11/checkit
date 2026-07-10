@@ -72,7 +72,7 @@ export default function QRPassGenerator({ student, sessionCode, onBack, onLogout
                     <stop offset="0.5" stopColor="#D7DEE8" stopOpacity="0.3" />
                     <stop offset="1" stopColor="#D7DEE8" stopOpacity="0" />
                   </linearGradient>
-                  <filter id="glow-qr"><feGaussianBlur stdDeviation="3.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                  <filter id="glow-qr"><feGaussianBlur stdDeviation="3.5" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
                 </defs>
                 <rect x="1" y="1" width="382" height="498" rx="16" ry="16" fill="none" stroke="url(#tracerGrad-qr)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="110 900" pathLength="1000" filter="url(#glow-qr)">
                   <animate attributeName="stroke-dashoffset" from="0" to="1000" dur="5.2s" repeatCount="indefinite" />

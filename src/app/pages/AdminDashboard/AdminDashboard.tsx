@@ -8,6 +8,7 @@ import ScannerTab from "./tabs/ScannerTab";
 import ReportsTab from "./tabs/ReportsTab";
 import { cn } from "../../lib/utils";
 import type { AdminTab, EventConfig } from "../../types";
+import AnimatedBackground from "../../components/common/AnimatedBackground";
 
 export default function AdminDashboard({ onLogout, events, setEvents }: {
   onLogout: () => void;
@@ -17,7 +18,9 @@ export default function AdminDashboard({ onLogout, events, setEvents }: {
   const [tab, setTab] = useState<AdminTab>("dashboard");
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen landing-page-black relative overflow-hidden">
+      <AnimatedBackground />
+      <div className="absolute inset-0 opacity-0 pointer-events-none" />
       <header className="bg-[var(--secondary)] px-5 py-3.5 flex items-center justify-between sticky top-0 z-30 shadow-md">
         <div className="flex items-center gap-4">
           <CheckITLogo inverted size="sm" />
@@ -36,7 +39,7 @@ export default function AdminDashboard({ onLogout, events, setEvents }: {
         </div>
       </header>
 
-      <div className="border-b border-slate-200 bg-white px-2 sm:px-5 overflow-x-auto hide-scrollbar sticky top-[61px] z-20">
+      <div className="relative z-20 border-b border-slate-200 bg-slate-200 px-2 sm:px-5 overflow-x-auto hide-scrollbar sticky top-[61px]">
         <div className="flex items-center min-w-max">
           {[
             { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -56,13 +59,15 @@ export default function AdminDashboard({ onLogout, events, setEvents }: {
         </div>
       </div>
 
-      <div className="p-4 sm:p-6 lg:p-8">
-        <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-          {tab === "dashboard" && <DashboardTab />}
-          {tab === "students" && <StudentsTab />}
-          {tab === "create-event" && <CreateEventTab events={events} setEvents={setEvents} />}
-          {tab === "scanner" && <ScannerTab />}
-          {tab === "reports" && <ReportsTab events={events} />}
+      <div className="relative z-10 max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 pt-6 sm:pt-10">
+        <div className="bg-black/30 backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-6 sm:p-10 shadow-2xl">
+          <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+            {tab === "dashboard" && <DashboardTab />}
+            {tab === "students" && <StudentsTab />}
+            {tab === "create-event" && <CreateEventTab events={events} setEvents={setEvents} />}
+            {tab === "scanner" && <ScannerTab />}
+            {tab === "reports" && <ReportsTab events={events} />}
+          </div>
         </div>
       </div>
     </div>

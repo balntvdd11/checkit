@@ -5,6 +5,8 @@ import CheckITLogo from "../../components/shared/CheckITLogo";
 import Card from "../../components/shared/Card";
 import { cn } from "../../lib/utils";
 import type { Student, EventConfig } from "../../types";
+import AnimatedBackground from "../../components/common/AnimatedBackground";
+import checkITLogoImg from "../../../asset/checkITlogo.png";
 
 // ─── Session Code Entry ───────────────────────────────────────────────────────
 
@@ -29,8 +31,10 @@ export default function SessionCodeEntry({ student, events, onSubmit, onViewHist
   };
 
   return (
-    <div className="min-h-screen page-diamond-bg">
-      <header className="bg-[var(--secondary)] px-5 py-3.5 flex items-center justify-between shrink-0">
+    <div className="min-h-screen landing-page-black relative overflow-hidden">
+      <AnimatedBackground />
+      <div className="absolute inset-0 opacity-0 pointer-events-none" />
+      <header className="relative z-10 bg-[var(--secondary)] px-5 py-3.5 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-4">
           <CheckITLogo inverted size="sm" />
           <div className="w-px h-5 bg-white/20" />
@@ -47,20 +51,36 @@ export default function SessionCodeEntry({ student, events, onSubmit, onViewHist
         </div>
       </header>
 
-      <div className="flex items-center justify-center min-h-[calc(100vh-57px)] p-4">
+      <div className="relative z-10 flex items-center justify-center min-h-[calc(100vh-57px)] p-4">
         <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="w-full max-w-md">
+          <button onClick={onViewHistory} className="flex items-center gap-1.5 text-sm text-white/70 hover:text-white mb-6 transition-colors">
+            <ChevronRight size={15} className="rotate-180" /> Back to dashboard
+          </button>
           <div className="mb-6 text-center">
-            <p className="text-sm text-[var(--muted-foreground)]">Welcome back,</p>
-            <h1 className="text-2xl font-bold text-[var(--card-foreground)] mt-0.5">{student.name}</h1>
-            <p className="text-xs text-[var(--muted-foreground)] mt-1 font-mono">{student.studentId} · {student.section}</p>
+            <p className="text-sm text-white/70">Welcome back,</p>
+            <h1 className="text-2xl font-bold text-white mt-0.5">{student.name}</h1>
+            <p className="text-xs text-white/70 mt-1 font-mono">{student.studentId} · {student.section}</p>
           </div>
 
-          <Card className="p-8">
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <Card className="p-8 relative !bg-black premium-border-card border-[1.5px] border-[#7EEAF8]/24 overflow-hidden">
+            <span className="border-tracer absolute inset-0 pointer-events-none">
+              <svg viewBox="0 0 360 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+                <defs>
+                  <linearGradient id="tracerGrad-session" x1="0" x2="1" y1="0" y2="0">
+                    <stop offset="0" stopColor="#F5F7FA" stopOpacity="0.75" />
+                    <stop offset="0.5" stopColor="#D7DEE8" stopOpacity="0.3" />
+                    <stop offset="1" stopColor="#D7DEE8" stopOpacity="0" />
+                  </linearGradient>
+                  <filter id="glow-session"><feGaussianBlur stdDeviation="3.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                </defs>
+                <rect x="1" y="1" width="358" height="218" rx="16" ry="16" fill="none" stroke="url(#tracerGrad-session)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="110 900" pathLength="1000" filter="url(#glow-session)">
+                  <animate attributeName="stroke-dashoffset" from="0" to="1000" dur="5.2s" repeatCount="indefinite" />
+                </rect>
+              </svg>
+            </span>
+            <form onSubmit={handleSubmit} className="relative z-10 flex flex-col gap-4">
               <div className="flex flex-col items-center text-center mb-7">
-                <div className="w-14 h-14 rounded-2xl bg-[#0B2A4D] flex items-center justify-center mb-4 shadow-[0_0_15px_rgba(10,42,77,0.35)]">
-                  <Hash size={28} className="text-white" />
-                </div>
+                <img src={checkITLogoImg} alt="CheckIT logo" className="w-28 h-28 object-contain drop-shadow-xl mb-4" />
                 <h2 className="text-lg font-bold text-white">Select CheckIT Event</h2>
                 <p className="text-sm text-slate-300 mt-1">Choose today's event from the list</p>
               </div>
@@ -78,9 +98,9 @@ export default function SessionCodeEntry({ student, events, onSubmit, onViewHist
                       "focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/20 transition-colors appearance-none",
                       error ? "border-white/20" : "border-white/10"
                     )}>
-                    <option value="">Select an event...</option>
+                    <option value="" className="text-black">Select an event...</option>
                     {activeEvents.map(event => (
-                      <option key={event.id} value={event.id}>
+                      <option key={event.id} value={event.id} className="text-black">
                         {event.name} · {event.checkItCode}
                       </option>
                     ))}

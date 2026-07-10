@@ -4,6 +4,7 @@ import CheckITLogo from "../../components/shared/CheckITLogo";
 import StatusBadge from "../../components/shared/StatusBadge";
 import Card from "../../components/shared/Card";
 import type { Student, AttendanceRecord } from "../../types";
+import AnimatedBackground from "../../components/common/AnimatedBackground";
 
 // ─── Student Dashboard (History / Devices) ────────────────────────────────────
 
@@ -23,7 +24,9 @@ export default function StudentDashboard({ student, onLogout, onGeneratePass }: 
   const absentCount = MOCK_ATTENDANCE.filter(r => r.status === "absent").length;
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen landing-page-black relative overflow-hidden">
+      <AnimatedBackground />
+      <div className="absolute inset-0 opacity-0 pointer-events-none" />
       <header className="bg-[var(--secondary)] px-5 py-3.5 flex items-center justify-between shrink-0 sticky top-0 z-20 shadow-md">
         <div className="flex items-center gap-4">
           <CheckITLogo inverted size="sm" />
@@ -37,15 +40,16 @@ export default function StudentDashboard({ student, onLogout, onGeneratePass }: 
         </div>
       </header>
 
-      <div className="max-w-5xl mx-auto p-4 sm:p-6 lg:p-8 pt-6 sm:pt-10">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+      <div className="relative z-10 max-w-5xl mx-auto p-4 sm:p-6 lg:p-8 pt-6 sm:pt-10">
+        <div className="bg-black/30 backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-6 sm:p-10 shadow-2xl">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
           <div className="flex items-center gap-4">
             <div className="w-14 h-14 rounded-2xl bg-[var(--primary)]/10 flex items-center justify-center shrink-0">
               <GraduationCap size={28} className="text-[var(--primary)]" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-[var(--card-foreground)]">{student.name}</h1>
-              <p className="text-sm text-[var(--muted-foreground)] mt-0.5">{student.studentId} · {student.section}</p>
+              <h1 className="text-2xl font-bold text-white">{student.name}</h1>
+              <p className="text-sm text-white/70 mt-0.5">{student.studentId} · {student.section}</p>
             </div>
           </div>
           <button onClick={onGeneratePass}
@@ -80,7 +84,7 @@ export default function StudentDashboard({ student, onLogout, onGeneratePass }: 
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 flex flex-col gap-4">
-            <h2 className="text-lg font-bold text-[var(--card-foreground)] flex items-center gap-2">
+            <h2 className="text-lg font-bold text-white flex items-center gap-2">
               <History size={18} className="text-[var(--primary)]" /> Recent Attendance
             </h2>
             <Card className="border border-slate-100 overflow-hidden">
@@ -113,7 +117,7 @@ export default function StudentDashboard({ student, onLogout, onGeneratePass }: 
           </div>
 
           <div className="flex flex-col gap-4">
-            <h2 className="text-lg font-bold text-[var(--card-foreground)] flex items-center gap-2">
+            <h2 className="text-lg font-bold text-white flex items-center gap-2">
               <Smartphone size={18} className="text-[var(--primary)]" /> Authorized Device
             </h2>
             <Card className="p-6 border border-slate-100">
@@ -139,6 +143,7 @@ export default function StudentDashboard({ student, onLogout, onGeneratePass }: 
               </button>
             </Card>
           </div>
+        </div>
         </div>
       </div>
     </div>

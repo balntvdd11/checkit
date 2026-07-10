@@ -5,7 +5,7 @@ import { cn } from "../../lib/utils";
 
 export default function Card({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <div className={cn("bg-white rounded-2xl shadow-[0_4px_32px_rgba(11,42,77,0.08)]", className)}>
+    <div className={cn("bg-slate-200 rounded-2xl shadow-[0_4px_32px_rgba(11,42,77,0.08)]", className)}>
       {children}
     </div>
   );
