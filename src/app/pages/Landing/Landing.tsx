@@ -1,0 +1,104 @@
+import { motion } from "motion/react";
+import checkITLogo from "../../../asset/checkITlogo.png";
+import studentPortalIcon from "../../../asset/studentportalICON.png";
+import adminPortalIcon from "../../../asset/adminportalICON.png";
+import AnimatedBackground from "../../components/common/AnimatedBackground";
+
+// ─── Landing Page ─────────────────────────────────────────────────────────────
+
+export default function LandingPage({ onStudent, onAdmin }: { onStudent: () => void; onAdmin: () => void }) {
+
+  return (
+    <div className="min-h-screen landing-page-black flex flex-col items-center justify-center relative overflow-hidden">
+      <AnimatedBackground />
+      <div className="absolute inset-0 opacity-0 pointer-events-none" />
+
+      {/* static background illustration removed per request */}
+
+      <motion.div initial={{ opacity: 0, y: 80 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }} className="relative z-10 flex flex-col items-center px-4 w-full max-w-4xl mx-auto py-2">
+
+        {/* Wordmark */}
+        <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}
+          className="flex flex-col items-center mb-1 -translate-y-16">
+          <div className="mb-0.5 flex items-center justify-center gap-0">
+            <div className="relative w-72 h-72 shrink-0">
+              <img src={checkITLogo} alt="CheckIT logo" className="relative z-10 w-72 h-72 object-contain" />
+            </div>
+            <div className="flex items-center gap-0 -translate-x-20 checkit-wordmark text-6xl sm:text-7xl">
+              <span className="checkit-wordmark__check">Check</span>
+              <span className="checkit-wordmark__it">IT</span>
+            </div>
+          </div>
+          <div className="relative -translate-y-15 flex flex-col items-center justify-center">
+            <p className="text-white text-lg font-medium text-center truncate my-0 max-w-2xl">
+              Fast and Secure Event Attendance for CIT Students
+            </p>
+            <div className="mt-0 flex items-center justify-center gap-2 text-white/35 text-xs">
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Portal cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-4xl mt-1">
+          <motion.button
+            initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }}
+            whileHover={{ y: -6, transition: { duration: 0.2 } }}
+            onClick={onStudent}
+            className="group relative premium-border-card border-[1.5px] text-left rounded-2xl border border-[#7EEAF8]/24 bg-black hover:bg-[rgba(14,32,68,0.18)] hover:border-[#7EEAF8]/40 transition-all duration-200 p-9 flex flex-col gap-6 cursor-pointer h-[265px] overflow-hidden"
+          >
+            <span className="border-tracer absolute inset-0 pointer-events-none">
+              <svg viewBox="0 0 360 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+                <defs>
+                  <linearGradient id="tracerGrad-student" x1="0" x2="1" y1="0" y2="0">
+                    <stop offset="0" stopColor="#F5F7FA" stopOpacity="0.75" />
+                    <stop offset="0.5" stopColor="#D7DEE8" stopOpacity="0.3" />
+                    <stop offset="1" stopColor="#D7DEE8" stopOpacity="0" />
+                  </linearGradient>
+                  <filter id="glow-student"><feGaussianBlur stdDeviation="3.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                </defs>
+                <rect x="1" y="1" width="358" height="218" rx="16" ry="16" fill="none" stroke="url(#tracerGrad-student)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="110 900" pathLength="1000" filter="url(#glow-student)">
+                  <animate attributeName="stroke-dashoffset" from="0" to="1000" dur="5.2s" repeatCount="indefinite" />
+                </rect>
+              </svg>
+            </span>
+            <img src={studentPortalIcon} alt="Student portal" className="w-24 h-24 object-contain" />
+            <div>
+              <h2 className="text-xl font-semibold text-white mb-1.5">Student Portal</h2>
+              <p className="text-[#d7f8ff]/50 text-sm leading-relaxed">Generate Event Passes</p>
+            </div>
+            <div className="mt-auto" />
+          </motion.button>
+
+          <motion.button
+            initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.35 }}
+            whileHover={{ y: -6, transition: { duration: 0.2 } }}
+            onClick={onAdmin}
+            className="group relative premium-border-card border-[1.5px] text-left rounded-2xl border border-[#7EEAF8]/24 bg-black hover:bg-[rgba(14,32,68,0.18)] hover:border-[#7EEAF8]/40 transition-all duration-200 p-9 flex flex-col gap-6 cursor-pointer h-[265px] overflow-hidden"
+          >
+            <span className="border-tracer absolute inset-0 pointer-events-none">
+              <svg viewBox="0 0 360 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+                <defs>
+                  <linearGradient id="tracerGrad-admin" x1="0" x2="1" y1="0" y2="0">
+                    <stop offset="0" stopColor="#F5F7FA" stopOpacity="0.75" />
+                    <stop offset="0.5" stopColor="#D7DEE8" stopOpacity="0.3" />
+                    <stop offset="1" stopColor="#D7DEE8" stopOpacity="0" />
+                  </linearGradient>
+                  <filter id="glow-admin"><feGaussianBlur stdDeviation="3.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                </defs>
+                <rect x="1" y="1" width="358" height="218" rx="16" ry="16" fill="none" stroke="url(#tracerGrad-admin)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="110 900" pathLength="1000" filter="url(#glow-admin)">
+                  <animate attributeName="stroke-dashoffset" from="0" to="1000" dur="5.2s" repeatCount="indefinite" />
+                </rect>
+              </svg>
+            </span>
+            <img src={adminPortalIcon} alt="Admin portal" className="w-24 h-24 object-contain" />
+            <div>
+              <h2 className="text-xl font-semibold text-white mb-1.5">Admin Portal</h2>
+              <p className="text-[#d7f8ff]/50 text-sm leading-relaxed">Manage Events and Reports</p>
+            </div>
+            <div className="mt-auto" />
+          </motion.button>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
