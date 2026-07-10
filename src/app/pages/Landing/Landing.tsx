@@ -19,18 +19,18 @@ export default function LandingPage({ onStudent, onAdmin }: { onStudent: () => v
 
         {/* Wordmark */}
         <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}
-          className="flex flex-col items-center mb-1 -translate-y-16">
-          <div className="mb-0.5 flex items-center justify-center gap-0">
-            <div className="relative w-72 h-72 shrink-0">
-              <img src={checkITLogo} alt="CheckIT logo" className="relative z-10 w-72 h-72 object-contain" />
+          className="flex flex-col items-center mb-1 -translate-y-16 sm:-translate-y-16">
+          <div className="mb-0.5 flex flex-col sm:flex-row items-center justify-center gap-0">
+            <div className="relative w-48 sm:w-72 h-48 sm:h-72 shrink-0">
+              <img src={checkITLogo} alt="CheckIT logo" className="relative z-10 w-full h-full object-contain" />
             </div>
-            <div className="flex items-center gap-0 -translate-x-20 checkit-wordmark text-6xl sm:text-7xl">
+            <div className="flex items-center gap-0 -translate-y-8 sm:-translate-y-0 sm:-translate-x-20 checkit-wordmark text-5xl sm:text-7xl">
               <span className="checkit-wordmark__check">Check</span>
               <span className="checkit-wordmark__it">IT</span>
             </div>
           </div>
-          <div className="relative -translate-y-15 flex flex-col items-center justify-center">
-            <p className="text-white text-lg font-medium text-center truncate my-0 max-w-2xl">
+          <div className="relative -translate-y-10 sm:-translate-y-15 flex flex-col items-center justify-center w-full">
+            <p className="text-white text-sm sm:text-lg font-medium text-center my-0 max-w-2xl px-2">
               Fast and Secure Event Attendance for CIT Students
             </p>
             <div className="mt-0 flex items-center justify-center gap-2 text-white/35 text-xs">
