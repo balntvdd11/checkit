@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "motion/react";
-import { GraduationCap, Hash, RefreshCw, ChevronRight, AlertTriangle } from "lucide-react";
+import { GraduationCap, Hash, RefreshCw, ChevronRight, AlertTriangle, Download } from "lucide-react";
 import CheckITLogo from "../../components/shared/CheckITLogo";
 import QRCodeDisplay from "../../components/shared/QRCodeDisplay";
 import ProgressRing from "../../components/shared/ProgressRing";
@@ -61,6 +61,26 @@ export default function QRPassGenerator({ student, EVENTSCode, onBack, onLogout 
   }, [isActive]);
 
   const qrValue = `${student.studentId}:${EVENTSCode}:${qrSeed}`;
+
+  const handleDownloadQR = () => {
+    const svg = document.getElementById("qr-code-svg");
+    if (!svg) return;
+    const svgData = new XMLSerializer().serializeToString(svg);
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    const img = new Image();
+    img.onload = () => {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx?.drawImage(img, 0, 0);
+      const pngFile = canvas.toDataURL("image/png");
+      const downloadLink = document.createElement("a");
+      downloadLink.download = `QR_Pass_${student.studentId}.png`;
+      downloadLink.href = `${pngFile}`;
+      downloadLink.click();
+    };
+    img.src = `data:image/svg+xml;base64,${btoa(svgData)}`;
+  };
 
   if (isActive === null) {
     return (
@@ -165,6 +185,13 @@ export default function QRPassGenerator({ student, EVENTSCode, onBack, onLogout 
                   <RefreshCw size={13} className={cn(isRefreshing && "animate-spin")} />
                   <span>{isRefreshing ? "Refreshing…" : `Refreshes in ${timeLeft}s`}</span>
                 </div>
+
+                <button 
+                  onClick={handleDownloadQR}
+                  className="mt-4 flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-colors text-sm font-semibold"
+                >
+                  <Download size={16} /> Download QR
+                </button>
 
                 <p className="mt-4 text-xs text-center text-slate-400 leading-relaxed max-w-[200px]">
                   Show this QR to your instructor's scanner. Keep this screen active.

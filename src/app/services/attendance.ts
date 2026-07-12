@@ -2,12 +2,9 @@ import type { AttendanceRecord } from "../types";
 import { MOCK_ATTENDANCE } from "../constants/mockData";
 import { apiFetch } from "./api";
 
-function hasAuthToken() {
-  return typeof window !== 'undefined' && Boolean(localStorage.getItem('checkit_admin_token'));
-}
+
 
 export const fetchAttendance = async (): Promise<AttendanceRecord[]> => {
-  if (!hasAuthToken()) return Promise.resolve(MOCK_ATTENDANCE);
   return apiFetch('/api/attendance/');
 };
 

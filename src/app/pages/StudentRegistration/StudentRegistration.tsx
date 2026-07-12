@@ -16,7 +16,12 @@ export default function StudentRegistration({ email, onSubmit, onBack }: { email
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  const sections = ["BSIT 1A", "BSIT 1B", "BSIT 2A", "BSIT 2B", "BSIT 3A", "BSIT 3B", "BSIT 4A", "BSIT 4B"];
+  const sections = [
+    "BSIT 1A", "BSIT 1B", "BSIT 1C", "BSIT 1D", "BSIT 1E",
+    "BSIT 2A", "BSIT 2B", "BSIT 2C", "BSIT 2D", "BSIT 2E",
+    "BSIT 3A", "BSIT 3B", "BSIT 3C", "BSIT 3D", "BSIT 3E",
+    "BSIT 4A", "BSIT 4B", "BSIT 4C", "BSIT 4D", "BSIT 4E"
+  ];
 
   const validate = () => {
     const e: Partial<typeof form> = {};

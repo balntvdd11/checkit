@@ -1,18 +1,102 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ScanLine, History, CheckCircle2, UserX, UserCheck } from "lucide-react";
+import { Html5QrcodeScanner } from "html5-qrcode";
 import Card from "../../../components/shared/Card";
 import StatusBadge from "../../../components/shared/StatusBadge";
 import type { EventConfig } from "../../../types";
 import { createAttendanceRecord } from "../../../services/attendance";
 import { useStore } from "../../../state/store";
+import { cn } from "../../../lib/utils";
 
 export default function ScannerTab({ events }: { events: EventConfig[] }) {
   const [selectedScanEVENTS, setSelectedScanEVENTS] = useState("");
   const [scanning, setScanning] = useState(false);
   const [scanResults, setScanResults] = useState<{ id: string; name: string; status: "success" | "invalid" | "duplicate"; time: string }[]>([]);
-  const { dispatch } = useStore();
+  const { state, dispatch } = useStore();
+  
+  // Keep track of recently scanned QR codes to prevent rapid duplicates
+  const recentlyScanned = useRef<Set<string>>(new Set());
 
   const activeScanEVENTS = events.find(s => s.id === selectedScanEVENTS);
+
+  useEffect(() => {
+    if (!scanning || !selectedScanEVENTS) return;
+
+    const scanner = new Html5QrcodeScanner(
+      "qr-reader",
+      { fps: 10, qrbox: { width: 250, height: 250 } },
+      /* verbose= */ false
+    );
+
+    scanner.render(async (decodedText) => {
+      // Decode QR string: expected format `studentId:EVENTSCode:qrSeed`
+      try {
+        const parts = decodedText.split(":");
+        if (parts.length < 2) throw new Error("Invalid format");
+        
+        const [studentId, code, seed] = parts;
+        const scanKey = `${studentId}-${code}-${seed}`;
+        
+        // Prevent rapid duplicate processing of the exact same QR frame
+        if (recentlyScanned.current.has(scanKey)) return;
+        recentlyScanned.current.add(scanKey);
+        
+        // Cleanup memory after 5 seconds
+        setTimeout(() => recentlyScanned.current.delete(scanKey), 5000);
+
+        const activeEvent = events.find(e => e.id === selectedScanEVENTS);
+        const student = state.students.find(s => s.studentId === studentId);
+
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        if (!student || !activeEvent || code !== activeEvent.checkItCode) {
+          setScanResults(prev => [{ id: `scan-${Date.now()}`, name: "Unknown / Invalid", status: "invalid", time }, ...prev]);
+          return;
+        }
+
+        // Check if student already has attendance for this event today
+        const today = new Date().toISOString().split('T')[0];
+        const hasAttended = state.attendance.some(a => 
+          a.studentId === student.studentId && 
+          a.EVENTSCode === activeEvent.checkItCode && 
+          a.date === today
+        );
+
+        if (hasAttended) {
+          setScanResults(prev => [{ id: `scan-${Date.now()}`, name: student.name, status: "duplicate", time }, ...prev]);
+          return;
+        }
+
+        // Determine late status based on activeEvent.lateThreshold vs current time
+        // For simplicity, we just mark present unless we implement full time parsing
+        const record = {
+          name: student.name,
+          studentId: student.studentId,
+          email: student.email,
+          date: today,
+          subject: activeEvent.name,
+          section: student.section,
+          status: "present", // Logic could be expanded to compare time against activeEvent.lateThreshold
+          timeIn: time,
+          EVENTSCode: activeEvent.checkItCode,
+        };
+
+        const saved = await createAttendanceRecord(record as any);
+        dispatch({ type: "ADD_ATTENDANCE_RECORD", payload: saved });
+        setScanResults(prev => [{ id: `scan-${Date.now()}`, name: student.name, status: "success", time }, ...prev]);
+
+      } catch (err) {
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        setScanResults(prev => [{ id: `scan-${Date.now()}`, name: "Invalid QR Code", status: "invalid", time }, ...prev]);
+      }
+    }, (error) => {
+      // Ignored: html5-qrcode triggers this constantly when looking for a code
+    });
+
+    return () => {
+      scanner.clear().catch(console.error);
+    };
+  }, [scanning, selectedScanEVENTS, events, state.students, state.attendance, dispatch]);
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
@@ -41,45 +125,15 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
                   <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-full mb-3">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /> Live Scanner Active
                   </div>
-                  <h3 className="font-bold text-slate-800">{activeScanEVENTS?.subject}</h3>
-                  <p className="text-sm text-slate-500">{activeScanEVENTS?.section} · Code: {activeScanEVENTS?.code}</p>
+                  <h3 className="font-bold text-slate-800">{activeScanEVENTS?.name}</h3>
+                  <p className="text-sm text-slate-500">Code: {activeScanEVENTS?.checkItCode}</p>
                 </div>
                 
-                <div className="relative w-64 h-64 border-2 border-[var(--primary)]/30 rounded-3xl overflow-hidden bg-slate-50 mb-8">
-                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[var(--primary)]/10 to-transparent w-full h-full animate-scan" />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <ScanLine size={48} className="text-[var(--primary)]/20" />
-                  </div>
-                  {/* Corner markers */}
-                  <div className="absolute top-4 left-4 w-6 h-6 border-t-4 border-l-4 border-[var(--primary)] rounded-tl-lg" />
-                  <div className="absolute top-4 right-4 w-6 h-6 border-t-4 border-r-4 border-[var(--primary)] rounded-tr-lg" />
-                  <div className="absolute bottom-4 left-4 w-6 h-6 border-b-4 border-l-4 border-[var(--primary)] rounded-bl-lg" />
-                  <div className="absolute bottom-4 right-4 w-6 h-6 border-b-4 border-r-4 border-[var(--primary)] rounded-br-lg" />
+                <div className="w-full max-w-sm rounded-2xl overflow-hidden bg-slate-50 mb-8 border border-slate-200">
+                  <div id="qr-reader" className="w-full" />
                 </div>
 
                 <div className="flex gap-3">
-                  <button onClick={async () => {
-                    const mockNames = ["Juan Paolo Reyes", "Ana Gabrielle Cruz", "Miguel Andrei Bautista"];
-                    const name = mockNames[Math.floor(Math.random() * mockNames.length)];
-                    const isInvalid = Math.random() > 0.8;
-                    const isDup = !isInvalid && Math.random() > 0.8;
-                    const status = isInvalid ? "invalid" : isDup ? "duplicate" : "success";
-                    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                    const activeEvent = events.find(e => e.id === selectedScanEVENTS);
-                    const record = {
-                      date: new Date().toISOString().split('T')[0],
-                      subject: activeEvent?.name || "Unknown",
-                      section: "UA Campus",
-                      status: status === "success" ? "present" : (status === "invalid" ? "absent" : "present"),
-                      timeIn: time,
-                      EVENTSCode: activeEvent?.checkItCode || "",
-                    };
-                    const saved = await createAttendanceRecord(record as any);
-                    dispatch({ type: "ADD_ATTENDANCE_RECORD", payload: saved });
-                    setScanResults([{ id: `scan-${Date.now()}`, name, status, time }, ...scanResults]);
-                  }} className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold rounded-lg transition-colors">
-                    Simulate Scan
-                  </button>
                   <button onClick={() => setScanning(false)}
                     className="px-4 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 text-sm font-semibold rounded-lg transition-colors">
                     Stop Scanner

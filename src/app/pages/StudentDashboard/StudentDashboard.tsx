@@ -134,9 +134,7 @@ export default function StudentDashboard({ student, onLogout, onGeneratePass }: 
                   <span>Browser:</span><span className="font-medium text-slate-700">Chrome (Windows)</span>
                 </p>
               </div>
-              <button className="w-full py-2.5 px-4 text-xs font-semibold text-rose-600 bg-rose-50 hover:bg-rose-100 rounded-lg transition-colors border border-rose-100">
-                Revoke Device Authorization
-              </button>
+
             </Card>
           </div>
         </div>

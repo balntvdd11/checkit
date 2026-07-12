@@ -26,6 +26,9 @@ export interface Student {
 }
 
 export interface AttendanceRecord {
+  name: string;
+  studentId: string;
+  email?: string;
   date: string;
   subject: string;
   section: string;

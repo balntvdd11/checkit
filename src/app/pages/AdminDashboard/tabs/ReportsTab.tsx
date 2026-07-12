@@ -54,9 +54,10 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
             <select value={reportSectionFilter} onChange={e => setReportSectionFilter(e.target.value)}
               className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
               <option value="All">All Sections</option>
-              <option value="BSIT 2A">BSIT 2A</option>
-              <option value="BSIT 3A">BSIT 3A</option>
-              <option value="BSIT 3B">BSIT 3B</option>
+              <option value="BSIT 1A">BSIT 1A</option><option value="BSIT 1B">BSIT 1B</option><option value="BSIT 1C">BSIT 1C</option><option value="BSIT 1D">BSIT 1D</option><option value="BSIT 1E">BSIT 1E</option>
+              <option value="BSIT 2A">BSIT 2A</option><option value="BSIT 2B">BSIT 2B</option><option value="BSIT 2C">BSIT 2C</option><option value="BSIT 2D">BSIT 2D</option><option value="BSIT 2E">BSIT 2E</option>
+              <option value="BSIT 3A">BSIT 3A</option><option value="BSIT 3B">BSIT 3B</option><option value="BSIT 3C">BSIT 3C</option><option value="BSIT 3D">BSIT 3D</option><option value="BSIT 3E">BSIT 3E</option>
+              <option value="BSIT 4A">BSIT 4A</option><option value="BSIT 4B">BSIT 4B</option><option value="BSIT 4C">BSIT 4C</option><option value="BSIT 4D">BSIT 4D</option><option value="BSIT 4E">BSIT 4E</option>
             </select>
           </div>
           <div>
