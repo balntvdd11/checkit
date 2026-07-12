@@ -2,6 +2,7 @@
 
 export type View =
   | "landing"
+  | "student-resolving"
   | "student-auth"
   | "student-register"
   | "student-activation"

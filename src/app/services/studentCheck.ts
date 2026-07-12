@@ -8,6 +8,7 @@ export interface StudentData {
   email: string;
   registered: boolean;
   registeredAt: string;
+  deviceFingerprint?: string;
 }
 
 /**
