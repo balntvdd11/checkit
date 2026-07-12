@@ -197,11 +197,11 @@ function AppInner() {
                   setCurrentView("student-dashboard");
                 }
               } else {
-                setCurrentView("student-dashboard");
+                setCurrentView("student-auth");
               }
             } catch {
-              // If fetch fails we still navigate; dashboard will show what it can
-              setCurrentView("student-dashboard");
+              // If fetch fails, route back to auth so they don't get a blank screen
+              setCurrentView("student-auth");
             }
           }}
         />

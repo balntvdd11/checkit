@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Lock, Smartphone, CheckCircle2, XCircle, RefreshCw, Fingerprint } from "lucide-react";
 import Card from "../../components/shared/Card";
@@ -15,9 +15,9 @@ import { generateDeviceFingerprint, sendFingerprintToBackend } from "../../servi
 //   3. Send the public key (PEM/SPKI) to the Django backend.
 //   4. Generate device fingerprint.
 //   5. Send device fingerprint to Django backend.
-//   6. Call onActivate() to proceed to the dashboard.
+//   6. Wait for user to click "Activate Browser" to proceed to the dashboard.
 
-type Phase = "idle" | "activating" | "done" | "error";
+type Phase = "activating" | "done" | "error";
 
 export default function BrowserActivation({
   student,
@@ -30,31 +30,47 @@ export default function BrowserActivation({
   onCancel: () => void;
   hasConflict?: boolean;
 }) {
-  const [phase, setPhase] = useState<Phase>("idle");
+  const [phase, setPhase] = useState<Phase>("activating");
   const [error, setError] = useState<string | null>(null);
+  const hasStartedRef = useRef(false);
 
-  const handleActivate = async () => {
-    setPhase("activating");
-    setError(null);
+  useEffect(() => {
+    let mounted = true;
 
-    try {
-      // Step 1: ECC Browser Activation
-      await activateBrowser(student.email);
+    const runActivation = async () => {
+      try {
+        // Step 1: ECC Browser Activation
+        await activateBrowser(student.email);
 
-      // Step 2: Device Fingerprinting
-      const fingerprint = await generateDeviceFingerprint();
-      await sendFingerprintToBackend(student.email, fingerprint);
+        // Step 2: Device Fingerprinting
+        const fingerprint = await generateDeviceFingerprint();
+        await sendFingerprintToBackend(student.email, fingerprint);
 
-      setPhase("done");
-      setTimeout(onActivate, 1200);
-    } catch (err) {
-      setPhase("error");
-      setError(err instanceof Error ? err.message : "Browser activation failed. Please try again.");
+        if (mounted) {
+          setPhase("done");
+        }
+      } catch (err) {
+        if (mounted) {
+          setPhase("error");
+          setError(err instanceof Error ? err.message : "Browser activation failed. Please try again.");
+        }
+      }
+    };
+
+    if (!hasStartedRef.current) {
+      hasStartedRef.current = true;
+      runActivation();
     }
-  };
+
+    return () => {
+      mounted = false;
+    };
+  }, [student.email]);
 
   const handleRetry = () => {
-    handleActivate();
+    setPhase("activating");
+    setError(null);
+    hasStartedRef.current = false;
   };
 
   return (
@@ -90,11 +106,6 @@ export default function BrowserActivation({
             <div className="mt-7 relative">
               <div className="w-20 h-20 rounded-2xl bg-[#0B2A4D] flex items-center justify-center shadow-[0_0_15px_rgba(10,42,77,0.35)]">
                 <AnimatePresence mode="wait">
-                  {phase === "idle" && (
-                    <motion.div key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                      <Smartphone size={36} className="text-white/80" />
-                    </motion.div>
-                  )}
                   {phase === "activating" && (
                     <motion.div key="activating" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                       <RefreshCw size={36} className="text-white animate-spin" />
@@ -118,15 +129,13 @@ export default function BrowserActivation({
             </div>
 
             <h1 className="mt-6 text-xl font-bold text-white">
-              {phase === "idle" && "New Browser Detected"}
-              {phase === "activating" && "Activating Browser…"}
-              {phase === "done" && "Browser Activated!"}
+              {phase === "activating" && "Registering Browser…"}
+              {phase === "done" && "Browser Ready!"}
               {phase === "error" && "Activation Failed"}
             </h1>
             <p className="mt-1.5 text-sm text-slate-300 leading-relaxed max-w-[280px]">
-              {phase === "idle" && "You must activate this browser to generate your attendance QR code. Your private key will be stored here."}
               {phase === "activating" && "Generating your secure key pair and registering this browser. This only takes a moment."}
-              {phase === "done" && "Your private key is stored here. Only this browser can generate your attendance QR code."}
+              {phase === "done" && "Your keys and fingerprint have been registered. Click the button below to complete activation."}
               {phase === "error" && (error ?? "Something went wrong. Please try again.")}
             </p>
           </div>
@@ -197,16 +206,16 @@ export default function BrowserActivation({
               </motion.div>
             )}
             
-            {phase === "idle" && (
+            {phase === "done" && (
               <motion.div
-                key="idle-actions"
+                key="done-actions"
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
                 className="relative z-10 flex flex-col gap-2 overflow-hidden"
               >
                 <button
-                  onClick={handleActivate}
+                  onClick={onActivate}
                   className="w-full py-3.5 bg-[#0B2A4D] hover:bg-[#0E3A65] text-white font-bold rounded-xl transition-colors flex items-center justify-center gap-2"
                 >
                   Activate Browser
@@ -223,3 +232,4 @@ export default function BrowserActivation({
     </div>
   );
 }
+

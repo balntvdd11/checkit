@@ -4,8 +4,8 @@
  * ECC key pair generation and browser activation utilities.
  *
  * - Generates a P-256 ECDSA key pair using the Web Crypto API.
- * - Stores the PRIVATE KEY (JWK-encoded) in localStorage, scoped to the
- *   student's email so multiple accounts on the same browser are isolated.
+ * - Stores the PRIVATE KEY (JWK-encoded) and PUBLIC KEY (PEM-encoded SPKI) in localStorage,
+ *   scoped to the student's email so multiple accounts on the same browser are isolated.
  * - Sends the PUBLIC KEY (PEM-encoded SPKI) to the Django backend.
  *
  * The private key is marked non-extractable for export but is stored as JWK
@@ -16,14 +16,23 @@ const API_BASE = import.meta.env.VITE_API_BASE || 'http://127.0.0.1:8000';
 
 // ── Key storage helpers ────────────────────────────────────────────────────────
 
-/** localStorage key for a given student email. */
+/** localStorage key for a given student email's private key. */
 function privateKeyStorageKey(email: string): string {
   return `checkit:privateKey:${email.trim().toLowerCase()}`;
+}
+
+/** localStorage key for a given student email's public key. */
+function publicKeyStorageKey(email: string): string {
+  return `checkit:publicKey:${email.trim().toLowerCase()}`;
 }
 
 /** Returns true if this browser already has a stored private key for the email. */
 export function hasStoredPrivateKey(email: string): boolean {
   return localStorage.getItem(privateKeyStorageKey(email)) !== null;
+}
+
+export function getStoredPublicKey(email: string): string | null {
+  return localStorage.getItem(publicKeyStorageKey(email));
 }
 
 // ── PEM encoding helper ────────────────────────────────────────────────────────
@@ -84,6 +93,13 @@ export function storePrivateKey(email: string, privateKeyJwk: JsonWebKey): void 
 }
 
 /**
+ * Persists the public key (PEM) in localStorage, scoped to the student email.
+ */
+export function storePublicKey(email: string, publicKeyPem: string): void {
+  localStorage.setItem(publicKeyStorageKey(email), publicKeyPem);
+}
+
+/**
  * Sends the student's ECC public key to the Django backend.
  * POST /api/students/save-public-key/  { email, publicKey }
  */
@@ -107,14 +123,27 @@ export async function sendPublicKeyToBackend(
 
 /**
  * Full browser-activation sequence:
- *   1. Generate ECC key pair.
- *   2. Store the private key in localStorage.
- *   3. Send the public key to the Django backend.
+ *   1. Check if keys already exist for this browser (switching logic).
+ *   2. Generate ECC key pair if they don't exist.
+ *   3. Store the keys in localStorage.
+ *   4. Send the public key to the Django backend, making this browser the active one.
  *
  * Throws if any step fails.
  */
 export async function activateBrowser(email: string): Promise<void> {
-  const { publicKeyPem, privateKeyJwk } = await generateECCKeyPair();
-  storePrivateKey(email, privateKeyJwk);
+  let publicKeyPem = getStoredPublicKey(email);
+  const hasPrivateKey = hasStoredPrivateKey(email);
+
+  if (!publicKeyPem || !hasPrivateKey) {
+    const keys = await generateECCKeyPair();
+    publicKeyPem = keys.publicKeyPem;
+    storePrivateKey(email, keys.privateKeyJwk);
+    storePublicKey(email, keys.publicKeyPem);
+  }
+
+  // Sending this browser's public key (and later fingerprint) to the backend
+  // overwrites any other browser's data, effectively deactivating them globally
+  // while keeping them registered locally.
   await sendPublicKeyToBackend(email, publicKeyPem);
 }
+

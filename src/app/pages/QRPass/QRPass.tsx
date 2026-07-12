@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
 import { motion } from "motion/react";
-import { GraduationCap, Hash, RefreshCw, ChevronRight } from "lucide-react";
+import { GraduationCap, Hash, RefreshCw, ChevronRight, AlertTriangle } from "lucide-react";
 import CheckITLogo from "../../components/shared/CheckITLogo";
 import QRCodeDisplay from "../../components/shared/QRCodeDisplay";
 import ProgressRing from "../../components/shared/ProgressRing";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
 import { cn } from "../../lib/utils";
 import type { Student } from "../../types";
+import { fetchStudentByEmail } from "../../services/studentCheck";
+import { generateDeviceFingerprint } from "../../services/fingerprint";
+import { hasStoredPrivateKey } from "../../services/browserActivation";
 
 // ─── QR Pass Generator ────────────────────────────────────────────────────────
 
@@ -18,9 +21,32 @@ export default function QRPassGenerator({ student, EVENTSCode, onBack, onLogout 
   const [timeLeft, setTimeLeft] = useState(REFRESH_INTERVAL);
   const [qrSeed, setQrSeed] = useState(Date.now().toString());
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isActive, setIsActive] = useState<boolean | null>(null);
   const ringSize = 264;
 
   useEffect(() => {
+    let mounted = true;
+    const checkActiveStatus = async () => {
+      try {
+        const currentFingerprint = await generateDeviceFingerprint();
+        const record = await fetchStudentByEmail(student.email);
+        if (mounted) {
+          if (!record || !hasStoredPrivateKey(student.email) || record.deviceFingerprint !== currentFingerprint) {
+            setIsActive(false);
+          } else {
+            setIsActive(true);
+          }
+        }
+      } catch (err) {
+        if (mounted) setIsActive(false);
+      }
+    };
+    checkActiveStatus();
+    return () => { mounted = false; };
+  }, [student.email]);
+
+  useEffect(() => {
+    if (isActive !== true) return;
     const interval = setInterval(() => {
       setTimeLeft(prev => {
         if (prev <= 1) {
@@ -32,9 +58,23 @@ export default function QRPassGenerator({ student, EVENTSCode, onBack, onLogout 
       });
     }, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [isActive]);
 
   const qrValue = `${student.studentId}:${EVENTSCode}:${qrSeed}`;
+
+  if (isActive === null) {
+    return (
+      <div className="min-h-screen landing-page-black flex items-center justify-center">
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ animation: "spin 0.9s linear infinite" }}>
+            <circle cx="18" cy="18" r="15" stroke="rgba(255,255,255,0.12)" strokeWidth="3" />
+            <path d="M18 3 A15 15 0 0 1 33 18" stroke="rgba(255,255,255,0.75)" strokeWidth="3" strokeLinecap="round" />
+          </svg>
+        </div>
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen landing-page-black relative overflow-hidden">
@@ -59,8 +99,17 @@ export default function QRPassGenerator({ student, EVENTSCode, onBack, onLogout 
 
           {/* Live indicator */}
           <div className="flex items-center justify-center gap-2 mb-5">
-            <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-            <span className="text-sm font-semibold text-emerald-400">Live — Ready to scan</span>
+            {isActive ? (
+              <>
+                <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+                <span className="text-sm font-semibold text-emerald-400">Live — Ready to scan</span>
+              </>
+            ) : (
+              <>
+                <span className="w-2 h-2 bg-red-500 rounded-full" />
+                <span className="text-sm font-semibold text-red-400">Security Check Failed</span>
+              </>
+            )}
           </div>
 
           <div className="!bg-black border border-white/10 rounded-2xl shadow-[0_32px_80px_rgba(0,0,0,0.35)] relative overflow-hidden group premium-border-card">
@@ -97,30 +146,44 @@ export default function QRPassGenerator({ student, EVENTSCode, onBack, onLogout 
               </div>
             </div>
 
-            {/* QR code + ring */}
-            <div className="flex flex-col items-center pt-6 pb-7 px-6 relative z-10">
-              <div className="relative" style={{ width: ringSize, height: ringSize }}>
-                <ProgressRing progress={timeLeft / REFRESH_INTERVAL} size={ringSize} />
-                <motion.div
-                  animate={{ opacity: isRefreshing ? 0.15 : 1, scale: isRefreshing ? 0.92 : 1 }}
-                  transition={{ duration: 0.35 }}
-                  className="absolute inset-0 flex items-center justify-center"
-                  style={{ padding: 30 }}>
-                  <div className="p-4 bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.08)]">
-                    <QRCodeDisplay value={qrValue} size={170} />
-                  </div>
-                </motion.div>
-              </div>
+            {isActive ? (
+              <div className="flex flex-col items-center pt-6 pb-7 px-6 relative z-10">
+                <div className="relative" style={{ width: ringSize, height: ringSize }}>
+                  <ProgressRing progress={timeLeft / REFRESH_INTERVAL} size={ringSize} />
+                  <motion.div
+                    animate={{ opacity: isRefreshing ? 0.15 : 1, scale: isRefreshing ? 0.92 : 1 }}
+                    transition={{ duration: 0.35 }}
+                    className="absolute inset-0 flex items-center justify-center"
+                    style={{ padding: 30 }}>
+                    <div className="p-4 bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.08)]">
+                      <QRCodeDisplay value={qrValue} size={170} />
+                    </div>
+                  </motion.div>
+                </div>
 
-              <div className="mt-1 flex items-center gap-1.5 text-sm text-slate-300">
-                <RefreshCw size={13} className={cn(isRefreshing && "animate-spin")} />
-                <span>{isRefreshing ? "Refreshing…" : `Refreshes in ${timeLeft}s`}</span>
-              </div>
+                <div className="mt-1 flex items-center gap-1.5 text-sm text-slate-300">
+                  <RefreshCw size={13} className={cn(isRefreshing && "animate-spin")} />
+                  <span>{isRefreshing ? "Refreshing…" : `Refreshes in ${timeLeft}s`}</span>
+                </div>
 
-              <p className="mt-4 text-xs text-center text-slate-400 leading-relaxed max-w-[200px]">
-                Show this QR to your instructor's scanner. Keep this screen active.
-              </p>
-            </div>
+                <p className="mt-4 text-xs text-center text-slate-400 leading-relaxed max-w-[200px]">
+                  Show this QR to your instructor's scanner. Keep this screen active.
+                </p>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center pt-10 pb-12 px-6 relative z-10 text-center">
+                <div className="w-16 h-16 rounded-2xl bg-red-500/10 flex items-center justify-center shadow-sm border border-red-500/20 mb-5">
+                  <AlertTriangle size={30} className="text-red-400" />
+                </div>
+                <h2 className="text-lg font-bold text-white mb-2">Browser Not Active</h2>
+                <p className="text-sm text-slate-300 leading-relaxed max-w-[250px]">
+                  This browser is not active. To protect your attendance, you cannot generate QR codes here.
+                </p>
+                <p className="text-xs text-slate-400 mt-4 max-w-[220px]">
+                  Please reload the page or go back to activate this browser first.
+                </p>
+              </div>
+            )}
           </div>
         </motion.div>
       </div>
