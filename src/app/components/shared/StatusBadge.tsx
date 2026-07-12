@@ -1,9 +1,9 @@
-import type { AttendanceStatus, SessionStatus } from "../../types";
+import type { AttendanceStatus, EVENTSStatus } from "../../types";
 import { cn } from "../../lib/utils";
 
 // ─── Status Badge ─────────────────────────────────────────────────────────────
 
-export default function StatusBadge({ status }: { status: AttendanceStatus | SessionStatus }) {
+export default function StatusBadge({ status }: { status: AttendanceStatus | EVENTSStatus }) {
   const cfg: Record<string, { label: string; cls: string; dot: string }> = {
     present:   { label: "Present",   cls: "bg-emerald-50 text-emerald-700 border border-emerald-200", dot: "bg-emerald-500" },
     late:      { label: "Late",      cls: "bg-[#E6F4FF] text-[#0B2A4D] border border-[#A8D6FF]",       dot: "bg-[#2A84D2]" },

@@ -1,10 +1,11 @@
 import { LayoutDashboard, Users, Hash, UsersRound, BookOpen } from "lucide-react";
 import Card from "../../../components/shared/Card";
 import StatusBadge from "../../../components/shared/StatusBadge";
-import { MOCK_SESSIONS } from "../../../constants/mockData";
+import { useSelectors } from "../../../state/store";
 
 export default function DashboardTab() {
-  const activeSessionsCount = MOCK_SESSIONS.filter(s => s.status === "active").length;
+  const { activeEvents, totalStudents, totalPresent, totalAbsent, events } = useSelectors();
+  const activeEVENTSCount = activeEvents.length;
   
   return (
     <div className="max-w-6xl mx-auto space-y-6">
@@ -14,8 +15,8 @@ export default function DashboardTab() {
             <LayoutDashboard size={24} className="text-indigo-600" />
           </div>
           <div>
-            <p className="text-2xl font-bold text-slate-800">{activeSessionsCount}</p>
-            <p className="text-xs text-slate-500 font-medium">Active Sessions</p>
+            <p className="text-2xl font-bold text-slate-800">{activeEVENTSCount}</p>
+            <p className="text-xs text-slate-500 font-medium">Active EVENTS</p>
           </div>
         </Card>
         <Card className="p-5 border border-slate-100 flex items-center gap-4">
@@ -23,7 +24,7 @@ export default function DashboardTab() {
             <Users size={24} className="text-sky-600" />
           </div>
           <div>
-            <p className="text-2xl font-bold text-slate-800">842</p>
+            <p className="text-2xl font-bold text-slate-800">{totalStudents}</p>
             <p className="text-xs text-slate-500 font-medium">Total Students</p>
           </div>
         </Card>
@@ -32,8 +33,8 @@ export default function DashboardTab() {
             <Hash size={24} className="text-emerald-600" />
           </div>
           <div>
-            <p className="text-2xl font-bold text-slate-800">4</p>
-            <p className="text-xs text-slate-500 font-medium">Events Today</p>
+            <p className="text-2xl font-bold text-slate-800">{totalPresent}</p>
+            <p className="text-xs text-slate-500 font-medium">Total Present</p>
           </div>
         </Card>
         <Card className="p-5 border border-slate-100 flex items-center gap-4">
@@ -41,36 +42,36 @@ export default function DashboardTab() {
             <BookOpen size={24} className="text-rose-600" />
           </div>
           <div>
-            <p className="text-2xl font-bold text-slate-800">12</p>
-            <p className="text-xs text-slate-500 font-medium">Departments</p>
+            <p className="text-2xl font-bold text-slate-800">{totalAbsent}</p>
+            <p className="text-xs text-slate-500 font-medium">Total Absent</p>
           </div>
         </Card>
       </div>
 
-      <h3 className="text-lg font-bold text-white mt-8 mb-4">Today's Sessions</h3>
+      <h3 className="text-lg font-bold text-white mt-8 mb-4">Today's EVENTS</h3>
       <Card className="border border-slate-100 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead className="bg-slate-50/50 text-slate-500 font-semibold border-b border-slate-100">
               <tr>
-                <th className="px-5 py-4 whitespace-nowrap">Session ID</th>
-                <th className="px-5 py-4">Subject / Section</th>
+                <th className="px-5 py-4 whitespace-nowrap">Event Code</th>
+                <th className="px-5 py-4">Event Name</th>
                 <th className="px-5 py-4">Schedule</th>
                 <th className="px-5 py-4">Status</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
-              {MOCK_SESSIONS.map((session, idx) => (
-                <tr key={idx} className="hover:bg-slate-50/30 transition-colors">
-                  <td className="px-5 py-4 font-mono text-slate-600">{session.code}</td>
+              {events.map((evt, idx) => (
+                <tr key={evt.id} className="hover:bg-slate-50/30 transition-colors">
+                  <td className="px-5 py-4 font-mono text-slate-600">{evt.checkItCode}</td>
                   <td className="px-5 py-4">
-                    <p className="font-semibold text-slate-700">{session.subject}</p>
-                    <p className="text-xs text-slate-400 font-mono mt-0.5">{session.section}</p>
+                    <p className="font-semibold text-slate-700">{evt.name}</p>
+                    <p className="text-xs text-slate-400 font-mono mt-0.5">&nbsp;</p>
                   </td>
                   <td className="px-5 py-4 text-slate-600 text-xs">
-                    {session.timeStart} – {session.timeEnd}
+                    {evt.timeIn} – {evt.timeOut}
                   </td>
-                  <td className="px-5 py-4"><StatusBadge status={session.status} /></td>
+                  <td className="px-5 py-4"><StatusBadge status={evt.status as any} /></td>
                 </tr>
               ))}
             </tbody>

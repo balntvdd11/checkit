@@ -2,18 +2,20 @@ import { useState } from "react";
 import { Download, Filter, FileText, Calendar, Building2 } from "lucide-react";
 import Card from "../../../components/shared/Card";
 import StatusBadge from "../../../components/shared/StatusBadge";
-import { MOCK_REPORT_RECORDS } from "../../../constants/mockData";
 import type { EventConfig } from "../../../types";
+import { useSelectors } from "../../../state/store";
 
 export default function ReportsTab({ events }: { events: EventConfig[] }) {
-  const [reportSession, setReportSession] = useState("");
+  const [reportEVENTS, setReportEVENTS] = useState("");
   const [reportSectionFilter, setReportSectionFilter] = useState("All");
   const [reportDateFilter, setReportDateFilter] = useState("");
+  const { attendance } = useSelectors();
 
-  const filteredReports = MOCK_REPORT_RECORDS.filter(r => {
+  const filteredReports = attendance.filter(r => {
     const matchSec = reportSectionFilter === "All" || r.section === reportSectionFilter;
     const matchDate = !reportDateFilter || r.date === reportDateFilter;
-    return matchSec && matchDate;
+    const matchEvent = !reportEVENTS || r.EVENTSCode === events.find(ev => ev.id === reportEVENTS)?.checkItCode;
+    return matchSec && matchDate && matchEvent;
   });
 
   const reportPresent = filteredReports.filter(r => r.status === "present").length;
@@ -26,7 +28,7 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-2">
         <div>
           <h2 className="text-xl font-bold text-white">Attendance Reports</h2>
-          <p className="text-sm text-white mt-1">Export and analyze attendance data for events and sessions</p>
+          <p className="text-sm text-white mt-1">Export and analyze attendance data for events and EVENTS</p>
         </div>
         <button className="w-full sm:w-auto px-5 py-2.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold rounded-xl transition-colors border border-indigo-100 flex items-center justify-center gap-2 text-sm shadow-sm">
           <Download size={16} /> Export CSV
@@ -36,19 +38,13 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
       <Card className="p-5 border border-slate-100">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           <div>
-            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-2 flex items-center gap-1.5">
-              <Building2 size={14} /> Select Event / Session
-            </label>
-            <select value={reportSession} onChange={e => setReportSession(e.target.value)}
+              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-2 flex items-center gap-1.5">
+                <Building2 size={14} /> Select Event / EVENTS
+              </label>
+              <select value={reportEVENTS} onChange={e => setReportEVENTS(e.target.value)}
               className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
-              <option value="">All Events & Sessions</option>
-              <optgroup label="Events">
-                {events.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}
-              </optgroup>
-              <optgroup label="Academic Sessions">
-                <option value="s1">CIT-2025-042 (BSIT 3A)</option>
-                <option value="s2">CIT-2025-041 (BSIT 3B)</option>
-              </optgroup>
+              <option value="">All Events</option>
+              {events.map(e => <option key={e.id} value={e.id}>{e.name}{e.status !== "active" ? ` — Ended` : ""}</option>)}
             </select>
           </div>
           <div>

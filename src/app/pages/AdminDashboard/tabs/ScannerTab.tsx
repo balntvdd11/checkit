@@ -2,34 +2,37 @@ import { useState } from "react";
 import { ScanLine, History, CheckCircle2, UserX, UserCheck } from "lucide-react";
 import Card from "../../../components/shared/Card";
 import StatusBadge from "../../../components/shared/StatusBadge";
-import { MOCK_SESSIONS } from "../../../constants/mockData";
+import type { EventConfig } from "../../../types";
+import { createAttendanceRecord } from "../../../services/attendance";
+import { useStore } from "../../../state/store";
 
-export default function ScannerTab() {
-  const [selectedScanSession, setSelectedScanSession] = useState("");
+export default function ScannerTab({ events }: { events: EventConfig[] }) {
+  const [selectedScanEVENTS, setSelectedScanEVENTS] = useState("");
   const [scanning, setScanning] = useState(false);
   const [scanResults, setScanResults] = useState<{ id: string; name: string; status: "success" | "invalid" | "duplicate"; time: string }[]>([]);
+  const { dispatch } = useStore();
 
-  const activeScanSession = MOCK_SESSIONS.find(s => s.id === selectedScanSession);
+  const activeScanEVENTS = events.find(s => s.id === selectedScanEVENTS);
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-2">
         <div>
           <h2 className="text-xl font-bold text-white">Scanner Station</h2>
-          <p className="text-sm text-white mt-1">Select a session to begin scanning QR passes</p>
+          <p className="text-sm text-white mt-1">Select a EVENTS to begin scanning QR passes</p>
         </div>
         {!scanning && (
-          <select value={selectedScanSession} onChange={e => { setSelectedScanSession(e.target.value); setScanResults([]); }}
+            <select value={selectedScanEVENTS} onChange={e => { setSelectedScanEVENTS(e.target.value); setScanResults([]); }}
             className="w-full sm:w-auto px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[var(--primary)] bg-white shadow-sm">
-            <option value="">Select active session...</option>
-            {MOCK_SESSIONS.filter(s => s.status === "active").map(s => (
-              <option key={s.id} value={s.id}>{s.subject} ({s.section})</option>
+            <option value="">Select active EVENTS...</option>
+            {events.filter(s => s.status === "active").map(s => (
+              <option key={s.id} value={s.id}>{s.name}</option>
             ))}
           </select>
         )}
       </div>
 
-      {selectedScanSession ? (
+      {selectedScanEVENTS ? (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <Card className="p-6 border border-slate-100 flex flex-col items-center justify-center min-h-[400px]">
             {scanning ? (
@@ -38,8 +41,8 @@ export default function ScannerTab() {
                   <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-full mb-3">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /> Live Scanner Active
                   </div>
-                  <h3 className="font-bold text-slate-800">{activeScanSession?.subject}</h3>
-                  <p className="text-sm text-slate-500">{activeScanSession?.section} · Code: {activeScanSession?.code}</p>
+                  <h3 className="font-bold text-slate-800">{activeScanEVENTS?.subject}</h3>
+                  <p className="text-sm text-slate-500">{activeScanEVENTS?.section} · Code: {activeScanEVENTS?.code}</p>
                 </div>
                 
                 <div className="relative w-64 h-64 border-2 border-[var(--primary)]/30 rounded-3xl overflow-hidden bg-slate-50 mb-8">
@@ -55,13 +58,25 @@ export default function ScannerTab() {
                 </div>
 
                 <div className="flex gap-3">
-                  <button onClick={() => {
+                  <button onClick={async () => {
                     const mockNames = ["Juan Paolo Reyes", "Ana Gabrielle Cruz", "Miguel Andrei Bautista"];
                     const name = mockNames[Math.floor(Math.random() * mockNames.length)];
                     const isInvalid = Math.random() > 0.8;
                     const isDup = !isInvalid && Math.random() > 0.8;
                     const status = isInvalid ? "invalid" : isDup ? "duplicate" : "success";
-                    setScanResults([{ id: `scan-${Date.now()}`, name, status, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }, ...scanResults]);
+                    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    const activeEvent = events.find(e => e.id === selectedScanEVENTS);
+                    const record = {
+                      date: new Date().toISOString().split('T')[0],
+                      subject: activeEvent?.name || "Unknown",
+                      section: "UA Campus",
+                      status: status === "success" ? "present" : (status === "invalid" ? "absent" : "present"),
+                      timeIn: time,
+                      EVENTSCode: activeEvent?.checkItCode || "",
+                    };
+                    const saved = await createAttendanceRecord(record as any);
+                    dispatch({ type: "ADD_ATTENDANCE_RECORD", payload: saved });
+                    setScanResults([{ id: `scan-${Date.now()}`, name, status, time }, ...scanResults]);
                   }} className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold rounded-lg transition-colors">
                     Simulate Scan
                   </button>
@@ -100,7 +115,7 @@ export default function ScannerTab() {
             <div className="overflow-y-auto flex-1 p-2 space-y-1">
               {scanResults.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-slate-400">
-                  <p className="text-sm">No scans yet for this session</p>
+                  <p className="text-sm">No scans yet for this EVENTS</p>
                 </div>
               ) : (
                 scanResults.map(res => (
@@ -135,9 +150,9 @@ export default function ScannerTab() {
           <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-slate-100">
             <ScanLine size={28} className="text-slate-300" />
           </div>
-          <h3 className="text-lg font-bold text-slate-700">No Session Selected</h3>
+          <h3 className="text-lg font-bold text-slate-700">No EVENTS Selected</h3>
           <p className="text-sm text-slate-500 mt-2 max-w-sm mx-auto">
-            Please select an active session from the dropdown above to start scanning QR passes for that class.
+            Please select an active EVENTS from the dropdown above to start scanning QR passes for that class.
           </p>
         </Card>
       )}

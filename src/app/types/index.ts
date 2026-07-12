@@ -6,7 +6,7 @@ export type View =
   | "student-register"
   | "student-activation"
   | "student-device-conflict"
-  | "student-session-code"
+  | "student-EVENTS-code"
   | "student-qr-pass"
   | "student-dashboard"
   | "admin-login"
@@ -14,7 +14,7 @@ export type View =
 
 export type AdminTab = "dashboard" | "students" | "create-event" | "scanner" | "reports";
 export type AttendanceStatus = "present" | "late" | "absent";
-export type SessionStatus = "active" | "completed" | "inactive";
+export type EVENTSStatus = "active" | "completed" | "inactive";
 export type EventStatus = "active" | "inactive";
 
 export interface Student {
@@ -30,10 +30,9 @@ export interface AttendanceRecord {
   section: string;
   status: AttendanceStatus;
   timeIn: string;
-  sessionCode: string;
+  EVENTSCode: string;
 }
-
-export interface Session {
+export interface EVENTS {
   id: string;
   code: string;
   section: string;
@@ -42,7 +41,7 @@ export interface Session {
   timeStart: string;
   lateThreshold: string;
   timeEnd: string;
-  status: SessionStatus;
+  status: EVENTSStatus;
 }
 
 export interface EventConfig {

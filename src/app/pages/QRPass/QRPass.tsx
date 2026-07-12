@@ -12,8 +12,8 @@ import type { Student } from "../../types";
 
 const REFRESH_INTERVAL = 15;
 
-export default function QRPassGenerator({ student, sessionCode, onBack, onLogout }: {
-  student: Student; sessionCode: string; onBack: () => void; onLogout: () => void;
+export default function QRPassGenerator({ student, EVENTSCode, onBack, onLogout }: {
+  student: Student; EVENTSCode: string; onBack: () => void; onLogout: () => void;
 }) {
   const [timeLeft, setTimeLeft] = useState(REFRESH_INTERVAL);
   const [qrSeed, setQrSeed] = useState(Date.now().toString());
@@ -34,7 +34,7 @@ export default function QRPassGenerator({ student, sessionCode, onBack, onLogout
     return () => clearInterval(interval);
   }, []);
 
-  const qrValue = `${student.studentId}:${sessionCode}:${qrSeed}`;
+  const qrValue = `${student.studentId}:${EVENTSCode}:${qrSeed}`;
 
   return (
     <div className="min-h-screen landing-page-black relative overflow-hidden">
@@ -47,7 +47,7 @@ export default function QRPassGenerator({ student, sessionCode, onBack, onLogout
         </div>
         <div className="flex items-center gap-3">
           <button onClick={onBack} className="text-sm text-white/55 hover:text-white transition-colors flex items-center gap-1.5">
-            <ChevronRight size={14} className="rotate-180" /> Change session
+            <ChevronRight size={14} className="rotate-180" /> Change EVENTS
           </button>
           <button onClick={onLogout} className="flex items-center gap-1.5 text-white/55 hover:text-white text-sm transition-colors">
           </button>
@@ -93,7 +93,7 @@ export default function QRPassGenerator({ student, sessionCode, onBack, onLogout
               </div>
               <div className="mt-3 pt-3 border-t border-white/10 flex items-center gap-2">
                 <Hash size={11} className="text-[var(--primary)]" />
-                <span className="text-xs font-mono text-white/60 tracking-widest">{sessionCode}</span>
+                <span className="text-xs font-mono text-white/60 tracking-widest">{EVENTSCode}</span>
               </div>
             </div>
 

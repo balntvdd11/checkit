@@ -4,6 +4,7 @@ import CheckITLogo from "../../components/shared/CheckITLogo";
 import StatusBadge from "../../components/shared/StatusBadge";
 import Card from "../../components/shared/Card";
 import type { Student, AttendanceRecord } from "../../types";
+import { useSelectors } from "../../state/store";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
 
 // ─── Student Dashboard (History / Devices) ────────────────────────────────────
@@ -11,17 +12,12 @@ import AnimatedBackground from "../../components/common/AnimatedBackground";
 export default function StudentDashboard({ student, onLogout, onGeneratePass }: {
   student: Student; onLogout: () => void; onGeneratePass: () => void;
 }) {
-  const MOCK_ATTENDANCE: AttendanceRecord[] = [
-    { date: "Jul 3, 2025", subject: "Software Engineering", section: "BSIT 3A", status: "present", timeIn: "07:58 AM", sessionCode: "CIT-2025-041" },
-    { date: "Jul 2, 2025", subject: "Web Development",      section: "BSIT 3A", status: "late",    timeIn: "09:22 AM", sessionCode: "CIT-2025-040" },
-    { date: "Jul 1, 2025", subject: "Database Management",  section: "BSIT 3A", status: "present", timeIn: "08:02 AM", sessionCode: "CIT-2025-039" },
-    { date: "Jun 30, 2025", subject: "Software Engineering",section: "BSIT 3A", status: "absent",  timeIn: "—",        sessionCode: "CIT-2025-038" },
-    { date: "Jun 28, 2025", subject: "Web Development",     section: "BSIT 3A", status: "present", timeIn: "08:00 AM", sessionCode: "CIT-2025-037" },
-  ];
+  const { attendance } = useSelectors();
+  const studentAttendance = attendance.filter(a => a.studentId === student.studentId || a.email === student.email);
 
-  const presentCount = MOCK_ATTENDANCE.filter(r => r.status === "present").length;
-  const lateCount = MOCK_ATTENDANCE.filter(r => r.status === "late").length;
-  const absentCount = MOCK_ATTENDANCE.filter(r => r.status === "absent").length;
+  const presentCount = studentAttendance.filter(r => r.status === "present").length;
+  const lateCount = studentAttendance.filter(r => r.status === "late").length;
+  const absentCount = studentAttendance.filter(r => r.status === "absent").length;
 
   return (
     <div className="min-h-screen landing-page-black relative overflow-hidden">
@@ -93,18 +89,18 @@ export default function StudentDashboard({ student, onLogout, onGeneratePass }: 
                   <thead className="bg-slate-50/50 text-[var(--muted-foreground)] font-semibold border-b border-slate-100">
                     <tr>
                       <th className="px-5 py-4 whitespace-nowrap">Date</th>
-                      <th className="px-5 py-4">Event / Session</th>
+                      <th className="px-5 py-4">Event / EVENTS</th>
                       <th className="px-5 py-4">Time In</th>
                       <th className="px-5 py-4">Status</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-50">
-                    {MOCK_ATTENDANCE.map((record, idx) => (
+                    {studentAttendance.map((record, idx) => (
                       <tr key={idx} className="hover:bg-slate-50/30 transition-colors">
                         <td className="px-5 py-4 whitespace-nowrap text-slate-600">{record.date}</td>
                         <td className="px-5 py-4">
                           <p className="font-semibold text-slate-700">{record.subject}</p>
-                          <p className="text-xs text-slate-400 font-mono mt-0.5">{record.sessionCode}</p>
+                          <p className="text-xs text-slate-400 font-mono mt-0.5">{record.EVENTSCode}</p>
                         </td>
                         <td className="px-5 py-4 font-mono text-slate-600">{record.timeIn}</td>
                         <td className="px-5 py-4"><StatusBadge status={record.status} /></td>

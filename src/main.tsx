@@ -1,5 +1,6 @@
 
   import { createRoot } from "react-dom/client";
+  import { ClerkProvider } from "@clerk/clerk-react";
   import App from "./app/App.tsx";
   import "./styles/index.css";
 
@@ -15,5 +16,19 @@
     document.head.appendChild(link);
   }
 
-  createRoot(document.getElementById("root")!).render(<App />);
+  const clerkPublishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY ?? "";
+
+  if (!clerkPublishableKey) {
+    console.error("Missing Clerk publishable key. Make sure VITE_CLERK_PUBLISHABLE_KEY is defined in checkit/.env.");
+  }
+
+  createRoot(document.getElementById("root")!).render(
+    <ClerkProvider
+      publishableKey={clerkPublishableKey}
+      routerPush={() => {}}
+      routerReplace={() => {}}
+    >
+      <App />
+    </ClerkProvider>
+  );
   

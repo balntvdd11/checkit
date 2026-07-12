@@ -3,21 +3,45 @@ import { Copy, CheckCircle2, Clock, MapPin, Hash, Building2, Ticket } from "luci
 import Card from "../../../components/shared/Card";
 import { generateCheckItCode, cn } from "../../../lib/utils";
 import type { EventConfig } from "../../../types";
+import { createEvent, updateEvent } from "../../../services/events";
+import { useStore, useSelectors } from "../../../state/store";
 
-export default function CreateEventTab({ events, setEvents }: { events: EventConfig[]; setEvents: (e: EventConfig[]) => void }) {
+export default function CreateEventTab() {
   const [eventForm, setEventForm] = useState({ name: "", timeIn: "08:00", lateThreshold: "08:15", timeOut: "17:00", status: "active" as const });
-  const [createdEvent, setCreatedEvent] = useState<EventConfig | null>(null);
+  const { dispatch } = useStore();
+  const { events } = useSelectors();
+  
   const [showEventForm, setShowEventForm] = useState(false);
   const [copiedCode, setCopiedCode] = useState(false);
+  const [editingEventId, setEditingEventId] = useState<string | null>(null);
 
   const handleCreateEvent = (ev: React.FormEvent) => {
     ev.preventDefault();
+    if (editingEventId) {
+      const updatedEvent: EventConfig = {
+        id: editingEventId,
+        name: eventForm.name,
+        checkItCode: events.find(e => e.id === editingEventId)?.checkItCode || generateCheckItCode(eventForm.name),
+        timeIn: eventForm.timeIn,
+        lateThreshold: eventForm.lateThreshold,
+        timeOut: eventForm.timeOut,
+        status: eventForm.status,
+      };
+      // call service
+      updateEvent(updatedEvent).then(res => {
+        dispatch({ type: "UPDATE_EVENT", payload: res });
+      });
+      setEditingEventId(null);
+      setShowEventForm(false);
+      setEventForm({ name: "", timeIn: "08:00", lateThreshold: "08:15", timeOut: "17:00", status: "active" });
+      return;
+    }
+
     const newEvent: EventConfig = {
       id: `e${Date.now()}`, name: eventForm.name, checkItCode: generateCheckItCode(eventForm.name),
       timeIn: eventForm.timeIn, lateThreshold: eventForm.lateThreshold, timeOut: eventForm.timeOut, status: eventForm.status,
     };
-    setEvents([newEvent, ...events]);
-    setCreatedEvent(newEvent);
+    createEvent(newEvent).then(res => dispatch({ type: "ADD_EVENT", payload: res }));
     setShowEventForm(false);
     setEventForm({ name: "", timeIn: "08:00", lateThreshold: "08:15", timeOut: "17:00", status: "active" });
   };
@@ -33,12 +57,12 @@ export default function CreateEventTab({ events, setEvents }: { events: EventCon
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center mb-6">
         <div>
           <h2 className="text-xl font-bold text-white">Event Management</h2>
           <p className="text-sm text-white mt-1">Create and manage institutional events and seminars</p>
         </div>
-        <button onClick={() => { setShowEventForm(!showEventForm); setCreatedEvent(null); }}
+        <button onClick={() => { setShowEventForm(!showEventForm); }}
           className="px-5 py-2.5 bg-[var(--primary)] hover:bg-[#A61831] text-white font-semibold rounded-xl transition-colors shadow-sm text-sm">
           {showEventForm ? "Cancel" : "+ Create New Event"}
         </button>
@@ -98,25 +122,7 @@ export default function CreateEventTab({ events, setEvents }: { events: EventCon
         </Card>
       )}
 
-      {createdEvent && !showEventForm && (
-        <Card className="p-8 border border-emerald-100 bg-emerald-50/30 text-center animate-in zoom-in-95 duration-300">
-          <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <CheckCircle2 size={32} className="text-emerald-600" />
-          </div>
-          <h3 className="text-xl font-bold text-slate-800">Event Created Successfully</h3>
-          <p className="text-slate-600 mt-2 max-w-md mx-auto text-sm">
-            Distribute this CheckIT Code to students. They will need it to generate their QR Pass in the Student Portal.
-          </p>
-          <div className="mt-6 inline-flex items-center gap-4 p-2 pl-6 bg-white border border-emerald-200 rounded-2xl shadow-sm">
-            <span className="font-mono text-3xl font-bold text-[var(--secondary)] tracking-widest">{createdEvent.checkItCode}</span>
-            <button onClick={() => copyToClipboard(createdEvent.checkItCode)}
-              className="p-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-xl transition-colors flex items-center gap-2">
-              {copiedCode ? <CheckCircle2 size={18} /> : <Copy size={18} />}
-              <span className="text-sm font-semibold pr-1">{copiedCode ? "Copied!" : "Copy"}</span>
-            </button>
-          </div>
-        </Card>
-      )}
+      
 
       {!showEventForm && (
         <Card className="border border-slate-100 overflow-hidden">
@@ -124,8 +130,8 @@ export default function CreateEventTab({ events, setEvents }: { events: EventCon
             <h3 className="font-bold text-slate-800">Recent Events</h3>
           </div>
           <div className="divide-y divide-slate-50">
-            {events.map((evt, idx) => (
-              <div key={idx} className="p-6 hover:bg-slate-50/50 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              {events.map((evt, idx) => (
+                <div key={idx} className="p-6 hover:bg-slate-50/50 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex items-start gap-4">
                   <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center shrink-0 border",
                     evt.status === "active" ? "bg-emerald-50 border-emerald-100" : "bg-slate-100 border-slate-200")}>
@@ -146,9 +152,31 @@ export default function CreateEventTab({ events, setEvents }: { events: EventCon
                     </div>
                   </div>
                 </div>
-                <div className="shrink-0 text-center sm:text-right bg-slate-50 sm:bg-transparent p-3 sm:p-0 rounded-lg">
+                <div className="shrink-0 text-center sm:text-right bg-slate-50 sm:bg-transparent p-3 sm:p-0 rounded-lg space-y-2">
                   <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">CheckIT Code</p>
                   <p className="font-mono text-lg font-bold text-[var(--secondary)]">{evt.checkItCode}</p>
+                  <div className="mt-2 flex items-center justify-center sm:justify-end gap-2">
+                    <button onClick={async () => {
+                      const updatedEvent: EventConfig = {
+                        ...evt,
+                        status: evt.status === "active" ? "inactive" : "active",
+                      };
+                      const saved = await updateEvent(updatedEvent);
+                      dispatch({ type: "UPDATE_EVENT", payload: saved });
+                    }}
+                      className="px-3 py-1 text-xs font-semibold rounded-lg border transition-colors bg-white hover:bg-slate-50">
+                      {evt.status === "active" ? "Deactivate" : "Activate"}
+                    </button>
+                    <button onClick={() => {
+                      // start editing
+                      setEditingEventId(evt.id);
+                      setEventForm({ name: evt.name, timeIn: evt.timeIn, lateThreshold: evt.lateThreshold, timeOut: evt.timeOut, status: evt.status });
+                      setShowEventForm(true);
+                    }}
+                      className="px-3 py-1 text-xs font-semibold rounded-lg border transition-colors bg-[var(--primary)] text-white hover:bg-[#A61831]">
+                      Edit
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}

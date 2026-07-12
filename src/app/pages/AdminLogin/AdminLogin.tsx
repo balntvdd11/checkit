@@ -4,22 +4,31 @@ import { ChevronRight, KeyRound, RefreshCw, XCircle } from "lucide-react";
 import CheckITLogo from "../../components/shared/CheckITLogo";
 import Card from "../../components/shared/Card";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
+import { login } from "../../services/auth";
 
 // ─── Admin Login ──────────────────────────────────────────────────────────────
 
 export default function AdminLogin({ onSuccess, onBack }: { onSuccess: () => void; onBack: () => void }) {
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (ev: React.FormEvent) => {
+  const handleSubmit = async (ev: React.FormEvent) => {
     ev.preventDefault();
-    if (password !== "admin123") {
-      setError("Invalid admin password. Try 'admin123'");
-      return;
+    setLoading(true);
+    setError(null);
+
+    try {
+      const result = await login(username.trim(), password);
+      localStorage.setItem("checkit_admin_token", result.token);
+      localStorage.setItem("checkit_admin_username", result.username);
+      onSuccess();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unable to login");
+    } finally {
+      setLoading(false);
     }
-    setLoading(true); setError(null);
-    setTimeout(() => { setLoading(false); onSuccess(); }, 800);
   };
 
   return (
@@ -52,13 +61,17 @@ export default function AdminLogin({ onSuccess, onBack }: { onSuccess: () => voi
               <KeyRound size={24} className="text-white" />
             </div>
             <h1 className="mt-4 text-xl font-bold text-white">Admin Access</h1>
-            <p className="mt-1 text-sm text-slate-300">Enter master password to manage events</p>
+            <p className="mt-1 text-sm text-slate-300">Enter your Django superuser username and password to access the admin portal</p>
           </div>
 
           <form onSubmit={handleSubmit} className="relative z-10">
-            <div className="mb-5">
-              <input type="password" placeholder="Admin password" value={password} onChange={e => { setPassword(e.target.value); setError(null); }}
+            <div className="mb-4">
+              <input type="text" placeholder="Username" value={username} onChange={e => { setUsername(e.target.value); setError(null); }}
                 className="w-full px-4 py-3.5 rounded-xl border border-white/10 text-center font-mono tracking-widest bg-white/5 text-white shadow-sm placeholder:text-slate-400 placeholder:tracking-normal focus:outline-none focus:ring-2 focus:ring-[#7EEAF8]/50 focus:border-[#7EEAF8] transition-all" autoFocus />
+            </div>
+            <div className="mb-5">
+              <input type="password" placeholder="Password" value={password} onChange={e => { setPassword(e.target.value); setError(null); }}
+                className="w-full px-4 py-3.5 rounded-xl border border-white/10 text-center font-mono tracking-widest bg-white/5 text-white shadow-sm placeholder:text-slate-400 placeholder:tracking-normal focus:outline-none focus:ring-2 focus:ring-[#7EEAF8]/50 focus:border-[#7EEAF8] transition-all" />
             </div>
 
             <AnimatePresence>

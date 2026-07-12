@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LogOut, LayoutDashboard, Users, ScanLine, FileText, CalendarCheck2 } from "lucide-react";
 import CheckITLogo from "../../components/shared/CheckITLogo";
 import DashboardTab from "./tabs/DashboardTab";
@@ -8,14 +8,43 @@ import ScannerTab from "./tabs/ScannerTab";
 import ReportsTab from "./tabs/ReportsTab";
 import { cn } from "../../lib/utils";
 import type { AdminTab, EventConfig } from "../../types";
+import { useStore, useSelectors } from "../../state/store";
+import { fetchEvents } from "../../services/events";
+import { fetchStudents } from "../../services/students";
+import { fetchAttendance } from "../../services/attendance";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
 
-export default function AdminDashboard({ onLogout, events, setEvents }: {
+export default function AdminDashboard({ onLogout }: {
   onLogout: () => void;
-  events: EventConfig[];
-  setEvents: (events: EventConfig[]) => void;
 }) {
   const [tab, setTab] = useState<AdminTab>("dashboard");
+  const { state, dispatch } = useStore();
+  const selectors = useSelectors();
+  const events = state.events;
+
+  useEffect(() => {
+    const token = localStorage.getItem('checkit_admin_token');
+    if (!token) return;
+
+    let mounted = true;
+    (async () => {
+      try {
+        const [eventsData, studentsData, attendanceData] = await Promise.all([
+          fetchEvents(),
+          fetchStudents(),
+          fetchAttendance(),
+        ]);
+        if (!mounted) return;
+        dispatch({ type: 'INIT_LOAD', payload: { students: studentsData, events: eventsData, attendance: attendanceData } });
+      } catch (error) {
+        console.error('Failed to load admin backend data', error);
+      }
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, [dispatch]);
 
   return (
     <div className="min-h-screen landing-page-black relative overflow-hidden">
@@ -64,8 +93,8 @@ export default function AdminDashboard({ onLogout, events, setEvents }: {
           <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
             {tab === "dashboard" && <DashboardTab />}
             {tab === "students" && <StudentsTab />}
-            {tab === "create-event" && <CreateEventTab events={events} setEvents={setEvents} />}
-            {tab === "scanner" && <ScannerTab />}
+            {tab === "create-event" && <CreateEventTab />}
+            {tab === "scanner" && <ScannerTab events={events} />}
             {tab === "reports" && <ReportsTab events={events} />}
           </div>
         </div>

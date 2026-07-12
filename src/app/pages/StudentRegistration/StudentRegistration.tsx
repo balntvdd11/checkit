@@ -1,16 +1,20 @@
 import { useState } from "react";
-import { motion } from "motion/react";
-import { ChevronRight } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+import { ChevronRight, ClipboardList, XCircle, RefreshCw } from "lucide-react";
 import CheckITLogo from "../../components/shared/CheckITLogo";
 import Card from "../../components/shared/Card";
+import AnimatedBackground from "../../components/common/AnimatedBackground";
 import { cn } from "../../lib/utils";
 import type { Student } from "../../types";
+import { registerStudent } from "../../services/studentCheck";
 
 // ─── Student Registration ─────────────────────────────────────────────────────
 
 export default function StudentRegistration({ email, onSubmit, onBack }: { email: string; onSubmit: (s: Student) => void; onBack: () => void }) {
   const [form, setForm] = useState({ name: "", section: "", studentId: "" });
   const [errors, setErrors] = useState<Partial<typeof form>>({});
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   const sections = ["BSIT 1A", "BSIT 1B", "BSIT 2A", "BSIT 2B", "BSIT 3A", "BSIT 3B", "BSIT 4A", "BSIT 4B"];
 
@@ -24,64 +28,152 @@ export default function StudentRegistration({ email, onSubmit, onBack }: { email
     return Object.keys(e).length === 0;
   };
 
-  const handleSubmit = (ev: React.FormEvent) => {
+  const handleSubmit = async (ev: React.FormEvent) => {
     ev.preventDefault();
-    if (validate()) onSubmit({ ...form, email });
+    setSubmitError(null);
+    if (!validate()) return;
+
+    setSubmitting(true);
+    try {
+      await registerStudent({
+        name: form.name,
+        studentId: form.studentId,
+        section: form.section,
+        email,
+        registered: true,
+        registeredAt: new Date().toISOString(),
+      });
+      // Pass the student data up to App.tsx to navigate to the dashboard
+      onSubmit({ name: form.name, studentId: form.studentId, section: form.section, email });
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : "Registration failed. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const inputCls = (err?: string) => cn(
-    "w-full px-4 py-3 rounded-xl border text-sm bg-white/5 placeholder:text-slate-400 text-white",
+    "w-full px-4 py-3 rounded-xl border text-sm bg-white/5 placeholder:text-slate-500 text-white",
     "focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/20 transition-colors",
-    err ? "border-white/20" : "border-white/10"
+    err ? "border-red-500/50" : "border-white/10"
   );
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.35 }} className="w-full max-w-md">
-        <button onClick={onBack} className="flex items-center gap-1.5 text-sm text-[#7A6268] hover:text-[#0B2A4D] mb-8 transition-colors">
+    <div className="min-h-screen landing-page-black flex items-center justify-center p-4 relative overflow-hidden">
+      <AnimatedBackground />
+      <motion.div
+        initial={{ opacity: 0, scale: 0.97 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.35 }}
+        className="w-full max-w-md relative z-10"
+      >
+        <button onClick={onBack} className="flex items-center gap-1.5 text-sm text-white/70 hover:text-white mb-8 transition-colors">
           <ChevronRight size={15} className="rotate-180" /> Back
         </button>
 
-        <Card className="p-8 bg-[#020A17] border border-white/10 shadow-[0_32px_80px_rgba(0,0,0,0.35)]">
-          <div className="mb-6">
-            <CheckITLogo size="sm" />
-            <h1 className="mt-5 text-xl font-bold text-white">Complete Registration</h1>
-            <p className="mt-1 text-sm text-slate-300">
+        <Card className="p-8 !bg-black border border-white/10 shadow-[0_32px_80px_rgba(0,0,0,0.35)] relative overflow-hidden group premium-border-card">
+          {/* Border tracer animation — identical to StudentAuth */}
+          <span className="border-tracer absolute inset-0 pointer-events-none">
+            <svg viewBox="0 0 448 580" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+              <defs>
+                <linearGradient id="tracerGrad-reg" x1="0" x2="1" y1="0" y2="0">
+                  <stop offset="0" stopColor="#F5F7FA" stopOpacity="0.75" />
+                  <stop offset="0.5" stopColor="#D7DEE8" stopOpacity="0.3" />
+                  <stop offset="1" stopColor="#D7DEE8" stopOpacity="0" />
+                </linearGradient>
+                <filter id="glow-reg"><feGaussianBlur stdDeviation="3.5" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+              </defs>
+              <rect x="1" y="1" width="446" height="578" rx="16" ry="16" fill="none" stroke="url(#tracerGrad-reg)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="110 900" pathLength="1000" filter="url(#glow-reg)">
+                <animate attributeName="stroke-dashoffset" from="0" to="1000" dur="5.2s" repeatCount="indefinite" />
+              </rect>
+            </svg>
+          </span>
+
+          {/* Header */}
+          <div className="relative z-10 flex flex-col items-center text-center mb-8">
+            <CheckITLogo size="md" />
+            <div className="mt-7 w-16 h-16 rounded-2xl bg-[#0B2A4D] flex items-center justify-center shadow-[0_0_15px_rgba(10,42,77,0.35)]">
+              <ClipboardList size={28} className="text-white" />
+            </div>
+            <h1 className="mt-4 text-xl font-bold text-white">Complete Registration</h1>
+            <p className="mt-1.5 text-sm text-slate-300 leading-relaxed max-w-[280px]">
               Signed in as <span className="font-semibold text-white">{email}</span>
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          {/* Global submit error */}
+          <AnimatePresence>
+            {submitError && (
+              <motion.div
+                key="submit-error"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                className="mb-4 p-3 bg-white/10 border border-white/10 rounded-xl flex items-start gap-2.5 overflow-hidden"
+              >
+                <XCircle size={15} className="text-white mt-0.5 shrink-0" />
+                <p className="text-sm text-white">{submitError}</p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <form onSubmit={handleSubmit} className="relative z-10 flex flex-col gap-4">
+            {/* Full Name */}
             <div>
               <label className="block text-sm font-semibold text-slate-300 mb-1.5">Full Name</label>
-              <input type="text" placeholder="e.g., Maria Clara Santos"
-                value={form.name} onChange={e => setForm({ ...form, name: e.target.value })}
-                className={inputCls(errors.name)} />
-              {errors.name && <p className="mt-1.5 text-xs text-sky-300">{errors.name}</p>}
+              <input
+                type="text"
+                placeholder="e.g., Maria Clara Santos"
+                value={form.name}
+                onChange={e => setForm({ ...form, name: e.target.value })}
+                className={inputCls(errors.name)}
+              />
+              {errors.name && (
+                <p className="mt-1.5 text-xs text-red-400">{errors.name}</p>
+              )}
             </div>
 
+            {/* Section */}
             <div>
               <label className="block text-sm font-semibold text-slate-300 mb-1.5">Section</label>
-              <select value={form.section} onChange={e => setForm({ ...form, section: e.target.value })}
-                className={cn(inputCls(errors.section), !form.section && "text-[#C0B4B8]")}>
-                <option value="">Select your section</option>
-                {sections.map(s => <option key={s} value={s}>{s}</option>)}
+              <select
+                value={form.section}
+                onChange={e => setForm({ ...form, section: e.target.value })}
+                className={cn(inputCls(errors.section), !form.section && "text-slate-500")}
+              >
+                <option value="" className="bg-[#0B0F1A] text-slate-400">Select your section</option>
+                {sections.map(s => <option key={s} value={s} className="bg-[#0B0F1A] text-white">{s}</option>)}
               </select>
-              {errors.section && <p className="mt-1.5 text-xs text-[#0B2A4D]">{errors.section}</p>}
+              {errors.section && (
+                <p className="mt-1.5 text-xs text-red-400">{errors.section}</p>
+              )}
             </div>
 
+            {/* Student ID */}
             <div>
               <label className="block text-sm font-semibold text-slate-300 mb-1.5">Student ID</label>
-              <input type="text" placeholder="e.g., 2023001321"
+              <input
+                type="text"
+                placeholder="e.g., 2023001321"
                 value={form.studentId}
                 onChange={e => setForm({ ...form, studentId: e.target.value.replace(/\D/g, "").slice(0, 10) })}
-                className={cn(inputCls(errors.studentId), "font-mono tracking-widest")} />
-              {errors.studentId && <p className="mt-1.5 text-xs text-sky-300">{errors.studentId}</p>}
+                className={cn(inputCls(errors.studentId), "font-mono tracking-widest")}
+              />
+              {errors.studentId && (
+                <p className="mt-1.5 text-xs text-red-400">{errors.studentId}</p>
+              )}
             </div>
 
-              <button type="submit"
-              className="mt-2 w-full py-3.5 bg-[#0B3B66] hover:bg-[#0E4B86] text-white font-bold rounded-xl transition-colors">
-              Complete Registration
+            <button
+              type="submit"
+              disabled={submitting}
+              className="mt-2 w-full flex items-center justify-center gap-2 py-3.5 bg-[#0B2A4D] hover:bg-[#0E3A65] text-white font-bold rounded-xl transition-all border border-white/10 disabled:opacity-60 disabled:cursor-wait"
+            >
+              {submitting ? (
+                <><RefreshCw size={16} className="animate-spin" /> Saving…</>
+              ) : (
+                "Complete Registration"
+              )}
             </button>
           </form>
         </Card>
