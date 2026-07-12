@@ -102,7 +102,7 @@ export default function StudentAuthGate({
 
         <SignIn 
           routing="virtual"
-          forceRedirectUrl={window.location.origin}
+          forceRedirectUrl={window.location.origin + "?login=success"}
           appearance={{
             elements: {
               rootBox: "mx-auto",

@@ -21,12 +21,12 @@ import type { View, Student } from "./types";
 
 function AppInner() {
   const [currentView, setCurrentView] = useState<View>(() => {
-    // After Google OAuth, the browser reloads the entire SPA and currentView
-    // would reset to "landing", making StudentAuthGate unmount before the email
-    // check can run.  We write "student-auth" to sessionStorage just before the
-    // redirect (in StudentAuth.tsx) so we can restore the correct view here.
-    if (sessionStorage.getItem("clerk-oauth-intent") === "student-auth") {
-      return "student-auth";
+    // When the user successfully signs in with Clerk, they are redirected back to the
+    // origin with ?login=success in the URL. We catch this here so they instantly
+    // resolve their session and proceed to registration or dashboard, rather than
+    // being stuck on the landing page.
+    if (window.location.search.includes("login=success")) {
+      return "student-resolving";
     }
     return "landing";
   });
@@ -57,6 +57,15 @@ function AppInner() {
       }
     })();
   }, [dispatch]);
+
+  // Clean up the URL if we just returned from a Clerk sign-in redirect
+  useEffect(() => {
+    if (window.location.search.includes("login=success")) {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("login");
+      window.history.replaceState({}, document.title, url.pathname + url.search);
+    }
+  }, []);
 
   // ── Seamless re-entry: resolve auth state before showing any auth UI ──────
   // When the user clicks "Student Portal" we land on "student-resolving".
