@@ -2,7 +2,7 @@ services:
   - type: web
     name: checkit-frontend
     env: static
-    buildCommand: "npm install && npm run build"
+    buildCommand: "npm install -g pnpm && pnpm install && pnpm run build"
     staticPublishPath: "./dist"
     envVars:
       - key: NODE_VERSION
