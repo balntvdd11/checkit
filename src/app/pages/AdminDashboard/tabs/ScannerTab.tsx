@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import Card from "../../../components/shared/Card";
 import StatusBadge from "../../../components/shared/StatusBadge";
 import type { EventConfig } from "../../../types";
-import { createAttendanceRecord } from "../../../services/attendance";
+import { createAttendanceRecord, updateAttendanceRecord } from "../../../services/attendance";
 import { useStore } from "../../../state/store";
 import { cn } from "../../../lib/utils";
 
@@ -51,24 +51,55 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
               const activeEvent = events.find(e => e.id === selectedScanEVENTS);
               const student = state.students.find(s => s.studentId === studentId);
 
-              const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+              // We need a strictly formatted HH:mm for reliable string comparison
+              const time24 = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
+              // Display time can still be localized AM/PM
+              const displayTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
               if (!student || !activeEvent || code !== activeEvent.checkItCode) {
-                setScanResults(prev => [{ id: `scan-${Date.now()}`, name: "Unknown / Invalid", status: "invalid", time }, ...prev]);
+                setScanResults(prev => [{ id: `scan-${Date.now()}`, name: "Unknown / Invalid", status: "invalid", time: displayTime }, ...prev]);
                 return;
               }
 
               // Check if student already has attendance for this event today
               const today = new Date().toISOString().split('T')[0];
-              const hasAttended = state.attendance.some(a => 
+              const existingRecord = state.attendance.find(a => 
                 a.studentId === student.studentId && 
                 a.EVENTSCode === activeEvent.checkItCode && 
                 a.date === today
               );
 
-              if (hasAttended) {
-                setScanResults(prev => [{ id: `scan-${Date.now()}`, name: student.name, status: "duplicate", time }, ...prev]);
-                return;
+              if (existingRecord) {
+                if (existingRecord.timeOut) {
+                  // Already timed out
+                  setScanResults(prev => [{ id: `scan-${Date.now()}`, name: student.name, status: "duplicate", time: displayTime }, ...prev]);
+                  return;
+                } else {
+                  // Second scan: Record Time-Out
+                  // Use the internal backend ID which should be in the store if it's fetched, 
+                  // but we might need to handle if it's missing. Assuming record has `id` if fetched from API.
+                  const recordId = (existingRecord as any).id;
+                  if (recordId) {
+                    const updated = await updateAttendanceRecord(recordId, { timeOut: time24 });
+                    dispatch({ type: "UPDATE_ATTENDANCE_RECORD", payload: updated }); // Assume action exists or just let refresh handle it. Wait, UPDATE_ATTENDANCE_RECORD might not exist.
+                    // We'll dispatch ADD but since we want to overwrite, let's just trigger a full fetch or rely on local state.
+                    // Actually, if we just push to scan results, that's enough feedback.
+                    setScanResults(prev => [{ id: `scan-${Date.now()}`, name: `${student.name} (Time Out)`, status: "success", time: displayTime }, ...prev]);
+                    setScanAlert({ name: `${student.name} (Timed Out)`, visible: true });
+                    setTimeout(() => {
+                      setScanAlert(prev => prev ? { ...prev, visible: false } : null);
+                    }, 3000);
+                  } else {
+                     setScanResults(prev => [{ id: `scan-${Date.now()}`, name: student.name, status: "duplicate", time: displayTime }, ...prev]);
+                  }
+                  return;
+                }
+              }
+
+              // First scan: Determine if Present or Late based on lateThreshold
+              let scanStatus: "present" | "late" = "present";
+              if (activeEvent.lateThreshold && time24 > activeEvent.lateThreshold) {
+                scanStatus = "late";
               }
 
               const record = {
@@ -78,14 +109,14 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
                 date: today,
                 subject: activeEvent.name,
                 section: student.section,
-                status: "present", 
-                timeIn: time,
+                status: scanStatus, 
+                timeIn: time24,
                 EVENTSCode: activeEvent.checkItCode,
               };
 
               const saved = await createAttendanceRecord(record as any);
               dispatch({ type: "ADD_ATTENDANCE_RECORD", payload: saved });
-              setScanResults(prev => [{ id: `scan-${Date.now()}`, name: student.name, status: "success", time }, ...prev]);
+              setScanResults(prev => [{ id: `scan-${Date.now()}`, name: `${student.name} (${scanStatus})`, status: "success", time: displayTime }, ...prev]);
               
               setScanAlert({ name: student.name, visible: true });
               setTimeout(() => {

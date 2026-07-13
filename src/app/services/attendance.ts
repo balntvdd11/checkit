@@ -28,3 +28,12 @@ export const createAttendance = async (record: AttendanceRecord): Promise<Attend
 };
 
 export const createAttendanceRecord = createAttendance;
+
+export const updateAttendance = async (id: string, updates: Partial<AttendanceRecord>): Promise<AttendanceRecord> => {
+  return apiFetch(`/api/attendance/${id}/`, {
+    method: 'PATCH',
+    body: JSON.stringify(updates),
+  });
+};
+
+export const updateAttendanceRecord = updateAttendance;

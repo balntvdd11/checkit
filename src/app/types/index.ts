@@ -34,6 +34,7 @@ export interface AttendanceRecord {
   section: string;
   status: AttendanceStatus;
   timeIn: string;
+  timeOut?: string;
   EVENTSCode: string;
 }
 export interface EVENTS {
