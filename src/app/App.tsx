@@ -4,6 +4,7 @@ import LandingPage from "./pages/Landing/Landing";
 import StudentAuthGate from "./pages/StudentAuth/StudentAuth";
 import StudentRegistration from "./pages/StudentRegistration/StudentRegistration";
 import BrowserActivation from "./pages/BrowserActivation/BrowserActivation";
+import DeviceConflict from "./pages/DeviceConflict/DeviceConflict";
 import EVENTSCodeEntry from "./pages/EVENTSCode/EVENTSCode";
 import QRPassGenerator from "./pages/QRPass/QRPass";
 import StudentDashboard from "./pages/StudentDashboard/StudentDashboard";
@@ -112,10 +113,16 @@ function AppInner() {
           });
           
           const currentFingerprint = await generateDeviceFingerprint();
-          if (!hasStoredPrivateKey(normalizedEmail) || record.deviceFingerprint !== currentFingerprint) {
-            setCurrentView("student-activation");
+          if (record.deviceFingerprint) {
+            // Already locked to a device on the server
+            if (record.deviceFingerprint !== currentFingerprint || !hasStoredPrivateKey(normalizedEmail)) {
+              setCurrentView("student-device-conflict");
+            } else {
+              setCurrentView("student-dashboard");
+            }
           } else {
-            setCurrentView("student-dashboard");
+            // Not locked yet, proceed to activation
+            setCurrentView("student-activation");
           }
         } else {
           // Signed in but not yet registered — go to the auth gate which will
@@ -200,10 +207,14 @@ function AppInner() {
                 });
                 
                 const currentFingerprint = await generateDeviceFingerprint();
-                if (!hasStoredPrivateKey(email) || record.deviceFingerprint !== currentFingerprint) {
-                  setCurrentView("student-activation");
+                if (record.deviceFingerprint) {
+                  if (record.deviceFingerprint !== currentFingerprint || !hasStoredPrivateKey(email)) {
+                    setCurrentView("student-device-conflict");
+                  } else {
+                    setCurrentView("student-dashboard");
+                  }
                 } else {
-                  setCurrentView("student-dashboard");
+                  setCurrentView("student-activation");
                 }
               } else {
                 setCurrentView("student-auth");
@@ -230,9 +241,16 @@ function AppInner() {
 
       {currentView === "student-activation" && currentStudent && (
         <BrowserActivation
-          student={currentStudent}
-          onCancel={() => setCurrentView("student-auth")}
+          student={currentStudent!}
           onActivate={() => setCurrentView("student-dashboard")}
+          onCancel={handleStudentLogout}
+        />
+      )}
+
+      {currentView === "student-device-conflict" && (
+        <DeviceConflict
+          email={currentStudentEmail}
+          onCancel={handleStudentLogout}
         />
       )}
 
