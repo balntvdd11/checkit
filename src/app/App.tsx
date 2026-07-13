@@ -115,8 +115,10 @@ function AppInner() {
           const currentFingerprint = await generateDeviceFingerprint();
           if (record.deviceFingerprint) {
             // Already locked to a device on the server
-            if (record.deviceFingerprint !== currentFingerprint || !hasStoredPrivateKey(normalizedEmail)) {
+            if (record.deviceFingerprint !== currentFingerprint) {
               setCurrentView("student-device-conflict");
+            } else if (!hasStoredPrivateKey(normalizedEmail)) {
+              setCurrentView("student-activation");
             } else {
               setCurrentView("student-dashboard");
             }
@@ -208,8 +210,10 @@ function AppInner() {
                 
                 const currentFingerprint = await generateDeviceFingerprint();
                 if (record.deviceFingerprint) {
-                  if (record.deviceFingerprint !== currentFingerprint || !hasStoredPrivateKey(email)) {
+                  if (record.deviceFingerprint !== currentFingerprint) {
                     setCurrentView("student-device-conflict");
+                  } else if (!hasStoredPrivateKey(email)) {
+                    setCurrentView("student-activation");
                   } else {
                     setCurrentView("student-dashboard");
                   }
