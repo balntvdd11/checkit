@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { ScanLine, History, CheckCircle2, UserX, UserCheck } from "lucide-react";
-import { Html5QrcodeScanner } from "html5-qrcode";
+import { Html5Qrcode } from "html5-qrcode";
 import Card from "../../../components/shared/Card";
 import StatusBadge from "../../../components/shared/StatusBadge";
 import type { EventConfig } from "../../../types";
@@ -22,79 +22,89 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
   useEffect(() => {
     if (!scanning || !selectedScanEVENTS) return;
 
-    const scanner = new Html5QrcodeScanner(
-      "qr-reader",
-      { fps: 10, qrbox: { width: 250, height: 250 } },
-      /* verbose= */ false
-    );
+    let html5QrCode: Html5Qrcode | null = null;
 
-    scanner.render(async (decodedText) => {
-      // Decode QR string: expected format `studentId:EVENTSCode:qrSeed`
+    const startScanner = async () => {
       try {
-        const parts = decodedText.split(":");
-        if (parts.length < 2) throw new Error("Invalid format");
-        
-        const [studentId, code, seed] = parts;
-        const scanKey = `${studentId}-${code}-${seed}`;
-        
-        // Prevent rapid duplicate processing of the exact same QR frame
-        if (recentlyScanned.current.has(scanKey)) return;
-        recentlyScanned.current.add(scanKey);
-        
-        // Cleanup memory after 5 seconds
-        setTimeout(() => recentlyScanned.current.delete(scanKey), 5000);
+        html5QrCode = new Html5Qrcode("qr-reader");
+        await html5QrCode.start(
+          { facingMode: "environment" }, // Forces back camera
+          { fps: 30, qrbox: { width: 250, height: 250 } }, // 30 fps for faster scanning
+          async (decodedText) => {
+            // Decode QR string: expected format `studentId:EVENTSCode:qrSeed`
+            try {
+              const parts = decodedText.split(":");
+              if (parts.length < 2) throw new Error("Invalid format");
+              
+              const [studentId, code, seed] = parts;
+              const scanKey = `${studentId}-${code}-${seed}`;
+              
+              // Prevent rapid duplicate processing of the exact same QR frame
+              if (recentlyScanned.current.has(scanKey)) return;
+              recentlyScanned.current.add(scanKey);
+              
+              // Cleanup memory after 5 seconds
+              setTimeout(() => recentlyScanned.current.delete(scanKey), 5000);
 
-        const activeEvent = events.find(e => e.id === selectedScanEVENTS);
-        const student = state.students.find(s => s.studentId === studentId);
+              const activeEvent = events.find(e => e.id === selectedScanEVENTS);
+              const student = state.students.find(s => s.studentId === studentId);
 
-        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+              const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-        if (!student || !activeEvent || code !== activeEvent.checkItCode) {
-          setScanResults(prev => [{ id: `scan-${Date.now()}`, name: "Unknown / Invalid", status: "invalid", time }, ...prev]);
-          return;
-        }
+              if (!student || !activeEvent || code !== activeEvent.checkItCode) {
+                setScanResults(prev => [{ id: `scan-${Date.now()}`, name: "Unknown / Invalid", status: "invalid", time }, ...prev]);
+                return;
+              }
 
-        // Check if student already has attendance for this event today
-        const today = new Date().toISOString().split('T')[0];
-        const hasAttended = state.attendance.some(a => 
-          a.studentId === student.studentId && 
-          a.EVENTSCode === activeEvent.checkItCode && 
-          a.date === today
+              // Check if student already has attendance for this event today
+              const today = new Date().toISOString().split('T')[0];
+              const hasAttended = state.attendance.some(a => 
+                a.studentId === student.studentId && 
+                a.EVENTSCode === activeEvent.checkItCode && 
+                a.date === today
+              );
+
+              if (hasAttended) {
+                setScanResults(prev => [{ id: `scan-${Date.now()}`, name: student.name, status: "duplicate", time }, ...prev]);
+                return;
+              }
+
+              const record = {
+                name: student.name,
+                studentId: student.studentId,
+                email: student.email,
+                date: today,
+                subject: activeEvent.name,
+                section: student.section,
+                status: "present", 
+                timeIn: time,
+                EVENTSCode: activeEvent.checkItCode,
+              };
+
+              const saved = await createAttendanceRecord(record as any);
+              dispatch({ type: "ADD_ATTENDANCE_RECORD", payload: saved });
+              setScanResults(prev => [{ id: `scan-${Date.now()}`, name: student.name, status: "success", time }, ...prev]);
+
+            } catch (err) {
+              const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+              setScanResults(prev => [{ id: `scan-${Date.now()}`, name: "Invalid QR Code", status: "invalid", time }, ...prev]);
+            }
+          },
+          (errorMessage) => {
+            // Ignored: html5-qrcode triggers this constantly when looking for a code
+          }
         );
-
-        if (hasAttended) {
-          setScanResults(prev => [{ id: `scan-${Date.now()}`, name: student.name, status: "duplicate", time }, ...prev]);
-          return;
-        }
-
-        // Determine late status based on activeEvent.lateThreshold vs current time
-        // For simplicity, we just mark present unless we implement full time parsing
-        const record = {
-          name: student.name,
-          studentId: student.studentId,
-          email: student.email,
-          date: today,
-          subject: activeEvent.name,
-          section: student.section,
-          status: "present", // Logic could be expanded to compare time against activeEvent.lateThreshold
-          timeIn: time,
-          EVENTSCode: activeEvent.checkItCode,
-        };
-
-        const saved = await createAttendanceRecord(record as any);
-        dispatch({ type: "ADD_ATTENDANCE_RECORD", payload: saved });
-        setScanResults(prev => [{ id: `scan-${Date.now()}`, name: student.name, status: "success", time }, ...prev]);
-
       } catch (err) {
-        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        setScanResults(prev => [{ id: `scan-${Date.now()}`, name: "Invalid QR Code", status: "invalid", time }, ...prev]);
+        console.error("Failed to start scanner:", err);
       }
-    }, (error) => {
-      // Ignored: html5-qrcode triggers this constantly when looking for a code
-    });
+    };
+
+    startScanner();
 
     return () => {
-      scanner.clear().catch(console.error);
+      if (html5QrCode && html5QrCode.isScanning) {
+        html5QrCode.stop().then(() => html5QrCode?.clear()).catch(console.error);
+      }
     };
   }, [scanning, selectedScanEVENTS, events, state.students, state.attendance, dispatch]);
 
