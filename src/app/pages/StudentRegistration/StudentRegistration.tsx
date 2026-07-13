@@ -77,22 +77,6 @@ export default function StudentRegistration({ email, onSubmit, onBack }: { email
         </button>
 
         <Card className="p-8 !bg-black border border-white/10 shadow-[0_32px_80px_rgba(0,0,0,0.35)] relative overflow-hidden group premium-border-card">
-          {/* Border tracer animation — identical to StudentAuth */}
-          <span className="border-tracer absolute inset-0 pointer-events-none">
-            <svg viewBox="0 0 448 580" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-              <defs>
-                <linearGradient id="tracerGrad-reg" x1="0" x2="1" y1="0" y2="0">
-                  <stop offset="0" stopColor="#F5F7FA" stopOpacity="0.75" />
-                  <stop offset="0.5" stopColor="#D7DEE8" stopOpacity="0.3" />
-                  <stop offset="1" stopColor="#D7DEE8" stopOpacity="0" />
-                </linearGradient>
-                <filter id="glow-reg"><feGaussianBlur stdDeviation="3.5" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
-              </defs>
-              <rect x="1" y="1" width="446" height="578" rx="16" ry="16" fill="none" stroke="url(#tracerGrad-reg)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="110 900" pathLength="1000" filter="url(#glow-reg)">
-                <animate attributeName="stroke-dashoffset" from="0" to="1000" dur="5.2s" repeatCount="indefinite" />
-              </rect>
-            </svg>
-          </span>
 
           {/* Header */}
           <div className="relative z-10 flex flex-col items-center text-center mb-8">

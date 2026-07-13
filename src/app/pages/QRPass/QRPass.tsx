@@ -132,21 +132,7 @@ export default function QRPassGenerator({ student, EVENTSCode, onBack, onLogout 
           </div>
 
           <div className="!bg-black border border-white/10 rounded-2xl shadow-[0_32px_80px_rgba(0,0,0,0.35)] relative overflow-hidden group premium-border-card">
-            <span className="border-tracer absolute inset-0 pointer-events-none">
-              <svg viewBox="0 0 384 500" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-                <defs>
-                  <linearGradient id="tracerGrad-qr" x1="0" x2="1" y1="0" y2="0">
-                    <stop offset="0" stopColor="#F5F7FA" stopOpacity="0.75" />
-                    <stop offset="0.5" stopColor="#D7DEE8" stopOpacity="0.3" />
-                    <stop offset="1" stopColor="#D7DEE8" stopOpacity="0" />
-                  </linearGradient>
-                  <filter id="glow-qr"><feGaussianBlur stdDeviation="3.5" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
-                </defs>
-                <rect x="1" y="1" width="382" height="498" rx="16" ry="16" fill="none" stroke="url(#tracerGrad-qr)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="110 900" pathLength="1000" filter="url(#glow-qr)">
-                  <animate attributeName="stroke-dashoffset" from="0" to="1000" dur="5.2s" repeatCount="indefinite" />
-                </rect>
-              </svg>
-            </span>
+
 
             {/* Student header */}
             <div className="bg-[var(--secondary)] px-6 py-5 relative z-10">

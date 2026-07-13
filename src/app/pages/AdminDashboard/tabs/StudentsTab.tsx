@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Search, Filter, AlertCircle, RefreshCw } from "lucide-react";
 import Card from "../../../components/shared/Card";
 import { useSelectors, useStore } from "../../../state/store";
-import { createStudent } from "../../../services/students";
+import { resetStudentDevice } from "../../../services/students";
 
 export default function StudentsTab() {
   const [searchStudents, setSearchStudents] = useState("");
@@ -10,6 +10,20 @@ export default function StudentsTab() {
 
   const { students } = useSelectors();
   const { dispatch } = useStore();
+  const [resettingId, setResettingId] = useState<string | null>(null);
+
+  const handleResetDevice = async (studentId: string) => {
+    if (!window.confirm("Are you sure you want to reset this student's device? They will need to re-verify their account on their next login.")) return;
+    setResettingId(studentId);
+    try {
+      await resetStudentDevice(studentId);
+      alert("Device successfully reset!");
+    } catch (e) {
+      alert("Failed to reset device.");
+    } finally {
+      setResettingId(null);
+    }
+  };
 
   const filteredStudents = students.filter(s => {
     const matchSearch = s.name.toLowerCase().includes(searchStudents.toLowerCase()) || 
@@ -78,8 +92,12 @@ export default function StudentsTab() {
                   </td>
                   <td className="px-5 py-4 text-right">
                     {student.registered && (
-                      <button className="text-xs font-semibold text-rose-600 hover:text-rose-700 px-3 py-1.5 rounded-md hover:bg-rose-50 transition-colors flex items-center gap-1.5 ml-auto">
-                        <RefreshCw size={12} /> Reset Device
+                      <button 
+                        onClick={() => handleResetDevice(student.studentId)}
+                        disabled={resettingId === student.studentId}
+                        className="text-xs font-semibold text-rose-600 hover:text-rose-700 px-3 py-1.5 rounded-md hover:bg-rose-50 transition-colors flex items-center gap-1.5 ml-auto disabled:opacity-50 disabled:cursor-not-allowed">
+                        <RefreshCw size={12} className={resettingId === student.studentId ? "animate-spin" : ""} /> 
+                        {resettingId === student.studentId ? "Resetting..." : "Reset Device"}
                       </button>
                     )}
                   </td>

@@ -39,3 +39,10 @@ export const updateStudent = async (student: StudentRecord): Promise<StudentReco
     body: JSON.stringify(payload),
   });
 };
+
+export const resetStudentDevice = async (studentId: string): Promise<any> => {
+  return apiFetch('/api/students/reset-device/', {
+    method: 'POST',
+    body: JSON.stringify({ studentId }),
+  });
+};

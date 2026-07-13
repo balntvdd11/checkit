@@ -63,21 +63,7 @@ export default function EVENTSCodeEntry({ student, events, onSubmit, onViewHisto
           </div>
 
           <Card className="p-8 relative !bg-black premium-border-card border-[1.5px] border-[#7EEAF8]/24 overflow-hidden">
-            <span className="border-tracer absolute inset-0 pointer-events-none">
-              <svg viewBox="0 0 360 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-                <defs>
-                  <linearGradient id="tracerGrad-EVENTS" x1="0" x2="1" y1="0" y2="0">
-                    <stop offset="0" stopColor="#F5F7FA" stopOpacity="0.75" />
-                    <stop offset="0.5" stopColor="#D7DEE8" stopOpacity="0.3" />
-                    <stop offset="1" stopColor="#D7DEE8" stopOpacity="0" />
-                  </linearGradient>
-                  <filter id="glow-EVENTS"><feGaussianBlur stdDeviation="3.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-                </defs>
-                <rect x="1" y="1" width="358" height="218" rx="16" ry="16" fill="none" stroke="url(#tracerGrad-EVENTS)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="110 900" pathLength="1000" filter="url(#glow-EVENTS)">
-                  <animate attributeName="stroke-dashoffset" from="0" to="1000" dur="5.2s" repeatCount="indefinite" />
-                </rect>
-              </svg>
-            </span>
+
             <form onSubmit={handleSubmit} className="relative z-10 flex flex-col gap-4">
               <div className="flex flex-col items-center text-center mb-7">
                 <img src={checkITLogoImg} alt="CheckIT logo" className="w-28 h-28 object-contain drop-shadow-xl mb-4" />

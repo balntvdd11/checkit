@@ -46,21 +46,7 @@ export default function LandingPage({ onStudent, onAdmin }: { onStudent: () => v
             onClick={onStudent}
             className="group relative premium-border-card border-[1.5px] text-left rounded-2xl border border-[#7EEAF8]/24 bg-black hover:bg-[rgba(14,32,68,0.18)] hover:border-[#7EEAF8]/40 transition-all duration-200 p-9 flex flex-col gap-6 cursor-pointer h-[265px] overflow-hidden"
           >
-            <span className="border-tracer absolute inset-0 pointer-events-none">
-              <svg viewBox="0 0 360 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-                <defs>
-                  <linearGradient id="tracerGrad-student" x1="0" x2="1" y1="0" y2="0">
-                    <stop offset="0" stopColor="#F5F7FA" stopOpacity="0.75" />
-                    <stop offset="0.5" stopColor="#D7DEE8" stopOpacity="0.3" />
-                    <stop offset="1" stopColor="#D7DEE8" stopOpacity="0" />
-                  </linearGradient>
-                  <filter id="glow-student"><feGaussianBlur stdDeviation="3.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-                </defs>
-                <rect x="1" y="1" width="358" height="218" rx="16" ry="16" fill="none" stroke="url(#tracerGrad-student)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="110 900" pathLength="1000" filter="url(#glow-student)">
-                  <animate attributeName="stroke-dashoffset" from="0" to="1000" dur="5.2s" repeatCount="indefinite" />
-                </rect>
-              </svg>
-            </span>
+
             <img src={studentPortalIcon} alt="Student portal" className="w-24 h-24 object-contain" />
             <div>
               <h2 className="text-xl font-semibold text-white mb-1.5">Student Portal</h2>
@@ -75,21 +61,7 @@ export default function LandingPage({ onStudent, onAdmin }: { onStudent: () => v
             onClick={onAdmin}
             className="group relative premium-border-card border-[1.5px] text-left rounded-2xl border border-[#7EEAF8]/24 bg-black hover:bg-[rgba(14,32,68,0.18)] hover:border-[#7EEAF8]/40 transition-all duration-200 p-9 flex flex-col gap-6 cursor-pointer h-[265px] overflow-hidden"
           >
-            <span className="border-tracer absolute inset-0 pointer-events-none">
-              <svg viewBox="0 0 360 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-                <defs>
-                  <linearGradient id="tracerGrad-admin" x1="0" x2="1" y1="0" y2="0">
-                    <stop offset="0" stopColor="#F5F7FA" stopOpacity="0.75" />
-                    <stop offset="0.5" stopColor="#D7DEE8" stopOpacity="0.3" />
-                    <stop offset="1" stopColor="#D7DEE8" stopOpacity="0" />
-                  </linearGradient>
-                  <filter id="glow-admin"><feGaussianBlur stdDeviation="3.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-                </defs>
-                <rect x="1" y="1" width="358" height="218" rx="16" ry="16" fill="none" stroke="url(#tracerGrad-admin)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="110 900" pathLength="1000" filter="url(#glow-admin)">
-                  <animate attributeName="stroke-dashoffset" from="0" to="1000" dur="5.2s" repeatCount="indefinite" />
-                </rect>
-              </svg>
-            </span>
+
             <img src={adminPortalIcon} alt="Admin portal" className="w-24 h-24 object-contain" />
             <div>
               <h2 className="text-xl font-semibold text-white mb-1.5">Admin Portal</h2>
