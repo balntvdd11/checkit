@@ -4,6 +4,8 @@ import Card from "../../../components/shared/Card";
 import StatusBadge from "../../../components/shared/StatusBadge";
 import type { EventConfig } from "../../../types";
 import { useSelectors } from "../../../state/store";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 export default function ReportsTab({ events }: { events: EventConfig[] }) {
   const [reportEVENTS, setReportEVENTS] = useState("");
@@ -23,6 +25,39 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
   const reportAbsent = filteredReports.filter(r => r.status === "absent").length;
   const reportTotal = filteredReports.length;
 
+  const handleExportCSV = () => {
+    if (filteredReports.length === 0) return alert("No data to export.");
+    const headers = ["Student Name", "ID", "Section", "Date", "Time In", "Status"];
+    const rows = filteredReports.map(r => [r.name, r.studentId, r.section, r.date, r.timeIn, r.status]);
+    const csvContent = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "attendance_report.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleExportPDF = () => {
+    if (filteredReports.length === 0) return alert("No data to export.");
+    const doc = new jsPDF();
+    doc.text("CheckIT Attendance Report", 14, 15);
+    doc.setFontSize(10);
+    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 22);
+    
+    autoTable(doc, {
+      startY: 30,
+      head: [["Student Name", "ID", "Section", "Date", "Time In", "Status"]],
+      body: filteredReports.map(r => [r.name, r.studentId, r.section, r.date, r.timeIn, r.status]),
+    });
+    
+    doc.save("attendance_report.pdf");
+  };
+
+
+
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-2">
@@ -30,9 +65,14 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
           <h2 className="text-xl font-bold text-white">Attendance Reports</h2>
           <p className="text-sm text-white mt-1">Export and analyze attendance data for events and EVENTS</p>
         </div>
-        <button className="w-full sm:w-auto px-5 py-2.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold rounded-xl transition-colors border border-indigo-100 flex items-center justify-center gap-2 text-sm shadow-sm">
-          <Download size={16} /> Export CSV
-        </button>
+        <div className="flex gap-2 w-full sm:w-auto">
+          <button onClick={handleExportCSV} className="flex-1 sm:flex-none px-5 py-2.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold rounded-xl transition-colors border border-indigo-100 flex items-center justify-center gap-2 text-sm shadow-sm">
+            <Download size={16} /> Export CSV
+          </button>
+          <button onClick={handleExportPDF} className="flex-1 sm:flex-none px-5 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold rounded-xl transition-colors border border-rose-100 flex items-center justify-center gap-2 text-sm shadow-sm">
+            <FileText size={16} /> Export PDF
+          </button>
+        </div>
       </div>
 
       <Card className="p-5 border border-slate-100">
