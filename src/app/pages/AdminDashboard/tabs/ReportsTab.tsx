@@ -4,8 +4,12 @@ import Card from "../../../components/shared/Card";
 import StatusBadge from "../../../components/shared/StatusBadge";
 import type { EventConfig } from "../../../types";
 import { useSelectors } from "../../../state/store";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
+
+declare global {
+  interface Window {
+    jspdf: any;
+  }
+}
 
 export default function ReportsTab({ events }: { events: EventConfig[] }) {
   const [reportEVENTS, setReportEVENTS] = useState("");
@@ -42,12 +46,21 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
 
   const handleExportPDF = () => {
     if (filteredReports.length === 0) return alert("No data to export.");
+    if (!window.jspdf) return alert("PDF generator is still loading. Please try again in a moment.");
+    
+    const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
     doc.text("CheckIT Attendance Report", 14, 15);
     doc.setFontSize(10);
     doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 22);
     
-    autoTable(doc, {
+    // The autotable plugin automatically attaches itself to the jsPDF instance via window
+    if (typeof doc.autoTable !== "function") {
+      alert("PDF table generator failed to load.");
+      return;
+    }
+
+    doc.autoTable({
       startY: 30,
       head: [["Student Name", "ID", "Section", "Date", "Time In", "Status"]],
       body: filteredReports.map(r => [r.name, r.studentId, r.section, r.date, r.timeIn, r.status]),
