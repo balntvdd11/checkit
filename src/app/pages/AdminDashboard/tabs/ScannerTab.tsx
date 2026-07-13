@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { ScanLine, History, CheckCircle2, UserX, UserCheck } from "lucide-react";
 import { Html5Qrcode } from "html5-qrcode";
+import { motion, AnimatePresence } from "motion/react";
 import Card from "../../../components/shared/Card";
 import StatusBadge from "../../../components/shared/StatusBadge";
 import type { EventConfig } from "../../../types";
@@ -12,6 +13,7 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
   const [selectedScanEVENTS, setSelectedScanEVENTS] = useState("");
   const [scanning, setScanning] = useState(false);
   const [scanResults, setScanResults] = useState<{ id: string; name: string; status: "success" | "invalid" | "duplicate"; time: string }[]>([]);
+  const [scanAlert, setScanAlert] = useState<{ name: string; visible: boolean } | null>(null);
   const { state, dispatch } = useStore();
   
   // Keep track of recently scanned QR codes to prevent rapid duplicates
@@ -84,6 +86,11 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
               const saved = await createAttendanceRecord(record as any);
               dispatch({ type: "ADD_ATTENDANCE_RECORD", payload: saved });
               setScanResults(prev => [{ id: `scan-${Date.now()}`, name: student.name, status: "success", time }, ...prev]);
+              
+              setScanAlert({ name: student.name, visible: true });
+              setTimeout(() => {
+                setScanAlert(prev => prev ? { ...prev, visible: false } : null);
+              }, 3000);
 
             } catch (err) {
               const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -139,8 +146,24 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
                   <p className="text-sm text-slate-500">Code: {activeScanEVENTS?.checkItCode}</p>
                 </div>
                 
-                <div className="w-full max-w-sm rounded-2xl overflow-hidden bg-slate-50 mb-8 border border-slate-200">
-                  <div id="qr-reader" className="w-full" />
+                <div className="w-full max-w-sm relative rounded-2xl overflow-hidden bg-slate-50 mb-8 border border-slate-200">
+                  <div id="qr-reader" className="w-full relative z-0" />
+                  
+                  <AnimatePresence>
+                    {scanAlert?.visible && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                        className="absolute inset-x-4 bottom-4 z-10 p-4 bg-emerald-500/95 backdrop-blur-md rounded-xl shadow-lg border border-emerald-400/50 flex flex-col items-center text-center"
+                      >
+                        <CheckCircle2 size={28} className="text-white mb-1" />
+                        <p className="text-white font-bold text-sm">Successfully scanned</p>
+                        <p className="text-emerald-50 text-sm font-medium">{scanAlert.name}</p>
+                        <p className="text-emerald-100 text-xs mt-1">Thank you!</p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
 
                 <div className="flex gap-3">
