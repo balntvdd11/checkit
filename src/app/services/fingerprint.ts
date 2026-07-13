@@ -12,15 +12,17 @@ const API_BASE = import.meta.env.VITE_API_BASE || 'http://127.0.0.1:8000';
  * Generates a SHA-256 hash based on several browser environment variables.
  */
 export async function generateDeviceFingerprint(): Promise<string> {
+  // Extract OS portion from user agent (e.g., "(Windows NT 10.0; Win64; x64)")
+  const osString = navigator.userAgent.match(/\([^)]+\)/)?.[0] || 'unknown_os';
+
   const components = [
-    navigator.language,
+    navigator.language.split('-')[0], // Use base language "en" instead of "en-US"
     screen.colorDepth,
-    `${screen.width}x${screen.height}`,
+    `${Math.max(screen.width, screen.height)}x${Math.min(screen.width, screen.height)}`,
     new Date().getTimezoneOffset(),
     Intl.DateTimeFormat().resolvedOptions().timeZone,
     navigator.hardwareConcurrency || 'unknown',
-    // @ts-ignore - deviceMemory is not standard across all browsers
-    navigator.deviceMemory || 'unknown',
+    osString
   ];
 
   const rawString = components.join('||');
