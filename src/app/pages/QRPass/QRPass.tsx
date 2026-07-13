@@ -3,7 +3,6 @@ import { motion } from "motion/react";
 import { GraduationCap, Hash, RefreshCw, ChevronRight, AlertTriangle, Download } from "lucide-react";
 import CheckITLogo from "../../components/shared/CheckITLogo";
 import QRCodeDisplay from "../../components/shared/QRCodeDisplay";
-import ProgressRing from "../../components/shared/ProgressRing";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
 import { cn } from "../../lib/utils";
 import type { Student } from "../../types";
@@ -168,22 +167,28 @@ export default function QRPassGenerator({ student, EVENTSCode, onBack, onLogout 
 
             {isActive ? (
               <div className="flex flex-col items-center pt-6 pb-7 px-6 relative z-10">
-                <div className="relative" style={{ width: ringSize, height: ringSize }}>
-                  <ProgressRing progress={timeLeft / REFRESH_INTERVAL} size={ringSize} />
+                <div className="flex justify-center items-center py-4 w-full">
                   <motion.div
                     animate={{ opacity: isRefreshing ? 0.15 : 1, scale: isRefreshing ? 0.92 : 1 }}
                     transition={{ duration: 0.35 }}
-                    className="absolute inset-0 flex items-center justify-center"
-                    style={{ padding: 30 }}>
-                    <div className="p-4 bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.08)]">
-                      <QRCodeDisplay value={qrValue} size={170} />
+                  >
+                    <div className="p-6 bg-white rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
+                      <QRCodeDisplay value={qrValue} size={220} />
                     </div>
                   </motion.div>
                 </div>
 
-                <div className="mt-1 flex items-center gap-1.5 text-sm text-slate-300">
-                  <RefreshCw size={13} className={cn(isRefreshing && "animate-spin")} />
-                  <span>{isRefreshing ? "Refreshing…" : `Refreshes in ${timeLeft}s`}</span>
+                <div className="mt-3 flex flex-col items-center gap-2 w-full max-w-[200px]">
+                  <div className="flex items-center gap-1.5 text-sm text-slate-300">
+                    <RefreshCw size={13} className={cn(isRefreshing && "animate-spin")} />
+                    <span>{isRefreshing ? "Refreshing…" : `Refreshes in ${timeLeft}s`}</span>
+                  </div>
+                  <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-[var(--primary)] transition-all duration-1000 ease-linear"
+                      style={{ width: `${(timeLeft / REFRESH_INTERVAL) * 100}%` }}
+                    />
+                  </div>
                 </div>
 
                 <button 
