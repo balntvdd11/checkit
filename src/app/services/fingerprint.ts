@@ -12,11 +12,10 @@ const API_BASE = import.meta.env.VITE_API_BASE || 'http://127.0.0.1:8000';
  * Generates a SHA-256 hash based on several browser environment variables.
  */
 export async function generateDeviceFingerprint(): Promise<string> {
-  // Extract OS portion from user agent (e.g., "(Windows NT 10.0; Win64; x64)")
   const osString = navigator.userAgent.match(/\([^)]+\)/)?.[0] || 'unknown_os';
 
   const components = [
-    navigator.language.split('-')[0], // Use base language "en" instead of "en-US"
+    navigator.language?.split('-')[0] || 'unknown',
     screen.colorDepth,
     `${Math.max(screen.width, screen.height)}x${Math.min(screen.width, screen.height)}`,
     new Date().getTimezoneOffset(),
@@ -26,6 +25,19 @@ export async function generateDeviceFingerprint(): Promise<string> {
   ];
 
   const rawString = components.join('||');
+  
+  if (!window.crypto || !window.crypto.subtle) {
+    console.warn("Web Crypto API is not available (insecure context). Using fallback fingerprint.");
+    // Simple fast fallback hash if crypto is not available
+    let hash = 0;
+    for (let i = 0; i < rawString.length; i++) {
+      const char = rawString.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash;
+    }
+    return Math.abs(hash).toString(16).padStart(8, '0');
+  }
+
   const encoder = new TextEncoder();
   const data = encoder.encode(rawString);
   const hashBuffer = await window.crypto.subtle.digest('SHA-256', data);
