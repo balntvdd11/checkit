@@ -8,11 +8,26 @@
 
 const API_BASE = import.meta.env.VITE_API_BASE || 'http://127.0.0.1:8000';
 
+function getOSFamily(): string {
+  const ua = navigator.userAgent.toLowerCase();
+  if (ua.includes('windows')) return 'Windows';
+  if (ua.includes('iphone')) return 'iPhone';
+  if (ua.includes('ipad')) return 'iPad';
+  if (ua.includes('android')) return 'Android';
+  if (ua.includes('macintosh') || ua.includes('mac os x')) {
+    // iPad on newer iOS versions requests Desktop site and identifies as Macintosh
+    return navigator.maxTouchPoints > 1 ? 'iPad' : 'Mac';
+  }
+  if (ua.includes('linux')) return 'Linux';
+  return 'Unknown';
+}
+
 /**
  * Generates a SHA-256 hash based on several browser environment variables.
  */
 export async function generateDeviceFingerprint(): Promise<string> {
   const osString = navigator.userAgent.match(/\([^)]+\)/)?.[0] || 'unknown_os';
+  const osFamily = getOSFamily();
 
   const components = [
     navigator.language?.split('-')[0] || 'unknown',
@@ -28,14 +43,14 @@ export async function generateDeviceFingerprint(): Promise<string> {
   
   if (!window.crypto || !window.crypto.subtle) {
     console.warn("Web Crypto API is not available (insecure context). Using fallback fingerprint.");
-    // Simple fast fallback hash if crypto is not available
     let hash = 0;
     for (let i = 0; i < rawString.length; i++) {
       const char = rawString.charCodeAt(i);
       hash = ((hash << 5) - hash) + char;
       hash = hash & hash;
     }
-    return Math.abs(hash).toString(16).padStart(8, '0');
+    const fallbackHash = Math.abs(hash).toString(16).padStart(8, '0');
+    return `${osFamily}::${fallbackHash}`;
   }
 
   const encoder = new TextEncoder();
@@ -43,7 +58,7 @@ export async function generateDeviceFingerprint(): Promise<string> {
   const hashBuffer = await window.crypto.subtle.digest('SHA-256', data);
   const hashArray = Array.from(new Uint8Array(hashBuffer));
   const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-  return hashHex;
+  return `${osFamily}::${hashHex}`;
 }
 
 /**
