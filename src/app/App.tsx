@@ -10,6 +10,7 @@ import QRPassGenerator from "./pages/QRPass/QRPass";
 import StudentDashboard from "./pages/StudentDashboard/StudentDashboard";
 import AdminLogin from "./pages/AdminLogin/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard/AdminDashboard";
+import InAppBrowserWarning from "./pages/InAppBrowserWarning/InAppBrowserWarning";
 import { StoreProvider, useStore } from "./state/store";
 import { fetchEvents } from "./services/events";
 import { fetchStudents } from "./services/students";
@@ -20,12 +21,27 @@ import { generateDeviceFingerprint } from "./services/fingerprint";
 
 import type { View, Student } from "./types";
 
+export const isInAppBrowser = () => {
+  const ua = navigator.userAgent || navigator.vendor || (window as any).opera;
+  return (
+    ua.indexOf("FBAN") > -1 || 
+    ua.indexOf("FBAV") > -1 || 
+    ua.indexOf("Instagram") > -1 || 
+    ua.indexOf("Messenger") > -1 ||
+    ua.indexOf("Line") > -1 ||
+    ua.indexOf("Viber") > -1
+  );
+};
+
 function AppInner() {
   const [currentView, setCurrentView] = useState<View>(() => {
     // When the user successfully signs in with Clerk, they are redirected back to the
     // origin with ?login=success in the URL. We catch this here so they instantly
     // resolve their session and proceed to registration or dashboard, rather than
     // being stuck on the landing page.
+    if (isInAppBrowser()) {
+      return "in-app-browser-warning";
+    }
     if (window.location.search.includes("login=success")) {
       return "student-resolving";
     }
@@ -156,10 +172,12 @@ function AppInner() {
     <>
       {currentView === "landing" && (
         <LandingPage
-          onStudent={() => setCurrentView("student-resolving")}
+          onStudent={() => setCurrentView(isInAppBrowser() ? "in-app-browser-warning" : "student-resolving")}
           onAdmin={() => setCurrentView("admin-login")}
         />
       )}
+      
+      {currentView === "in-app-browser-warning" && <InAppBrowserWarning />}
 
       {/* Silent loading screen — shown while we wait for Clerk to initialise.
           Matches the app's dark theme so there is no visible flash. */}

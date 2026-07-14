@@ -11,7 +11,8 @@ export type View =
   | "student-qr-pass"
   | "student-dashboard"
   | "admin-login"
-  | "admin-dashboard";
+  | "admin-dashboard"
+  | "in-app-browser-warning";
 
 export type AdminTab = "dashboard" | "students" | "create-event" | "scanner" | "reports";
 export type AttendanceStatus = "present" | "late" | "absent";
