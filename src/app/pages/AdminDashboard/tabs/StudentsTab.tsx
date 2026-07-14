@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Search, Filter, AlertCircle, RefreshCw } from "lucide-react";
+import { Search, Filter, AlertCircle, RefreshCw, Trash2 } from "lucide-react";
 import Card from "../../../components/shared/Card";
 import { useSelectors, useStore } from "../../../state/store";
-import { resetStudentDevice } from "../../../services/students";
+import { resetStudentDevice, deleteStudent } from "../../../services/students";
 
 export default function StudentsTab() {
   const [searchStudents, setSearchStudents] = useState("");
@@ -11,6 +11,7 @@ export default function StudentsTab() {
   const { students } = useSelectors();
   const { dispatch } = useStore();
   const [resettingId, setResettingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const handleResetDevice = async (studentId: string) => {
     if (!window.confirm("Are you sure you want to reset this student's device? They will need to re-verify their account on their next login.")) return;
@@ -22,6 +23,21 @@ export default function StudentsTab() {
       alert("Failed to reset device.");
     } finally {
       setResettingId(null);
+    }
+  };
+
+  const handleDeleteAccount = async (id: string | undefined) => {
+    if (!id) return;
+    if (!window.confirm("Are you sure you want to permanently delete this student account? This will remove them from the database and Clerk completely.")) return;
+    setDeletingId(id);
+    try {
+      await deleteStudent(id);
+      dispatch({ type: "DELETE_STUDENT", payload: { id } });
+      alert("Account successfully deleted!");
+    } catch (e) {
+      alert("Failed to delete account.");
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -91,15 +107,24 @@ export default function StudentsTab() {
                     )}
                   </td>
                   <td className="px-5 py-4 text-right">
-                    {student.registered && (
+                    <div className="flex items-center justify-end gap-2">
                       <button 
-                        onClick={() => handleResetDevice(student.studentId)}
-                        disabled={resettingId === student.studentId}
-                        className="text-xs font-semibold text-rose-600 hover:text-rose-700 px-3 py-1.5 rounded-md hover:bg-rose-50 transition-colors flex items-center gap-1.5 ml-auto disabled:opacity-50 disabled:cursor-not-allowed">
-                        <RefreshCw size={12} className={resettingId === student.studentId ? "animate-spin" : ""} /> 
-                        {resettingId === student.studentId ? "Resetting..." : "Reset Device"}
+                        onClick={() => handleDeleteAccount(student.id)}
+                        disabled={deletingId === student.id}
+                        className="text-xs font-semibold text-slate-500 hover:text-rose-600 px-3 py-1.5 rounded-md hover:bg-rose-50 transition-colors flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <Trash2 size={14} className={deletingId === student.id ? "animate-pulse" : ""} /> 
+                        {deletingId === student.id ? "Deleting..." : "Delete Account"}
                       </button>
-                    )}
+                      {student.registered && (
+                        <button 
+                          onClick={() => handleResetDevice(student.studentId)}
+                          disabled={resettingId === student.studentId}
+                          className="text-xs font-semibold text-rose-600 hover:text-rose-700 px-3 py-1.5 rounded-md hover:bg-rose-50 transition-colors flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed">
+                          <RefreshCw size={12} className={resettingId === student.studentId ? "animate-spin" : ""} /> 
+                          {resettingId === student.studentId ? "Resetting..." : "Reset Device"}
+                        </button>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}

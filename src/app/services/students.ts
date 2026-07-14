@@ -46,3 +46,9 @@ export const resetStudentDevice = async (studentId: string): Promise<any> => {
     body: JSON.stringify({ studentId }),
   });
 };
+
+export const deleteStudent = async (id: string): Promise<void> => {
+  return apiFetch(`/api/students/${id}/`, {
+    method: 'DELETE',
+  });
+};

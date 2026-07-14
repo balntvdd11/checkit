@@ -21,7 +21,8 @@ type Action =
   | { type: "ADD_ATTENDANCE"; payload: AttendanceRecord }
   | { type: "ADD_ATTENDANCE_RECORD"; payload: AttendanceRecord }
   | { type: "UPDATE_ATTENDANCE_RECORD"; payload: AttendanceRecord }
-  | { type: "SET_ATTENDANCE"; payload: AttendanceRecord[] };
+  | { type: "SET_ATTENDANCE"; payload: AttendanceRecord[] }
+  | { type: "DELETE_STUDENT"; payload: { id: string } };
 
 const initialState: State = { students: [], events: [], attendance: [], loading: false, error: null };
 
@@ -43,6 +44,8 @@ function reducer(state: State, action: Action): State {
       return { ...state, students: [action.payload, ...state.students] };
     case "UPDATE_STUDENT":
       return { ...state, students: state.students.map(s => s.studentId === action.payload.studentId ? action.payload : s) };
+    case "DELETE_STUDENT":
+      return { ...state, students: state.students.filter(s => s.id !== action.payload.id) };
     case "SET_ATTENDANCE":
       return { ...state, attendance: action.payload };
     case "ADD_ATTENDANCE":

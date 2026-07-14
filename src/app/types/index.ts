@@ -61,6 +61,7 @@ export interface EventConfig {
 }
 
 export interface StudentRecord {
+  id?: string;
   name: string;
   studentId: string;
   section: string;
