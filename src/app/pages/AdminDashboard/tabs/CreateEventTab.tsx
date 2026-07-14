@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Copy, CheckCircle2, Clock, MapPin, Hash, Building2, Ticket } from "lucide-react";
+import { Copy, CheckCircle2, Clock, MapPin, Hash, Building2, Ticket, Archive, Trash2, ArrowLeft } from "lucide-react";
 import Card from "../../../components/shared/Card";
 import { generateCheckItCode, cn } from "../../../lib/utils";
 import type { EventConfig } from "../../../types";
@@ -12,8 +12,12 @@ export default function CreateEventTab() {
   const { events } = useSelectors();
   
   const [showEventForm, setShowEventForm] = useState(false);
+  const [showArchivedEvents, setShowArchivedEvents] = useState(false);
   const [copiedCode, setCopiedCode] = useState(false);
   const [editingEventId, setEditingEventId] = useState<string | null>(null);
+
+  const activeEventsList = events.filter(e => e.status !== "archived");
+  const archivedEventsList = events.filter(e => e.status === "archived");
 
   const handleCreateEvent = (ev: React.FormEvent) => {
     ev.preventDefault();
@@ -62,10 +66,18 @@ export default function CreateEventTab() {
           <h2 className="text-xl font-bold text-white">Event Management</h2>
           <p className="text-sm text-white mt-1">Create and manage institutional events and seminars</p>
         </div>
-        <button onClick={() => { setShowEventForm(!showEventForm); }}
-          className="px-5 py-2.5 bg-[var(--primary)] hover:bg-[#A61831] text-white font-semibold rounded-xl transition-colors shadow-sm text-sm">
-          {showEventForm ? "Cancel" : "+ Create New Event"}
-        </button>
+        <div className="flex items-center gap-3">
+          <button onClick={() => { setShowArchivedEvents(!showArchivedEvents); setShowEventForm(false); }}
+            className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold rounded-xl transition-colors shadow-sm text-sm border border-slate-700 flex items-center gap-2">
+            {showArchivedEvents ? <><ArrowLeft size={16} /> Back</> : <><Archive size={16} /> Archives</>}
+          </button>
+          {!showArchivedEvents && (
+            <button onClick={() => { setShowEventForm(!showEventForm); }}
+              className="px-5 py-2.5 bg-[var(--primary)] hover:bg-[#A61831] text-white font-semibold rounded-xl transition-colors shadow-sm text-sm">
+              {showEventForm ? "Cancel" : "+ Create New Event"}
+            </button>
+          )}
+        </div>
       </div>
 
       {showEventForm && (
@@ -124,13 +136,13 @@ export default function CreateEventTab() {
 
       
 
-      {!showEventForm && (
+      {!showEventForm && !showArchivedEvents && (
         <Card className="border border-slate-100 overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
             <h3 className="font-bold text-slate-800">Recent Events</h3>
           </div>
           <div className="divide-y divide-slate-50">
-              {events.map((evt, idx) => (
+              {activeEventsList.map((evt, idx) => (
                 <div key={idx} className="p-6 hover:bg-slate-50/50 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex items-start gap-4">
                   <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center shrink-0 border",
@@ -176,10 +188,64 @@ export default function CreateEventTab() {
                       className="px-3 py-1 text-xs font-semibold rounded-lg border transition-colors bg-[var(--primary)] text-white hover:bg-[#A61831]">
                       Edit
                     </button>
+                    <button onClick={async () => {
+                      if (window.confirm("Are you sure you want to delete this event? It will be moved to Archives.")) {
+                        const updatedEvent: EventConfig = { ...evt, status: "archived" };
+                        const saved = await updateEvent(updatedEvent);
+                        dispatch({ type: "UPDATE_EVENT", payload: saved });
+                      }
+                    }}
+                      className="px-3 py-1 text-xs font-semibold rounded-lg border transition-colors bg-rose-50 text-rose-600 hover:bg-rose-100 border-rose-200">
+                      <Trash2 size={14} className="inline-block mr-1" /> Delete
+                    </button>
                   </div>
                 </div>
               </div>
             ))}
+            {activeEventsList.length === 0 && (
+              <div className="p-8 text-center text-slate-500">No active events found. Create one to get started!</div>
+            )}
+          </div>
+        </Card>
+      )}
+
+      {showArchivedEvents && (
+        <Card className="border border-slate-100 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300">
+          <div className="px-6 py-4 border-b border-slate-100 bg-slate-50 flex items-center gap-3">
+            <Archive size={18} className="text-slate-500" />
+            <h3 className="font-bold text-slate-800">Archived Events</h3>
+          </div>
+          <div className="divide-y divide-slate-50">
+            {archivedEventsList.map((evt, idx) => (
+              <div key={idx} className="p-6 bg-slate-50/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4 opacity-75">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 border bg-slate-200 border-slate-300">
+                    <Archive size={20} className="text-slate-500" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-slate-700 line-through">{evt.name}</h4>
+                    <div className="flex items-center gap-4 text-xs text-slate-500 mt-1">
+                      <span className="flex items-center gap-1.5"><Clock size={12} /> {evt.timeIn} – {evt.timeOut}</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="shrink-0 text-center sm:text-right p-3 sm:p-0">
+                  <button onClick={async () => {
+                    if (window.confirm("Are you sure you want to restore this event?")) {
+                      const updatedEvent: EventConfig = { ...evt, status: "inactive" };
+                      const saved = await updateEvent(updatedEvent);
+                      dispatch({ type: "UPDATE_EVENT", payload: saved });
+                    }
+                  }}
+                    className="px-4 py-2 text-xs font-semibold rounded-lg border transition-colors bg-white text-slate-600 hover:bg-slate-100">
+                    Restore Event
+                  </button>
+                </div>
+              </div>
+            ))}
+            {archivedEventsList.length === 0 && (
+              <div className="p-8 text-center text-slate-400">No archived events found.</div>
+            )}
           </div>
         </Card>
       )}

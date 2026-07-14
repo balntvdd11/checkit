@@ -17,7 +17,7 @@ export type View =
 export type AdminTab = "dashboard" | "students" | "create-event" | "scanner" | "reports";
 export type AttendanceStatus = "present" | "late" | "absent";
 export type EVENTSStatus = "active" | "completed" | "inactive";
-export type EventStatus = "active" | "inactive";
+export type EventStatus = "active" | "inactive" | "archived";
 
 export interface Student {
   name: string;
