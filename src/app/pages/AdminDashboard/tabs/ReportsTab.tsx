@@ -50,7 +50,7 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
     
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
-    doc.text("CheckIT Attendance Report", 14, 15);
+    doc.text("COAccess Attendance Report", 14, 15);
     doc.setFontSize(10);
     doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 22);
     

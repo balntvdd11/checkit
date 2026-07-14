@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { GraduationCap, Hash, RefreshCw, ChevronRight, AlertTriangle, Download } from "lucide-react";
-import CheckITLogo from "../../components/shared/CheckITLogo";
+import COAccessLogo from "../../components/shared/COAccessLogo";
 import QRCodeDisplay from "../../components/shared/QRCodeDisplay";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
 import { cn } from "../../lib/utils";
@@ -101,7 +101,7 @@ export default function QRPassGenerator({ student, EVENTSCode, onBack, onLogout 
       <AnimatedBackground />
       <header className="bg-[var(--secondary)] px-5 py-3.5 flex items-center justify-between shrink-0 relative z-20 shadow-md">
         <div className="flex items-center gap-4">
-          <CheckITLogo inverted size="sm" />
+          <COAccessLogo inverted size="sm" />
           <div className="w-px h-5 bg-white/20" />
           <span className="text-white/50 text-sm">Student Portal</span>
         </div>

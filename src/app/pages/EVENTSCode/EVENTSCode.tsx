@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { LogOut, ChevronRight, Hash, RefreshCw, QrCode } from "lucide-react";
-import CheckITLogo from "../../components/shared/CheckITLogo";
+import COAccessLogo from "../../components/shared/COAccessLogo";
 import Card from "../../components/shared/Card";
 import { cn } from "../../lib/utils";
 import type { Student, EventConfig } from "../../types";
@@ -23,7 +23,7 @@ export default function EVENTSCodeEntry({ student, events, onSubmit, onViewHisto
 
   const handleSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
-    if (!selectedEventId) { setError("Please select a CheckIT code"); return; }
+    if (!selectedEventId) { setError("Please select a COAccess code"); return; }
     setLoading(true); setError(null);
     setTimeout(() => {
       setLoading(false);
@@ -37,7 +37,7 @@ export default function EVENTSCodeEntry({ student, events, onSubmit, onViewHisto
       <div className="absolute inset-0 opacity-0 pointer-events-none" />
       <header className="relative z-10 bg-[var(--secondary)] px-5 py-3.5 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-4">
-          <CheckITLogo inverted size="sm" />
+          <COAccessLogo inverted size="sm" />
           <div className="w-px h-5 bg-white/20" />
           <span className="text-white/50 text-sm">Student Portal</span>
         </div>
@@ -67,8 +67,8 @@ export default function EVENTSCodeEntry({ student, events, onSubmit, onViewHisto
 
             <form onSubmit={handleSubmit} className="relative z-10 flex flex-col gap-4">
               <div className="flex flex-col items-center text-center mb-7">
-                <img src={checkITLogoImg} alt="CheckIT logo" className="w-28 h-28 object-contain drop-shadow-xl mb-4" />
-                <h2 className="text-lg font-bold text-white">Select CheckIT Event</h2>
+                <img src={checkITLogoImg} alt="COAccess logo" className="w-28 h-28 object-contain drop-shadow-xl mb-4" />
+                <h2 className="text-lg font-bold text-white">Select COAccess Event</h2>
                 <p className="text-sm text-slate-300 mt-1">Choose today's event from the list</p>
               </div>
 

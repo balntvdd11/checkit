@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 import { LogOut, RefreshCw, Smartphone, GraduationCap, CheckCircle2, History, AlertCircle } from "lucide-react";
-import CheckITLogo from "../../components/shared/CheckITLogo";
+import COAccessLogo from "../../components/shared/COAccessLogo";
 import StatusBadge from "../../components/shared/StatusBadge";
 import Card from "../../components/shared/Card";
 import type { Student, AttendanceRecord } from "../../types";
@@ -26,7 +26,7 @@ export default function StudentDashboard({ student, onLogout, onGeneratePass }: 
       <div className="absolute inset-0 opacity-0 pointer-events-none" />
       <header className="bg-[var(--secondary)] px-5 py-3.5 flex items-center justify-between shrink-0 sticky top-0 z-20 shadow-md">
         <div className="flex items-center gap-4">
-          <CheckITLogo inverted size="sm" />
+          <COAccessLogo inverted size="sm" />
           <div className="w-px h-5 bg-white/20" />
           <span className="text-white/50 text-sm">Student Portal</span>
         </div>

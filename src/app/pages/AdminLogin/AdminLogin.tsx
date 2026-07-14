@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ChevronRight, KeyRound, RefreshCw, XCircle, Eye, EyeOff } from "lucide-react";
-import CheckITLogo from "../../components/shared/CheckITLogo";
+import COAccessLogo from "../../components/shared/COAccessLogo";
 import Card from "../../components/shared/Card";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
 import { login } from "../../services/auth";
@@ -44,7 +44,7 @@ export default function AdminLogin({ onSuccess, onBack }: { onSuccess: () => voi
         <Card className="p-8 !bg-black border border-white/10 shadow-[0_32px_80px_rgba(0,0,0,0.35)] relative overflow-hidden group premium-border-card">
 
           <div className="relative z-10 flex flex-col items-center text-center mb-8">
-            <CheckITLogo size="sm" />
+            <COAccessLogo size="sm" />
             <div className="mt-6 w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center shadow-sm border border-white/10">
               <KeyRound size={24} className="text-white" />
             </div>

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { RefreshCw, XCircle, ChevronRight, Info, GraduationCap } from "lucide-react";
 import { useClerk, useSignIn, useUser, SignIn } from "@clerk/clerk-react";
-import CheckITLogo from "../../components/shared/CheckITLogo";
+import COAccessLogo from "../../components/shared/COAccessLogo";
 import Card from "../../components/shared/Card";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
 import { checkStudentExists } from "../../services/studentCheck";

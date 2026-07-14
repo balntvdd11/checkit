@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useUser } from "@clerk/clerk-react";
 import { motion, AnimatePresence } from "motion/react";
 import { ChevronRight, ClipboardList, XCircle, RefreshCw } from "lucide-react";
-import CheckITLogo from "../../components/shared/CheckITLogo";
+import COAccessLogo from "../../components/shared/COAccessLogo";
 import Card from "../../components/shared/Card";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
 import { cn } from "../../lib/utils";
@@ -83,7 +83,7 @@ export default function StudentRegistration({ email, onSubmit, onBack }: { email
 
           {/* Header */}
           <div className="relative z-10 flex flex-col items-center text-center mb-8">
-            <CheckITLogo size="md" />
+            <COAccessLogo size="md" />
             <div className="mt-7 w-16 h-16 rounded-2xl bg-[#0B2A4D] flex items-center justify-center shadow-[0_0_15px_rgba(10,42,77,0.35)]">
               <ClipboardList size={28} className="text-white" />
             </div>

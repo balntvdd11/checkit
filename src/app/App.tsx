@@ -57,7 +57,7 @@ function AppInner() {
   const clerk = useClerk();
 
   const handleStudentLogout = () => {
-    // "Sign Out" in CheckIT only clears application state and returns to the
+    // "Sign Out" in COAccess only clears application state and returns to the
     // landing page.  It does NOT terminate the Clerk session so the student
     // can re-enter the portal instantly without re-authenticating via Google.
     setCurrentStudent(null);

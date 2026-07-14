@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { AlertTriangle, ExternalLink, Copy, CheckCircle2 } from "lucide-react";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
-import CheckITLogo from "../../components/shared/CheckITLogo";
+import COAccessLogo from "../../components/shared/COAccessLogo";
 import DeveloperFooter from "../../components/shared/DeveloperFooter";
 
 export default function InAppBrowserWarning() {
@@ -26,7 +26,7 @@ export default function InAppBrowserWarning() {
       <AnimatedBackground />
       <div className="relative z-10 w-full max-w-md bg-black border border-white/10 rounded-3xl p-8 shadow-2xl text-center">
         <div className="mb-8 flex justify-center">
-          <CheckITLogo size="md" />
+          <COAccessLogo size="md" />
         </div>
         
         <div className="w-16 h-16 rounded-2xl bg-amber-500/10 flex items-center justify-center mx-auto mb-6 border border-amber-500/20">
@@ -37,7 +37,7 @@ export default function InAppBrowserWarning() {
         
         <p className="text-sm text-slate-300 leading-relaxed mb-6">
           You are currently viewing this page inside an app like Messenger or Facebook. 
-          For security reasons, CheckIT's browser activation cannot run inside in-app browsers.
+          For security reasons, COAccess's browser activation cannot run inside in-app browsers.
         </p>
 
         <div className="p-4 bg-white/5 border border-white/10 rounded-xl mb-6">

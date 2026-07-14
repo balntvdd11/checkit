@@ -18,7 +18,7 @@ export default function AnimatedBackground(): JSX.Element {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const logo = document.querySelector<HTMLImageElement>("img[alt='CheckIT logo']");
+    const logo = document.querySelector<HTMLImageElement>("img[alt='COAccess logo']");
 
     const updateCenter = () => {
       if (logo) {

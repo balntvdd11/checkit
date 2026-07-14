@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
 import { ShieldAlert, LogOut } from "lucide-react";
 import Card from "../../components/shared/Card";
-import CheckITLogo from "../../components/shared/CheckITLogo";
+import COAccessLogo from "../../components/shared/COAccessLogo";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
 import { useClerk } from "@clerk/clerk-react";
 import DeveloperFooter from "../../components/shared/DeveloperFooter";
@@ -20,7 +20,7 @@ export default function DeviceConflict({ email, savedOS, onCancel }: { email: st
 
       <div className="relative z-10 w-full max-w-md">
         <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="flex justify-center mb-8">
-          <CheckITLogo size="lg" />
+          <COAccessLogo size="lg" />
         </motion.div>
 
         <Card className="p-8 backdrop-blur-xl bg-slate-800/80 border-red-500/30">
@@ -39,7 +39,7 @@ export default function DeviceConflict({ email, savedOS, onCancel }: { email: st
             <p className="text-slate-300 mb-6 leading-relaxed">
               The account <span className="font-semibold text-white">{email}</span> is already permanently locked to {savedOS ? `a ${savedOS}` : "another"} device. 
               <br /><br />
-              CheckIT strictly enforces a <strong>one device per student</strong> policy. You cannot log in from this browser or device.
+              COAccess strictly enforces a <strong>one device per student</strong> policy. You cannot log in from this browser or device.
             </p>
 
             <div className="w-full space-y-3">

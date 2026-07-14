@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Lock, Smartphone, CheckCircle2, XCircle, RefreshCw, Fingerprint } from "lucide-react";
 import Card from "../../components/shared/Card";
-import CheckITLogo from "../../components/shared/CheckITLogo";
+import COAccessLogo from "../../components/shared/COAccessLogo";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
 import type { Student } from "../../types";
 import { activateBrowser } from "../../services/browserActivation";
@@ -94,7 +94,7 @@ export default function BrowserActivation({
 
           {/* Header */}
           <div className="relative z-10 flex flex-col items-center text-center mb-8">
-            <CheckITLogo size="md" />
+            <COAccessLogo size="md" />
             <div className="mt-7 relative">
               <div className="w-20 h-20 rounded-2xl bg-[#0B2A4D] flex items-center justify-center shadow-[0_0_15px_rgba(10,42,77,0.35)]">
                 <AnimatePresence mode="wait">
@@ -138,7 +138,7 @@ export default function BrowserActivation({
             {[
               { label: "Generate ECC key pair", desc: "P-256 via Web Crypto API" },
               { label: "Store private key", desc: "Secured in this browser only" },
-              { label: "Register public key", desc: "Sent to CheckIT backend" },
+              { label: "Register public key", desc: "Sent to COAccess backend" },
               { label: "Bind device fingerprint", desc: "Hardware + Browser tied to account" },
             ].map((step, i) => (
               <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10">

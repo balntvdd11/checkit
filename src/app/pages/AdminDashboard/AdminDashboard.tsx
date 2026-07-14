@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { LogOut, LayoutDashboard, Users, ScanLine, FileText, CalendarCheck2 } from "lucide-react";
-import CheckITLogo from "../../components/shared/CheckITLogo";
+import COAccessLogo from "../../components/shared/COAccessLogo";
 import DashboardTab from "./tabs/DashboardTab";
 import StudentsTab from "./tabs/StudentsTab";
 import CreateEventTab from "./tabs/CreateEventTab";
@@ -53,7 +53,7 @@ export default function AdminDashboard({ onLogout }: {
       <div className="absolute inset-0 opacity-0 pointer-events-none" />
       <header className="bg-[var(--secondary)] px-5 py-3.5 flex items-center justify-between sticky top-0 z-30 shadow-md">
         <div className="flex items-center gap-4">
-          <CheckITLogo inverted size="sm" />
+          <COAccessLogo inverted size="sm" />
           <div className="w-px h-5 bg-white/20 hidden sm:block" />
           <span className="text-white/50 font-semibold text-sm hidden sm:block">Admin Portal</span>
         </div>

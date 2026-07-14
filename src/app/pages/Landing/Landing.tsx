@@ -23,11 +23,11 @@ export default function LandingPage({ onStudent, onAdmin }: { onStudent: () => v
           className="flex flex-col items-center mb-1 -translate-y-16 sm:-translate-y-16">
           <div className="mb-0.5 flex flex-col sm:flex-row items-center justify-center gap-0">
             <div className="relative w-48 sm:w-72 h-48 sm:h-72 shrink-0">
-              <img src={checkITLogo} alt="CheckIT logo" className="relative z-10 w-full h-full object-contain" />
+              <img src={checkITLogo} alt="COAccess logo" className="relative z-10 w-full h-full object-contain" />
             </div>
             <div className="flex items-center gap-0 -translate-y-8 sm:-translate-y-0 sm:-translate-x-20 checkit-wordmark text-5xl sm:text-7xl">
-              <span className="checkit-wordmark__check">Check</span>
-              <span className="checkit-wordmark__it">IT</span>
+              <span className="checkit-wordmark__check">CO</span>
+              <span className="checkit-wordmark__it">Access</span>
             </div>
           </div>
           <div className="relative -translate-y-10 sm:-translate-y-15 flex flex-col items-center justify-center w-full">
