@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useUser } from "@clerk/clerk-react";
 import { motion, AnimatePresence } from "motion/react";
 import { ChevronRight, ClipboardList, XCircle, RefreshCw } from "lucide-react";
 import CheckITLogo from "../../components/shared/CheckITLogo";
@@ -11,7 +12,8 @@ import { registerStudent } from "../../services/studentCheck";
 // ─── Student Registration ─────────────────────────────────────────────────────
 
 export default function StudentRegistration({ email, onSubmit, onBack }: { email: string; onSubmit: (s: Student) => void; onBack: () => void }) {
-  const [form, setForm] = useState({ name: "", section: "", studentId: "" });
+  const { user } = useUser();
+  const [form, setForm] = useState({ name: user?.fullName || "", section: "", studentId: "" });
   const [errors, setErrors] = useState<Partial<typeof form>>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -86,7 +88,7 @@ export default function StudentRegistration({ email, onSubmit, onBack }: { email
             </div>
             <h1 className="mt-4 text-xl font-bold text-white">Complete Registration</h1>
             <p className="mt-1.5 text-sm text-slate-300 leading-relaxed max-w-[280px]">
-              Signed in as <span className="font-semibold text-white">{email}</span>
+              Welcome, <span className="font-semibold text-white">{form.name || email}</span>
             </p>
           </div>
 
@@ -107,21 +109,6 @@ export default function StudentRegistration({ email, onSubmit, onBack }: { email
           </AnimatePresence>
 
           <form onSubmit={handleSubmit} className="relative z-10 flex flex-col gap-4">
-            {/* Full Name */}
-            <div>
-              <label className="block text-sm font-semibold text-slate-300 mb-1.5">Full Name</label>
-              <input
-                type="text"
-                placeholder="e.g., Maria Clara Santos"
-                value={form.name}
-                onChange={e => setForm({ ...form, name: e.target.value })}
-                className={inputCls(errors.name)}
-              />
-              {errors.name && (
-                <p className="mt-1.5 text-xs text-red-400">{errors.name}</p>
-              )}
-            </div>
-
             {/* Section */}
             <div>
               <label className="block text-sm font-semibold text-slate-300 mb-1.5">Section</label>
