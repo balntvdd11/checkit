@@ -31,8 +31,8 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
 
   const handleExportCSV = () => {
     if (filteredReports.length === 0) return alert("No data to export.");
-    const headers = ["Student Name", "ID", "Section", "Date", "Time In", "Status"];
-    const rows = filteredReports.map(r => [r.name, r.studentId, r.section, r.date, r.timeIn, r.status]);
+    const headers = ["Student Name", "ID", "Section", "Date", "Time In", "Time Out", "Status"];
+    const rows = filteredReports.map(r => [r.name, r.studentId, r.section, r.date, r.timeIn, r.timeOut || "—", r.status]);
     const csvContent = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
@@ -62,8 +62,8 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
 
     doc.autoTable({
       startY: 30,
-      head: [["Student Name", "ID", "Section", "Date", "Time In", "Status"]],
-      body: filteredReports.map(r => [r.name, r.studentId, r.section, r.date, r.timeIn, r.status]),
+      head: [["Student Name", "ID", "Section", "Date", "Time In", "Time Out", "Status"]],
+      body: filteredReports.map(r => [r.name, r.studentId, r.section, r.date, r.timeIn, r.timeOut || "—", r.status]),
     });
     
     doc.save("attendance_report.pdf");
@@ -156,6 +156,7 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
                 <th className="px-5 py-3">ID / Section</th>
                 <th className="px-5 py-3">Date</th>
                 <th className="px-5 py-3">Time In</th>
+                <th className="px-5 py-3">Time Out</th>
                 <th className="px-5 py-3">Status</th>
               </tr>
             </thead>
@@ -169,6 +170,7 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
                   </td>
                   <td className="px-5 py-3 text-slate-600">{r.date}</td>
                   <td className="px-5 py-3 font-mono text-slate-600">{r.timeIn}</td>
+                  <td className="px-5 py-3 font-mono text-slate-600">{r.timeOut || "—"}</td>
                   <td className="px-5 py-3"><StatusBadge status={r.status} /></td>
                 </tr>
               ))}

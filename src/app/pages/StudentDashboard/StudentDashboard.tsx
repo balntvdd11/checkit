@@ -91,6 +91,7 @@ export default function StudentDashboard({ student, onLogout, onGeneratePass }: 
                       <th className="px-5 py-4 whitespace-nowrap">Date</th>
                       <th className="px-5 py-4">Event / EVENTS</th>
                       <th className="px-5 py-4">Time In</th>
+                      <th className="px-5 py-4">Time Out</th>
                       <th className="px-5 py-4">Status</th>
                     </tr>
                   </thead>
@@ -103,6 +104,7 @@ export default function StudentDashboard({ student, onLogout, onGeneratePass }: 
                           <p className="text-xs text-slate-400 font-mono mt-0.5">{record.EVENTSCode}</p>
                         </td>
                         <td className="px-5 py-4 font-mono text-slate-600">{record.timeIn}</td>
+                        <td className="px-5 py-4 font-mono text-slate-600">{record.timeOut || "—"}</td>
                         <td className="px-5 py-4"><StatusBadge status={record.status} /></td>
                       </tr>
                     ))}

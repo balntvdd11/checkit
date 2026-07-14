@@ -12,7 +12,7 @@ import { cn } from "../../../lib/utils";
 export default function ScannerTab({ events }: { events: EventConfig[] }) {
   const [selectedScanEVENTS, setSelectedScanEVENTS] = useState("");
   const [scanning, setScanning] = useState(false);
-  const [scanResults, setScanResults] = useState<{ id: string; name: string; status: "success" | "invalid" | "duplicate"; time: string }[]>([]);
+  const [scanResults, setScanResults] = useState<{ id: string; name: string; status: "success" | "invalid" | "duplicate"; action?: "present" | "late" | "time-out"; time: string }[]>([]);
   const [scanAlert, setScanAlert] = useState<{ name: string; visible: boolean } | null>(null);
   const { state, dispatch } = useStore();
   
@@ -52,9 +52,10 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
               const student = state.students.find(s => s.studentId === studentId);
 
               // We need a strictly formatted HH:mm for reliable string comparison
-              const time24 = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
+              const now = new Date();
+              const time24 = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
               // Display time can still be localized AM/PM
-              const displayTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+              const displayTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
               if (!student || !activeEvent || code !== activeEvent.checkItCode) {
                 setScanResults(prev => [{ id: `scan-${Date.now()}`, name: "Unknown / Invalid", status: "invalid", time: displayTime }, ...prev]);
@@ -81,10 +82,9 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
                   const recordId = (existingRecord as any).id;
                   if (recordId) {
                     const updated = await updateAttendanceRecord(recordId, { timeOut: time24 });
-                    dispatch({ type: "UPDATE_ATTENDANCE_RECORD", payload: updated }); // Assume action exists or just let refresh handle it. Wait, UPDATE_ATTENDANCE_RECORD might not exist.
-                    // We'll dispatch ADD but since we want to overwrite, let's just trigger a full fetch or rely on local state.
-                    // Actually, if we just push to scan results, that's enough feedback.
-                    setScanResults(prev => [{ id: `scan-${Date.now()}`, name: `${student.name} (Time Out)`, status: "success", time: displayTime }, ...prev]);
+                    dispatch({ type: "UPDATE_ATTENDANCE_RECORD", payload: updated }); 
+                    
+                    setScanResults(prev => [{ id: `scan-${Date.now()}`, name: student.name, status: "success", action: "time-out", time: displayTime }, ...prev]);
                     setScanAlert({ name: `${student.name} (Timed Out)`, visible: true });
                     setTimeout(() => {
                       setScanAlert(prev => prev ? { ...prev, visible: false } : null);
@@ -116,9 +116,9 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
 
               const saved = await createAttendanceRecord(record as any);
               dispatch({ type: "ADD_ATTENDANCE_RECORD", payload: saved });
-              setScanResults(prev => [{ id: `scan-${Date.now()}`, name: `${student.name} (${scanStatus})`, status: "success", time: displayTime }, ...prev]);
+              setScanResults(prev => [{ id: `scan-${Date.now()}`, name: student.name, status: "success", action: scanStatus, time: displayTime }, ...prev]);
               
-              setScanAlert({ name: student.name, visible: true });
+              setScanAlert({ name: `${student.name} (${scanStatus === 'late' ? 'Late' : 'Time In'})`, visible: true });
               setTimeout(() => {
                 setScanAlert(prev => prev ? { ...prev, visible: false } : null);
               }, 3000);
@@ -250,7 +250,12 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
                       <div>
                         <p className="text-sm font-bold text-slate-700">{res.name}</p>
                         <p className="text-xs font-medium mt-0.5">
-                          {res.status === "success" ? <span className="text-emerald-600">Marked Present</span> :
+                          {res.status === "success" ? (
+                            <span className={res.action === "late" ? "text-amber-600" : res.action === "time-out" ? "text-blue-600" : "text-emerald-600"}>
+                              {res.action === "time-out" ? "Time Out Recorded" :
+                               res.action === "late" ? "Marked Late" : "Marked Present"}
+                            </span>
+                          ) :
                            res.status === "invalid" ? <span className="text-rose-600">Invalid / Spoofed QR</span> :
                            <span className="text-amber-600">Already Scanned</span>}
                         </p>
