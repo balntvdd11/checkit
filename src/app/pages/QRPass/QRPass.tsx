@@ -84,7 +84,7 @@ export default function QRPassGenerator({ student, EVENTSCode, onBack, onLogout 
 
   if (isActive === null) {
     return (
-      <div className="min-h-screen landing-page-black flex items-center justify-center">
+      <div className="min-h-screen pb-[180px] sm:pb-[220px] landing-page-black flex items-center justify-center">
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
           <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ animation: "spin 0.9s linear infinite" }}>
             <circle cx="18" cy="18" r="15" stroke="rgba(255,255,255,0.12)" strokeWidth="3" />
@@ -97,7 +97,7 @@ export default function QRPassGenerator({ student, EVENTSCode, onBack, onLogout 
   }
 
   return (
-    <div className="min-h-screen landing-page-black relative overflow-hidden">
+    <div className="min-h-screen pb-[180px] sm:pb-[220px] landing-page-black relative overflow-hidden">
       <AnimatedBackground />
       <header className="bg-[var(--secondary)] px-5 py-3.5 flex items-center justify-between shrink-0 relative z-20 shadow-md">
         <div className="flex items-center gap-4">

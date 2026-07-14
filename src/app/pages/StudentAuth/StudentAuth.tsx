@@ -79,7 +79,7 @@ export default function StudentAuthGate({
   // we must render the UI so the user can see the error message.
   if (!userLoaded || (isSignedIn && checkingBackend) || (isSignedIn && user && !error)) {
     return (
-      <div className="min-h-screen landing-page-black flex items-center justify-center" aria-label="Loading…">
+      <div className="min-h-screen pb-[180px] sm:pb-[220px] landing-page-black flex items-center justify-center" aria-label="Loading…">
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
           <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ animation: "spin 0.9s linear infinite" }}>
             <circle cx="18" cy="18" r="15" stroke="rgba(255,255,255,0.12)" strokeWidth="3" />
@@ -92,7 +92,7 @@ export default function StudentAuthGate({
   }
 
   return (
-    <div className="min-h-screen landing-page-black flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen pb-[180px] sm:pb-[220px] landing-page-black flex items-center justify-center p-4 relative overflow-hidden">
       <AnimatedBackground />
       <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.35 }} className="w-full relative z-10 flex flex-col items-center justify-center min-h-[500px]">
         <div className="w-full max-w-[400px] mb-6">

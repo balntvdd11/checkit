@@ -22,7 +22,7 @@ export default function InAppBrowserWarning() {
   };
 
   return (
-    <div className="min-h-screen landing-page-black flex flex-col items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen pb-[180px] sm:pb-[220px] landing-page-black flex flex-col items-center justify-center p-4 relative overflow-hidden">
       <AnimatedBackground />
       <div className="relative z-10 w-full max-w-md bg-black border border-white/10 rounded-3xl p-8 shadow-2xl text-center">
         <div className="mb-8 flex justify-center">

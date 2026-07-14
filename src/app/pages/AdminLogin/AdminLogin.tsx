@@ -34,7 +34,7 @@ export default function AdminLogin({ onSuccess, onBack }: { onSuccess: () => voi
   };
 
   return (
-    <div className="min-h-screen landing-page-black flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen pb-[180px] sm:pb-[220px] landing-page-black flex items-center justify-center p-4 relative overflow-hidden">
       <AnimatedBackground />
       <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.35 }} className="w-full max-w-md relative z-10">
         <button onClick={onBack} className="flex items-center gap-1.5 text-sm text-white/70 hover:text-white mb-8 transition-colors">

@@ -10,7 +10,7 @@ import DeveloperFooter from "../../components/shared/DeveloperFooter";
 export default function LandingPage({ onStudent, onAdmin }: { onStudent: () => void; onAdmin: () => void }) {
 
   return (
-    <div className="min-h-screen landing-page-black flex flex-col items-center justify-center relative overflow-hidden">
+    <div className="min-h-screen pb-[180px] sm:pb-[220px] landing-page-black flex flex-col items-center justify-center relative overflow-hidden">
       <AnimatedBackground />
       <div className="absolute inset-0 opacity-0 pointer-events-none" />
 

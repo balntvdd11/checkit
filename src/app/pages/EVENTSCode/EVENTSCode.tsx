@@ -32,7 +32,7 @@ export default function EVENTSCodeEntry({ student, events, onSubmit, onViewHisto
   };
 
   return (
-    <div className="min-h-screen landing-page-black relative overflow-hidden">
+    <div className="min-h-screen pb-[180px] sm:pb-[220px] landing-page-black relative overflow-hidden">
       <AnimatedBackground />
       <div className="absolute inset-0 opacity-0 pointer-events-none" />
       <header className="relative z-10 bg-[var(--secondary)] px-5 py-3.5 flex items-center justify-between shrink-0">

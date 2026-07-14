@@ -80,7 +80,7 @@ export default function BrowserActivation({
   };
 
   return (
-    <div className="min-h-screen landing-page-black flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen pb-[180px] sm:pb-[220px] landing-page-black flex items-center justify-center p-4 relative overflow-hidden">
       <AnimatedBackground />
       <motion.div
         initial={{ opacity: 0, scale: 0.96 }}
