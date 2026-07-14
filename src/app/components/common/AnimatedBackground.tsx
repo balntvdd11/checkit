@@ -78,10 +78,13 @@ export default function AnimatedBackground(): JSX.Element {
 
     const pointerMax = 20;
 
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let isMobile = false;
+    if (typeof window !== "undefined") {
+      isMobile = window.innerWidth < 768 || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    }
 
     const tick = () => {
-      if (mediaQuery.matches) return; // Completely disable loop on low-end/reduced-motion
+      if (isMobile) return; // Completely disable loop on low-end/mobile/reduced-motion devices
 
       const t = performance.now();
       const idleX = Math.sin((t / 18000) * Math.PI * 2) * 6;
@@ -145,7 +148,7 @@ export default function AnimatedBackground(): JSX.Element {
     };
 
     const onPointerMove = (event: PointerEvent) => {
-      if (mediaQuery.matches) return;
+      if (isMobile) return;
       const rawX = event.clientX - centerPoint.current.x;
       const rawY = event.clientY - centerPoint.current.y;
       pointerRaw.current.x = rawX;
@@ -156,7 +159,7 @@ export default function AnimatedBackground(): JSX.Element {
     };
 
     const onPointerReset = () => {
-      if (mediaQuery.matches) return;
+      if (isMobile) return;
       targetOffset.current.x = 0;
       targetOffset.current.y = 0;
       pointerRaw.current.x = 0;
@@ -164,18 +167,26 @@ export default function AnimatedBackground(): JSX.Element {
       if (!raf.current) raf.current = requestAnimationFrame(tick);
     };
 
+    const handleResize = () => {
+      if (typeof window !== "undefined") {
+        isMobile = window.innerWidth < 768 || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      }
+      onResize();
+      if (!isMobile && !raf.current) raf.current = requestAnimationFrame(tick);
+    };
+
     window.addEventListener("pointermove", onPointerMove);
     window.addEventListener("pointerleave", onPointerReset);
     window.addEventListener("blur", onPointerReset);
-    window.addEventListener("resize", onResize);
+    window.addEventListener("resize", handleResize);
 
-    if (!mediaQuery.matches && !raf.current) raf.current = requestAnimationFrame(tick);
+    if (!isMobile && !raf.current) raf.current = requestAnimationFrame(tick);
 
     return () => {
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("pointerleave", onPointerReset);
       window.removeEventListener("blur", onPointerReset);
-      window.removeEventListener("resize", onResize);
+      window.removeEventListener("resize", handleResize);
       if (logo && !logo.complete) {
         logo.removeEventListener("load", onLogoLoad);
       }

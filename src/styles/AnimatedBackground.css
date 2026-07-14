@@ -110,6 +110,15 @@
 /* keep blobs behind content */
 .animated-background, .blobs, .css-blob { z-index: 0; }
 
+@media (max-width: 768px) {
+  .css-blob {
+    animation: none !important;
+  }
+  .ambient-glow {
+    filter: blur(40px) !important;
+  }
+}
+
 /* ─── Pointer-reactive logo glow (unchanged behavior) ──────────────── */
 
 .animated-background__glow {
