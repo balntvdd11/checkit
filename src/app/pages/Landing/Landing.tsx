@@ -26,8 +26,8 @@ export default function LandingPage({ onStudent, onAdmin }: { onStudent: () => v
               <img src={coaLogo} alt="COAccess logo" className="relative z-10 w-full h-full object-contain drop-shadow-2xl rounded-full" />
             </div>
             <div className="flex items-center gap-0 checkit-wordmark text-5xl sm:text-7xl">
-              <span className="checkit-wordmark__check">CO</span>
-              <span className="checkit-wordmark__it">Access</span>
+              <span className="checkit-wordmark__check">COA</span>
+              <span className="checkit-wordmark__it">ccess</span>
             </div>
           </div>
           <div className="relative -translate-y-10 sm:-translate-y-15 flex flex-col items-center justify-center w-full">
@@ -73,6 +73,6 @@ export default function LandingPage({ onStudent, onAdmin }: { onStudent: () => v
         </div>
       </motion.div>
       <DeveloperFooter />
-      </div>
+    </div>
   );
 }
