@@ -3,6 +3,7 @@ import checkITLogo from "../../../asset/checkITlogo.png";
 import studentPortalIcon from "../../../asset/studentportalICON.png";
 import adminPortalIcon from "../../../asset/adminportalICON.png";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
+import DeveloperFooter from "../../components/shared/DeveloperFooter";
 
 // ─── Landing Page ─────────────────────────────────────────────────────────────
 
@@ -70,25 +71,8 @@ export default function LandingPage({ onStudent, onAdmin }: { onStudent: () => v
             <div className="mt-auto" />
           </motion.button>
         </div>
-        {/* Developer Footer */}
-        <motion.div 
-          initial={{ opacity: 0 }} 
-          animate={{ opacity: 1 }} 
-          transition={{ duration: 0.8, delay: 0.8 }}
-          className="mt-12 sm:mt-16 text-center text-white/40 text-[10px] sm:text-xs flex flex-col items-center"
-        >
-          <p className="font-bold tracking-[0.2em] uppercase mb-2 text-white/60">Developed by 1NEPEAK</p>
-          <div className="flex flex-wrap justify-center gap-x-3 gap-y-1 max-w-lg mx-auto opacity-75">
-            <span>BONDOC, K.</span>
-            <span>DAVID, C.</span>
-            <span>GIRADO, S.</span>
-            <span>NATIVIDAD, B.</span>
-            <span>PASCUA, Z.</span>
-            <span>SALAC, J.</span>
-            <span>SICAT, M.</span>
-          </div>
-        </motion.div>
       </motion.div>
-    </div>
+      <DeveloperFooter />
+      </div>
   );
 }

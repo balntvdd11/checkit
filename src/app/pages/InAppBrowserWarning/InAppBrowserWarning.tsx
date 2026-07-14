@@ -2,6 +2,7 @@ import { useState } from "react";
 import { AlertTriangle, ExternalLink, Copy, CheckCircle2 } from "lucide-react";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
 import CheckITLogo from "../../components/shared/CheckITLogo";
+import DeveloperFooter from "../../components/shared/DeveloperFooter";
 
 export default function InAppBrowserWarning() {
   const [copied, setCopied] = useState(false);
@@ -55,6 +56,7 @@ export default function InAppBrowserWarning() {
           {copied ? "Link Copied! Paste in Chrome/Safari" : "Open System Browser / Copy Link"}
         </button>
       </div>
-    </div>
+      <DeveloperFooter />
+      </div>
   );
 }

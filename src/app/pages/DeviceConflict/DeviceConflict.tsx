@@ -4,6 +4,7 @@ import Card from "../../components/shared/Card";
 import CheckITLogo from "../../components/shared/CheckITLogo";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
 import { useClerk } from "@clerk/clerk-react";
+import DeveloperFooter from "../../components/shared/DeveloperFooter";
 
 export default function DeviceConflict({ email, savedOS, onCancel }: { email: string; savedOS?: string; onCancel: () => void }) {
   const clerk = useClerk();
@@ -53,6 +54,7 @@ export default function DeviceConflict({ email, savedOS, onCancel }: { email: st
           </motion.div>
         </Card>
       </div>
-    </div>
+      <DeveloperFooter />
+      </div>
   );
 }

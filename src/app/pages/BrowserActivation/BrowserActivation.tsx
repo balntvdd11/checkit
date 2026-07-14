@@ -7,6 +7,7 @@ import AnimatedBackground from "../../components/common/AnimatedBackground";
 import type { Student } from "../../types";
 import { activateBrowser } from "../../services/browserActivation";
 import { generateDeviceFingerprint, sendFingerprintToBackend } from "../../services/fingerprint";
+import DeveloperFooter from "../../components/shared/DeveloperFooter";
 
 // ─── Browser Activation ───────────────────────────────────────────────────────
 // Runs automatically on mount:
@@ -221,7 +222,8 @@ export default function BrowserActivation({
           </p>
         </Card>
       </motion.div>
-    </div>
+      <DeveloperFooter />
+      </div>
   );
 }
 

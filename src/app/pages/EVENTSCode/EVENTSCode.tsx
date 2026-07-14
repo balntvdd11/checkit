@@ -7,6 +7,7 @@ import { cn } from "../../lib/utils";
 import type { Student, EventConfig } from "../../types";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
 import checkITLogoImg from "../../../asset/checkITlogo.png";
+import DeveloperFooter from "../../components/shared/DeveloperFooter";
 
 // ─── EVENTS Code Entry (renamed) ─────────────────────────────────────────────────────
 
@@ -122,6 +123,7 @@ export default function EVENTSCodeEntry({ student, events, onSubmit, onViewHisto
           </Card>
         </motion.div>
       </div>
-    </div>
+      <DeveloperFooter />
+      </div>
   );
 }

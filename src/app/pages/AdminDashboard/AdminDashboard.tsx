@@ -13,6 +13,7 @@ import { fetchEvents } from "../../services/events";
 import { fetchStudents } from "../../services/students";
 import { fetchAttendance } from "../../services/attendance";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
+import DeveloperFooter from "../../components/shared/DeveloperFooter";
 
 export default function AdminDashboard({ onLogout }: {
   onLogout: () => void;
@@ -99,6 +100,7 @@ export default function AdminDashboard({ onLogout }: {
           </div>
         </div>
       </div>
-    </div>
+      <DeveloperFooter />
+      </div>
   );
 }

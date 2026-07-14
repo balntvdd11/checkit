@@ -8,6 +8,7 @@ import AnimatedBackground from "../../components/common/AnimatedBackground";
 import { cn } from "../../lib/utils";
 import type { Student } from "../../types";
 import { registerStudent } from "../../services/studentCheck";
+import DeveloperFooter from "../../components/shared/DeveloperFooter";
 
 // ─── Student Registration ─────────────────────────────────────────────────────
 
@@ -154,6 +155,7 @@ export default function StudentRegistration({ email, onSubmit, onBack }: { email
           </form>
         </Card>
       </motion.div>
-    </div>
+      <DeveloperFooter />
+      </div>
   );
 }

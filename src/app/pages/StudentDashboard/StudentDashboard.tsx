@@ -6,6 +6,7 @@ import Card from "../../components/shared/Card";
 import type { Student, AttendanceRecord } from "../../types";
 import { useSelectors } from "../../state/store";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
+import DeveloperFooter from "../../components/shared/DeveloperFooter";
 
 // ─── Student Dashboard (History / Devices) ────────────────────────────────────
 
@@ -142,6 +143,7 @@ export default function StudentDashboard({ student, onLogout, onGeneratePass }: 
         </div>
         </div>
       </div>
-    </div>
+      <DeveloperFooter />
+      </div>
   );
 }

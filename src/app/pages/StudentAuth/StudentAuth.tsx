@@ -6,6 +6,7 @@ import CheckITLogo from "../../components/shared/CheckITLogo";
 import Card from "../../components/shared/Card";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
 import { checkStudentExists } from "../../services/studentCheck";
+import DeveloperFooter from "../../components/shared/DeveloperFooter";
 
 // ─── Student Auth Gate ────────────────────────────────────────────────────────
 
@@ -140,6 +141,7 @@ export default function StudentAuthGate({
           )}
         </AnimatePresence>
       </motion.div>
-    </div>
+      <DeveloperFooter />
+      </div>
   );
 }

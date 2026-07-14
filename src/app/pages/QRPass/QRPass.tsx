@@ -9,6 +9,7 @@ import type { Student } from "../../types";
 import { fetchStudentByEmail } from "../../services/studentCheck";
 import { generateDeviceFingerprint } from "../../services/fingerprint";
 import { hasStoredPrivateKey } from "../../services/browserActivation";
+import DeveloperFooter from "../../components/shared/DeveloperFooter";
 
 // ─── QR Pass Generator ────────────────────────────────────────────────────────
 
@@ -205,6 +206,7 @@ export default function QRPassGenerator({ student, EVENTSCode, onBack, onLogout 
           </div>
         </motion.div>
       </div>
-    </div>
+      <DeveloperFooter />
+      </div>
   );
 }

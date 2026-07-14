@@ -5,6 +5,7 @@ import CheckITLogo from "../../components/shared/CheckITLogo";
 import Card from "../../components/shared/Card";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
 import { login } from "../../services/auth";
+import DeveloperFooter from "../../components/shared/DeveloperFooter";
 
 // ─── Admin Login ──────────────────────────────────────────────────────────────
 
@@ -83,6 +84,7 @@ export default function AdminLogin({ onSuccess, onBack }: { onSuccess: () => voi
           </form>
         </Card>
       </motion.div>
-    </div>
+      <DeveloperFooter />
+      </div>
   );
 }
