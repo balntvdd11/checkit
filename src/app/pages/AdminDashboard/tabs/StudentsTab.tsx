@@ -64,10 +64,18 @@ export default function StudentsTab() {
             <select value={sectionFilter} onChange={e => setSectionFilter(e.target.value)}
               className="pl-8 pr-8 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none appearance-none bg-white">
               <option>All Sections</option>
-              <option>BSIT 1A</option><option>BSIT 1B</option><option>BSIT 1C</option><option>BSIT 1D</option><option>BSIT 1E</option>
-              <option>BSIT 2A</option><option>BSIT 2B</option><option>BSIT 2C</option><option>BSIT 2D</option><option>BSIT 2E</option>
-              <option>BSIT 3A</option><option>BSIT 3B</option><option>BSIT 3C</option><option>BSIT 3D</option><option>BSIT 3E</option>
-              <option>BSIT 4A</option><option>BSIT 4B</option><option>BSIT 4C</option><option>BSIT 4D</option><option>BSIT 4E</option>
+              <optgroup label="First Year">
+                <option>BSA 1A</option><option>BSA 1B</option><option>BSA 1C</option><option>BSA 1D</option>
+              </optgroup>
+              <optgroup label="Second Year">
+                <option>BSA 2A</option><option>BSA 2B</option><option>BSAIS 2A</option>
+              </optgroup>
+              <optgroup label="Third Year">
+                <option>BSA 3A</option><option>BSAIS 3A</option><option>BSAIS 3B</option>
+              </optgroup>
+              <optgroup label="Fourth Year">
+                <option>BSA 4A</option><option>BSAIS 4A</option>
+              </optgroup>
             </select>
           </div>
         </div>

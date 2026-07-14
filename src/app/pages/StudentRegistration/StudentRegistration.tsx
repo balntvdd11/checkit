@@ -20,10 +20,10 @@ export default function StudentRegistration({ email, onSubmit, onBack }: { email
   const [submitting, setSubmitting] = useState(false);
 
   const sections = [
-    "BSIT 1A", "BSIT 1B", "BSIT 1C", "BSIT 1D", "BSIT 1E",
-    "BSIT 2A", "BSIT 2B", "BSIT 2C", "BSIT 2D", "BSIT 2E",
-    "BSIT 3A", "BSIT 3B", "BSIT 3C", "BSIT 3D", "BSIT 3E",
-    "BSIT 4A", "BSIT 4B", "BSIT 4C", "BSIT 4D", "BSIT 4E"
+    { group: "First Year", options: ["BSA 1A", "BSA 1B", "BSA 1C", "BSA 1D"] },
+    { group: "Second Year", options: ["BSA 2A", "BSA 2B", "BSAIS 2A"] },
+    { group: "Third Year", options: ["BSA 3A", "BSAIS 3A", "BSAIS 3B"] },
+    { group: "Fourth Year", options: ["BSA 4A", "BSAIS 4A"] }
   ];
 
   const validate = () => {
@@ -119,7 +119,11 @@ export default function StudentRegistration({ email, onSubmit, onBack }: { email
                 className={cn(inputCls(errors.section), !form.section && "text-slate-500")}
               >
                 <option value="" className="bg-[#0B0F1A] text-slate-400">Select your section</option>
-                {sections.map(s => <option key={s} value={s} className="bg-[#0B0F1A] text-white">{s}</option>)}
+                {sections.map(g => (
+                  <optgroup key={g.group} label={g.group} className="text-slate-400 font-semibold bg-[#0B0F1A]">
+                    {g.options.map(s => <option key={s} value={s} className="bg-[#0B0F1A] text-white font-normal">{s}</option>)}
+                  </optgroup>
+                ))}
               </select>
               {errors.section && (
                 <p className="mt-1.5 text-xs text-red-400">{errors.section}</p>
