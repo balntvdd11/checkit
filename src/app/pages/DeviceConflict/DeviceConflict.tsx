@@ -5,7 +5,7 @@ import CheckITLogo from "../../components/shared/CheckITLogo";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
 import { useClerk } from "@clerk/clerk-react";
 
-export default function DeviceConflict({ email, onCancel }: { email: string; onCancel: () => void }) {
+export default function DeviceConflict({ email, savedOS, onCancel }: { email: string; savedOS?: string; onCancel: () => void }) {
   const clerk = useClerk();
 
   const handleSignOut = async () => {
@@ -36,7 +36,7 @@ export default function DeviceConflict({ email, onCancel }: { email: string; onC
             <h2 className="text-2xl font-bold text-white mb-2">Device Locked</h2>
             
             <p className="text-slate-300 mb-6 leading-relaxed">
-              The account <span className="font-semibold text-white">{email}</span> is already permanently locked to another device. 
+              The account <span className="font-semibold text-white">{email}</span> is already permanently locked to {savedOS ? `a ${savedOS}` : "another"} device. 
               <br /><br />
               CheckIT strictly enforces a <strong>one device per student</strong> policy. You cannot log in from this browser or device.
             </p>

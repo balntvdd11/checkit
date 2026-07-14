@@ -53,6 +53,7 @@ function AppInner() {
   const [currentStudentEmail, setCurrentStudentEmail] = useState<string>("");
   const [currentStudent, setCurrentStudent] = useState<Student | null>(null);
   const [currentEVENTSCode, setCurrentEVENTSCode] = useState<string>("");
+  const [lockedOS, setLockedOS] = useState<string | undefined>(undefined);
   const clerk = useClerk();
 
   const handleStudentLogout = () => {
@@ -129,10 +130,20 @@ function AppInner() {
           });
           
           const currentFingerprint = await generateDeviceFingerprint();
-          if (!hasStoredPrivateKey(normalizedEmail) || record.deviceFingerprint !== currentFingerprint) {
-            setCurrentView("student-activation");
+          if (record.deviceFingerprint) {
+            const savedOS = record.deviceFingerprint.split("::")[0];
+            const currentOS = currentFingerprint.split("::")[0];
+
+            if (savedOS && currentOS && savedOS !== currentOS) {
+              setLockedOS(savedOS);
+              setCurrentView("student-device-conflict");
+            } else if (!hasStoredPrivateKey(normalizedEmail) || record.deviceFingerprint !== currentFingerprint) {
+              setCurrentView("student-activation");
+            } else {
+              setCurrentView("student-dashboard");
+            }
           } else {
-            setCurrentView("student-dashboard");
+            setCurrentView("student-activation");
           }
         } else {
           // Signed in but not yet registered — go to the auth gate which will
@@ -219,10 +230,20 @@ function AppInner() {
                 });
                 
                 const currentFingerprint = await generateDeviceFingerprint();
-                if (!hasStoredPrivateKey(email) || record.deviceFingerprint !== currentFingerprint) {
-                  setCurrentView("student-activation");
+                if (record.deviceFingerprint) {
+                  const savedOS = record.deviceFingerprint.split("::")[0];
+                  const currentOS = currentFingerprint.split("::")[0];
+
+                  if (savedOS && currentOS && savedOS !== currentOS) {
+                    setLockedOS(savedOS);
+                    setCurrentView("student-device-conflict");
+                  } else if (!hasStoredPrivateKey(email) || record.deviceFingerprint !== currentFingerprint) {
+                    setCurrentView("student-activation");
+                  } else {
+                    setCurrentView("student-dashboard");
+                  }
                 } else {
-                  setCurrentView("student-dashboard");
+                  setCurrentView("student-activation");
                 }
               } else {
                 setCurrentView("student-auth");
@@ -255,9 +276,10 @@ function AppInner() {
         />
       )}
 
-      {currentView === "student-device-conflict" && (
+      {currentView === "student-device-conflict" && currentStudentEmail && (
         <DeviceConflict
           email={currentStudentEmail}
+          savedOS={lockedOS}
           onCancel={handleStudentLogout}
         />
       )}
