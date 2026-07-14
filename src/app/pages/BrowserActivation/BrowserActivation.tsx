@@ -32,12 +32,14 @@ export default function BrowserActivation({
 }) {
   const [phase, setPhase] = useState<Phase>("activating");
   const [error, setError] = useState<string | null>(null);
+  const [isSlow, setIsSlow] = useState(false);
   const hasStartedRef = useRef(false);
 
   useEffect(() => {
     let mounted = true;
 
     const runActivation = async () => {
+      const slowTimeout = setTimeout(() => setIsSlow(true), 4000);
       try {
         // Step 1: ECC Browser Activation
         await activateBrowser(student.email);
@@ -47,10 +49,12 @@ export default function BrowserActivation({
         await sendFingerprintToBackend(student.email, fingerprint);
 
         if (mounted) {
+          clearTimeout(slowTimeout);
           setPhase("done");
         }
       } catch (err) {
         if (mounted) {
+          clearTimeout(slowTimeout);
           setPhase("error");
           setError(err instanceof Error ? err.message : "Browser activation failed. Please try again.");
         }
@@ -64,6 +68,7 @@ export default function BrowserActivation({
 
     return () => {
       mounted = false;
+      hasStartedRef.current = false; // Fix for React Strict Mode
     };
   }, [student.email]);
 
@@ -120,7 +125,8 @@ export default function BrowserActivation({
               {phase === "error" && "Activation Failed"}
             </h1>
             <p className="mt-1.5 text-sm text-slate-300 leading-relaxed max-w-[280px]">
-              {phase === "activating" && "Generating your secure key pair and registering this browser. This only takes a moment."}
+              {phase === "activating" && !isSlow && "Generating your secure key pair and registering this browser. This only takes a moment."}
+              {phase === "activating" && isSlow && "The server is waking up. This can take up to 50 seconds. Please do not close this page..."}
               {phase === "done" && "Your keys and fingerprint have been registered. Click the button below to complete activation."}
               {phase === "error" && (error ?? "Something went wrong. Please try again.")}
             </p>
