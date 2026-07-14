@@ -129,18 +129,10 @@ function AppInner() {
           });
           
           const currentFingerprint = await generateDeviceFingerprint();
-          if (record.deviceFingerprint) {
-            // Already locked to a device on the server
-            if (record.deviceFingerprint !== currentFingerprint) {
-              setCurrentView("student-device-conflict");
-            } else if (!hasStoredPrivateKey(normalizedEmail)) {
-              setCurrentView("student-activation");
-            } else {
-              setCurrentView("student-dashboard");
-            }
-          } else {
-            // Not locked yet, proceed to activation
+          if (!hasStoredPrivateKey(normalizedEmail) || record.deviceFingerprint !== currentFingerprint) {
             setCurrentView("student-activation");
+          } else {
+            setCurrentView("student-dashboard");
           }
         } else {
           // Signed in but not yet registered — go to the auth gate which will
@@ -227,16 +219,10 @@ function AppInner() {
                 });
                 
                 const currentFingerprint = await generateDeviceFingerprint();
-                if (record.deviceFingerprint) {
-                  if (record.deviceFingerprint !== currentFingerprint) {
-                    setCurrentView("student-device-conflict");
-                  } else if (!hasStoredPrivateKey(email)) {
-                    setCurrentView("student-activation");
-                  } else {
-                    setCurrentView("student-dashboard");
-                  }
-                } else {
+                if (!hasStoredPrivateKey(email) || record.deviceFingerprint !== currentFingerprint) {
                   setCurrentView("student-activation");
+                } else {
+                  setCurrentView("student-dashboard");
                 }
               } else {
                 setCurrentView("student-auth");
