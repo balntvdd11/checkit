@@ -76,7 +76,7 @@ export default function StudentsTab() {
       <Card className="border border-slate-100 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="bg-slate-50/50 text-slate-500 font-semibold border-b border-slate-100">
+            <thead className="bg-slate-50/50 text-slate-500 font-semibold border-b border-slate-100 whitespace-nowrap">
               <tr>
                 <th className="px-5 py-4">Student</th>
                 <th className="px-5 py-4">ID & Section</th>
@@ -86,7 +86,7 @@ export default function StudentsTab() {
             </thead>
             <tbody className="divide-y divide-slate-50">
               {filteredStudents.map((student, idx) => (
-                <tr key={idx} className="hover:bg-slate-50/30 transition-colors">
+                <tr key={idx} className="hover:bg-slate-50/30 transition-colors whitespace-nowrap">
                   <td className="px-5 py-4">
                     <p className="font-semibold text-slate-700">{student.name}</p>
                     <p className="text-xs text-slate-400 mt-0.5">{student.email}</p>

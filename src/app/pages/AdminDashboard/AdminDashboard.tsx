@@ -88,8 +88,8 @@ export default function AdminDashboard({ onLogout }: {
         </div>
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 pt-6 sm:pt-10">
-        <div className="bg-black/30 backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-6 sm:p-10 shadow-2xl">
+      <div className="relative z-10 max-w-7xl mx-auto p-2 sm:p-4 md:p-6 lg:p-8 pt-4 sm:pt-10">
+        <div className="bg-black/30 backdrop-blur-xl border border-white/10 rounded-2xl sm:rounded-[2.5rem] p-3 sm:p-6 md:p-10 shadow-2xl">
           <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
             {tab === "dashboard" && <DashboardTab />}
             {tab === "students" && <StudentsTab />}

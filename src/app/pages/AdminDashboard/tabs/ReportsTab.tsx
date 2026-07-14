@@ -150,7 +150,7 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="bg-white text-slate-500 font-semibold border-b border-slate-100">
+            <thead className="bg-white text-slate-500 font-semibold border-b border-slate-100 whitespace-nowrap">
               <tr>
                 <th className="px-5 py-3">Student Name</th>
                 <th className="px-5 py-3">ID / Section</th>
@@ -162,7 +162,7 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
             </thead>
             <tbody className="divide-y divide-slate-50">
               {filteredReports.map((r, i) => (
-                <tr key={i} className="hover:bg-slate-50/50 transition-colors">
+                <tr key={i} className="hover:bg-slate-50/50 transition-colors whitespace-nowrap">
                   <td className="px-5 py-3 font-semibold text-slate-700">{r.name}</td>
                   <td className="px-5 py-3">
                     <p className="font-mono text-slate-600">{r.studentId}</p>

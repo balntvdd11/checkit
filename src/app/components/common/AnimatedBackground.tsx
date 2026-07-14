@@ -78,7 +78,11 @@ export default function AnimatedBackground(): JSX.Element {
 
     const pointerMax = 20;
 
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
     const tick = () => {
+      if (mediaQuery.matches) return; // Completely disable loop on low-end/reduced-motion
+
       const t = performance.now();
       const idleX = Math.sin((t / 18000) * Math.PI * 2) * 6;
       const idleY = Math.cos((t / 22000) * Math.PI * 2) * 5;
@@ -133,16 +137,15 @@ export default function AnimatedBackground(): JSX.Element {
       currentScale.current.x += (desiredScaleX - currentScale.current.x) * 0.08;
       currentScale.current.y += (desiredScaleY - currentScale.current.y) * 0.08;
 
-      updateCenter();
-
       if (glowRef.current) {
-        glowRef.current.style.transform = `translate(-50%, -50%) translate3d(${currentOffset.current.x}px, ${currentOffset.current.y}px, 0) scale(${currentScale.current.x}, ${currentScale.current.y})`;
+        glowRef.current.style.transform = `translate(-50%, -50%) translate3d(${currentOffset.current.x}px, ${currentOffset.current.y}px, 0) scale3d(${currentScale.current.x}, ${currentScale.current.y}, 1)`;
       }
 
       raf.current = requestAnimationFrame(tick);
     };
 
     const onPointerMove = (event: PointerEvent) => {
+      if (mediaQuery.matches) return;
       const rawX = event.clientX - centerPoint.current.x;
       const rawY = event.clientY - centerPoint.current.y;
       pointerRaw.current.x = rawX;
@@ -153,6 +156,7 @@ export default function AnimatedBackground(): JSX.Element {
     };
 
     const onPointerReset = () => {
+      if (mediaQuery.matches) return;
       targetOffset.current.x = 0;
       targetOffset.current.y = 0;
       pointerRaw.current.x = 0;
@@ -165,7 +169,7 @@ export default function AnimatedBackground(): JSX.Element {
     window.addEventListener("blur", onPointerReset);
     window.addEventListener("resize", onResize);
 
-    if (!raf.current) raf.current = requestAnimationFrame(tick);
+    if (!mediaQuery.matches && !raf.current) raf.current = requestAnimationFrame(tick);
 
     return () => {
       window.removeEventListener("pointermove", onPointerMove);
