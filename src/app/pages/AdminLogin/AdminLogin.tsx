@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { ChevronRight, KeyRound, RefreshCw, XCircle } from "lucide-react";
+import { ChevronRight, KeyRound, RefreshCw, XCircle, Eye, EyeOff } from "lucide-react";
 import CheckITLogo from "../../components/shared/CheckITLogo";
 import Card from "../../components/shared/Card";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
@@ -11,6 +11,7 @@ import { login } from "../../services/auth";
 export default function AdminLogin({ onSuccess, onBack }: { onSuccess: () => void; onBack: () => void }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -55,9 +56,13 @@ export default function AdminLogin({ onSuccess, onBack }: { onSuccess: () => voi
               <input type="text" placeholder="Username" value={username} onChange={e => { setUsername(e.target.value); setError(null); }}
                 className="w-full px-4 py-3.5 rounded-xl border border-white/10 text-center font-mono tracking-widest bg-white/5 text-white shadow-sm placeholder:text-slate-400 placeholder:tracking-normal focus:outline-none focus:ring-2 focus:ring-[#7EEAF8]/50 focus:border-[#7EEAF8] transition-all" autoFocus />
             </div>
-            <div className="mb-5">
-              <input type="password" placeholder="Password" value={password} onChange={e => { setPassword(e.target.value); setError(null); }}
-                className="w-full px-4 py-3.5 rounded-xl border border-white/10 text-center font-mono tracking-widest bg-white/5 text-white shadow-sm placeholder:text-slate-400 placeholder:tracking-normal focus:outline-none focus:ring-2 focus:ring-[#7EEAF8]/50 focus:border-[#7EEAF8] transition-all" />
+            <div className="mb-5 relative">
+              <input type={showPassword ? "text" : "password"} placeholder="Password" value={password} onChange={e => { setPassword(e.target.value); setError(null); }}
+                className="w-full px-10 py-3.5 rounded-xl border border-white/10 text-center font-mono tracking-widest bg-white/5 text-white shadow-sm placeholder:text-slate-400 placeholder:tracking-normal focus:outline-none focus:ring-2 focus:ring-[#7EEAF8]/50 focus:border-[#7EEAF8] transition-all" />
+              <button type="button" onClick={() => setShowPassword(!showPassword)} tabIndex={-1}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/70 transition-colors p-1">
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
             </div>
 
             <AnimatePresence>
