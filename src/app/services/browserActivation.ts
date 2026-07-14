@@ -68,6 +68,15 @@ export interface GeneratedKeyPair {
  * JWK for localStorage; it is never sent over the network.
  */
 export async function generateECCKeyPair(): Promise<GeneratedKeyPair> {
+  if (!window.crypto || !window.crypto.subtle) {
+    console.warn("Web Crypto API is not available (insecure context). Using fallback keys for development.");
+    const dummyKey = "mock-key-" + Date.now();
+    return {
+      publicKeyPem: `-----BEGIN PUBLIC KEY-----\n${dummyKey}\n-----END PUBLIC KEY-----`,
+      privateKeyJwk: { kty: "mock", k: dummyKey } as unknown as JsonWebKey
+    };
+  }
+
   const keyPair = await window.crypto.subtle.generateKey(
     { name: 'ECDSA', namedCurve: 'P-256' },
     true, // extractable — needed to export to JWK for local storage
