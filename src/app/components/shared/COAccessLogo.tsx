@@ -1,21 +1,21 @@
-import checkITLogo from "../../../asset/checkITlogo.png";
+import coaLogo from "../../../asset/coalogo.png";
 import { cn } from "../../lib/utils";
 
 // ─── Logo ─────────────────────────────────────────────────────────────────────
 
 export default function COAccessLogo({ size = "md", inverted }: { size?: "sm" | "md" | "lg"; inverted?: boolean }) {
   void inverted; // prop accepted for API compatibility; visual variant handled by parent context/CSS
-  const iconBox = { sm: "w-20 h-20 sm:w-24 sm:h-24", md: "w-24 h-24 sm:w-36 sm:h-36", lg: "w-32 h-32 sm:w-48 sm:h-48" };
+  const iconBox = { sm: "w-12 h-12 sm:w-14 sm:h-14", md: "w-16 h-16 sm:w-20 sm:h-20", lg: "w-20 h-20 sm:w-24 sm:h-24" };
   const text = { sm: "text-2xl", md: "text-4xl sm:text-5xl", lg: "text-5xl sm:text-6xl" };
   return (
-    <div className={cn("flex items-center", text[size])}>
-      <img src={checkITLogo} alt="COAccess logo" className={cn("object-contain block self-center", iconBox[size])} />
+    <div className={cn("flex items-center gap-3 sm:gap-4", text[size])}>
+      <img src={coaLogo} alt="COAccess logo" className={cn("object-contain block self-center shadow-lg rounded-full", iconBox[size])} />
       <div className={cn(
         "flex items-baseline leading-none checkit-wordmark",
-        size === "sm" ? "-ml-5 sm:-ml-6 -translate-y-0.5" : size === "md" ? "-ml-6 sm:-ml-10 -translate-y-1" : "-ml-8 sm:-ml-14 -translate-y-1"
+        size === "sm" ? "-translate-y-0.5" : "-translate-y-1"
       )}>
         <span className="checkit-wordmark__check">CO</span>
-              <span className="checkit-wordmark__it">Access</span>
+        <span className="checkit-wordmark__it">Access</span>
       </div>
     </div>
   );

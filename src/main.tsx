@@ -4,7 +4,7 @@
   import App from "./app/App.tsx";
   import "./styles/index.css";
 
-  const faviconUrl = new URL("./asset/checkITlogo.png", import.meta.url).href;
+  const faviconUrl = new URL("./asset/coalogo.png", import.meta.url).href;
   const existingFavicon = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
   if (existingFavicon) {
     existingFavicon.href = faviconUrl;

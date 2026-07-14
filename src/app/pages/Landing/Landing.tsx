@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import checkITLogo from "../../../asset/checkITlogo.png";
+import coaLogo from "../../../asset/coalogo.png";
 import studentPortalIcon from "../../../asset/studentportalICON.png";
 import adminPortalIcon from "../../../asset/adminportalICON.png";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
@@ -21,11 +21,11 @@ export default function LandingPage({ onStudent, onAdmin }: { onStudent: () => v
         {/* Wordmark */}
         <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}
           className="flex flex-col items-center mb-1 -translate-y-16 sm:-translate-y-16">
-          <div className="mb-0.5 flex flex-col sm:flex-row items-center justify-center gap-0">
-            <div className="relative w-48 sm:w-72 h-48 sm:h-72 shrink-0">
-              <img src={checkITLogo} alt="COAccess logo" className="relative z-10 w-full h-full object-contain" />
+          <div className="mb-4 sm:mb-8 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
+            <div className="relative w-40 sm:w-56 h-40 sm:h-56 shrink-0">
+              <img src={coaLogo} alt="COAccess logo" className="relative z-10 w-full h-full object-contain drop-shadow-2xl rounded-full" />
             </div>
-            <div className="flex items-center gap-0 -translate-y-8 sm:-translate-y-0 sm:-translate-x-20 checkit-wordmark text-5xl sm:text-7xl">
+            <div className="flex items-center gap-0 checkit-wordmark text-5xl sm:text-7xl">
               <span className="checkit-wordmark__check">CO</span>
               <span className="checkit-wordmark__it">Access</span>
             </div>

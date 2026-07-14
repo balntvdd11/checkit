@@ -6,7 +6,7 @@ import Card from "../../components/shared/Card";
 import { cn } from "../../lib/utils";
 import type { Student, EventConfig } from "../../types";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
-import checkITLogoImg from "../../../asset/checkITlogo.png";
+import coaLogo from "../../../asset/coalogo.png";
 import DeveloperFooter from "../../components/shared/DeveloperFooter";
 
 // ─── EVENTS Code Entry (renamed) ─────────────────────────────────────────────────────
@@ -67,7 +67,7 @@ export default function EVENTSCodeEntry({ student, events, onSubmit, onViewHisto
 
             <form onSubmit={handleSubmit} className="relative z-10 flex flex-col gap-4">
               <div className="flex flex-col items-center text-center mb-7">
-                <img src={checkITLogoImg} alt="COAccess logo" className="w-28 h-28 object-contain drop-shadow-xl mb-4" />
+                <img src={coaLogo} alt="COAccess logo" className="w-28 h-28 object-contain drop-shadow-xl mb-4 rounded-full" />
                 <h2 className="text-lg font-bold text-white">Select COAccess Event</h2>
                 <p className="text-sm text-slate-300 mt-1">Choose today's event from the list</p>
               </div>

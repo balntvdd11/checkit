@@ -148,7 +148,7 @@
 .ambient-layer--rim {
   width: var(--rim-w, 320px);
   height: var(--rim-h, 320px);
-  background-image: url("../asset/checkITlogo.png");
+  background-image: url("../asset/coalogo.png");
   opacity: var(--rim-opacity, 0.06);
   filter: blur(var(--rim-blur, 40px));
 }
@@ -156,7 +156,7 @@
 .ambient-layer--core {
   width: var(--core-w, 260px);
   height: var(--core-h, 260px);
-  background-image: url("../asset/checkITlogo.png");
+  background-image: url("../asset/coalogo.png");
   opacity: var(--core-opacity, 0.1);
   filter: blur(var(--core-blur, 24px));
 }
@@ -164,7 +164,7 @@
 .ambient-layer--halo {
   width: var(--halo-w, 220px);
   height: var(--halo-h, 220px);
-  background-image: url("../asset/checkITlogo.png");
+  background-image: url("../asset/coalogo.png");
   opacity: var(--halo-opacity, 0.14);
   filter: blur(var(--halo-blur, 12px));
 }
@@ -172,7 +172,7 @@
 .ambient-layer--bloom {
   width: var(--bloom-w, 190px);
   height: var(--bloom-h, 190px);
-  background-image: url("../asset/checkITlogo.png");
+  background-image: url("../asset/coalogo.png");
   opacity: var(--bloom-opacity, 0.2);
   filter: blur(var(--bloom-blur, 8px));
 }
