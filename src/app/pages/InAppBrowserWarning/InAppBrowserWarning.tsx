@@ -1,8 +1,25 @@
-import { AlertTriangle, ExternalLink } from "lucide-react";
+import { useState } from "react";
+import { AlertTriangle, ExternalLink, Copy, CheckCircle2 } from "lucide-react";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
 import CheckITLogo from "../../components/shared/CheckITLogo";
 
 export default function InAppBrowserWarning() {
+  const [copied, setCopied] = useState(false);
+
+  const handleAction = () => {
+    // Try Android intent to force open Chrome
+    if (/android/i.test(navigator.userAgent)) {
+      const url = window.location.href.replace(/^https?:\/\//, '');
+      window.location.href = `intent://${url}#Intent;scheme=https;package=com.android.chrome;end;`;
+    }
+    
+    // Copy to clipboard as a universal fallback
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 3000);
+    });
+  };
+
   return (
     <div className="min-h-screen landing-page-black flex flex-col items-center justify-center p-4 relative overflow-hidden">
       <AnimatedBackground />
@@ -31,10 +48,11 @@ export default function InAppBrowserWarning() {
         </div>
 
         <button 
-          onClick={() => window.location.reload()}
+          onClick={handleAction}
           className="w-full py-3.5 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-xl transition-colors flex items-center justify-center gap-2"
         >
-          <ExternalLink size={16} /> I've opened it in my main browser
+          {copied ? <CheckCircle2 size={16} className="text-emerald-400" /> : <ExternalLink size={16} />}
+          {copied ? "Link Copied! Paste in Chrome/Safari" : "Open System Browser / Copy Link"}
         </button>
       </div>
     </div>
