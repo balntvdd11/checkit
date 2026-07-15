@@ -27,6 +27,10 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
       r.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
       r.studentId.toLowerCase().includes(searchQuery.toLowerCase());
     return matchSec && matchDate && matchEvent && matchSearch;
+  }).sort((a, b) => {
+    const nameA = formatNameLastFirst(a.name).toLowerCase();
+    const nameB = formatNameLastFirst(b.name).toLowerCase();
+    return nameA.localeCompare(nameB);
   });
 
   const reportPresent = filteredReports.filter(r => r.status === "present").length;
