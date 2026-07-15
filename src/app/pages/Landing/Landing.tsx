@@ -18,29 +18,21 @@ export default function LandingPage({ onStudent, onAdmin }: { onStudent: () => v
 
       <motion.div initial={{ opacity: 0, y: 80 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }} className="relative z-10 flex flex-col items-center px-4 w-full max-w-4xl mx-auto py-2">
 
-        {/* Wordmark */}
+        {/* Logo and Subtitle */}
         <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}
-          className="flex flex-col items-center mb-1 mt-8 sm:mt-0 sm:-translate-y-16">
-          <div className="mb-2 sm:mb-6 flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-4">
-            <div className="relative w-32 sm:w-48 h-32 sm:h-48 shrink-0">
-              <img src={coaLogo} alt="COAccess logo" className="relative z-10 w-full h-full object-contain drop-shadow-2xl rounded-full" />
-            </div>
-            <div className="flex items-center gap-0 checkit-wordmark text-5xl sm:text-7xl">
-              <span className="checkit-wordmark__coa">COA</span>
-              <span className="checkit-wordmark__ccess">ccess</span>
-            </div>
+          className="flex flex-col items-center mb-8 sm:mb-12 mt-4 sm:mt-0">
+          <div className="relative w-48 sm:w-72 h-48 sm:h-72 shrink-0 mb-4 sm:mb-6">
+            <img src={coaLogo} alt="COA logo" className="relative z-10 w-full h-full object-contain drop-shadow-2xl rounded-full" />
           </div>
-          <div className="relative sm:-translate-y-12 flex flex-col items-center justify-center w-full mt-2 sm:mt-0">
+          <div className="relative flex flex-col items-center justify-center w-full">
             <p className="bg-white text-[#123499] px-5 py-2 rounded-full shadow-sm text-sm sm:text-lg font-bold text-center my-0 max-w-2xl">
               Fast and Secure Event Attendance for COA students
             </p>
-            <div className="mt-0 flex items-center justify-center gap-2 text-white/35 text-xs">
-            </div>
           </div>
         </motion.div>
 
         {/* Portal cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-4xl mt-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-4xl">
           <motion.button
             initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }}
             whileHover={{ y: -6, transition: { duration: 0.2 } }}
