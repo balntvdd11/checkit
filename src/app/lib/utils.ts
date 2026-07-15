@@ -33,3 +33,11 @@ export function formatTime12Hour(time24: string | undefined | null): string {
   hours = hours ? hours : 12; 
   return `${hours}:${minutesStr} ${ampm}`;
 }
+
+export function formatNameLastFirst(fullName: string): string {
+  if (!fullName) return "";
+  const parts = fullName.trim().split(/\s+/);
+  if (parts.length <= 1) return fullName;
+  const lastName = parts.pop();
+  return `${lastName}, ${parts.join(" ")}`;
+}
