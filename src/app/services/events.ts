@@ -18,6 +18,8 @@ export const createEvent = async (event: EventConfig): Promise<EventConfig> => {
     lateThreshold: event.lateThreshold,
     timeOut: event.timeOut,
     status: event.status,
+    logoUrl: event.logoUrl,
+    subtitle: event.subtitle,
   };
   return apiFetch('/api/events/', {
     method: 'POST',
@@ -33,6 +35,8 @@ export const updateEvent = async (event: EventConfig): Promise<EventConfig> => {
     lateThreshold: event.lateThreshold,
     timeOut: event.timeOut,
     status: event.status,
+    logoUrl: event.logoUrl,
+    subtitle: event.subtitle,
   };
   return apiFetch(`/api/events/${event.id}/`, {
     method: 'PUT',

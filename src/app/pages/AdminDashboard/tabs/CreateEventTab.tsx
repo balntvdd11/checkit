@@ -7,7 +7,7 @@ import { createEvent, updateEvent } from "../../../services/events";
 import { useStore, useSelectors } from "../../../state/store";
 
 export default function CreateEventTab() {
-  const [eventForm, setEventForm] = useState<{ name: string; timeIn: string; lateThreshold: string; timeOut: string; status: EventConfig["status"] }>({ name: "", timeIn: "08:00", lateThreshold: "08:15", timeOut: "17:00", status: "active" });
+  const [eventForm, setEventForm] = useState<{ name: string; timeIn: string; lateThreshold: string; timeOut: string; status: EventConfig["status"]; logoUrl?: string; subtitle?: string }>({ name: "", timeIn: "08:00", lateThreshold: "08:15", timeOut: "17:00", status: "active", logoUrl: "", subtitle: "" });
   const { dispatch } = useStore();
   const { events } = useSelectors();
   
@@ -30,6 +30,8 @@ export default function CreateEventTab() {
         lateThreshold: eventForm.lateThreshold,
         timeOut: eventForm.timeOut,
         status: eventForm.status,
+        logoUrl: eventForm.logoUrl,
+        subtitle: eventForm.subtitle,
       };
       // call service
       updateEvent(updatedEvent).then(res => {
@@ -37,17 +39,29 @@ export default function CreateEventTab() {
       });
       setEditingEventId(null);
       setShowEventForm(false);
-      setEventForm({ name: "", timeIn: "08:00", lateThreshold: "08:15", timeOut: "17:00", status: "active" });
+      setEventForm({ name: "", timeIn: "08:00", lateThreshold: "08:15", timeOut: "17:00", status: "active", logoUrl: "", subtitle: "" });
       return;
     }
 
     const newEvent: EventConfig = {
       id: `e${Date.now()}`, name: eventForm.name, checkItCode: generateCheckItCode(eventForm.name),
       timeIn: eventForm.timeIn, lateThreshold: eventForm.lateThreshold, timeOut: eventForm.timeOut, status: eventForm.status,
+      logoUrl: eventForm.logoUrl, subtitle: eventForm.subtitle,
     };
     createEvent(newEvent).then(res => dispatch({ type: "ADD_EVENT", payload: res }));
     setShowEventForm(false);
-    setEventForm({ name: "", timeIn: "08:00", lateThreshold: "08:15", timeOut: "17:00", status: "active" });
+    setEventForm({ name: "", timeIn: "08:00", lateThreshold: "08:15", timeOut: "17:00", status: "active", logoUrl: "", subtitle: "" });
+  };
+
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setEventForm(prev => ({ ...prev, logoUrl: e.target?.result as string }));
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const copyToClipboard = (text: string) => {
@@ -88,10 +102,26 @@ export default function CreateEventTab() {
                   <Ticket size={16} className="text-[var(--primary)]" /> Event Details
                 </h3>
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">Event Title / Description</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">Event Title</label>
                   <input type="text" placeholder="e.g. 1st Semester General Assembly" required
                     value={eventForm.name} onChange={e => setEventForm({ ...eventForm, name: e.target.value })}
                     className={inputCls} />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">Description / Subtitle (Optional)</label>
+                  <textarea placeholder="e.g. Fast and Secure Event Attendance" rows={2}
+                    value={eventForm.subtitle || ""} onChange={e => setEventForm({ ...eventForm, subtitle: e.target.value })}
+                    className={inputCls} />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">Event Logo (Optional)</label>
+                  <input type="file" accept="image/*" onChange={handleLogoUpload} className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[var(--primary)] file:text-white hover:file:bg-[#A61831] transition-all cursor-pointer" />
+                  {eventForm.logoUrl && (
+                    <div className="mt-2">
+                      <img src={eventForm.logoUrl} alt="Logo preview" className="h-16 object-contain rounded-lg shadow-sm" />
+                      <button type="button" onClick={() => setEventForm(prev => ({ ...prev, logoUrl: "" }))} className="text-xs text-red-500 mt-1 hover:underline">Remove Logo</button>
+                    </div>
+                  )}
                 </div>
                 <div className="p-4 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-between">
                   <div>
@@ -181,7 +211,7 @@ export default function CreateEventTab() {
                     <button onClick={() => {
                       // start editing
                       setEditingEventId(evt.id);
-                      setEventForm({ name: evt.name, timeIn: evt.timeIn, lateThreshold: evt.lateThreshold, timeOut: evt.timeOut, status: evt.status });
+                      setEventForm({ name: evt.name, timeIn: evt.timeIn, lateThreshold: evt.lateThreshold, timeOut: evt.timeOut, status: evt.status, logoUrl: evt.logoUrl || "", subtitle: evt.subtitle || "" });
                       setShowEventForm(true);
                     }}
                       className="px-3 py-1 text-xs font-semibold rounded-lg border transition-colors bg-[var(--primary)] text-white hover:bg-[#A61831]">
