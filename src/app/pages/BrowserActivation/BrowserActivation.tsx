@@ -88,7 +88,7 @@ export default function BrowserActivation({
         transition={{ duration: 0.35 }}
         className="w-full max-w-md relative z-10"
       >
-        <Card className="p-8 !bg-black border border-white/10 shadow-[0_32px_80px_rgba(0,0,0,0.35)] relative overflow-hidden group premium-border-card">
+        <Card className="p-8 bg-gradient-to-br from-[#0a2472]/85 via-[#123499]/90 to-[#72caec] border border-white/10 shadow-[0_32px_80px_rgba(0,0,0,0.35)] relative overflow-hidden group premium-border-card">
           {/* Border tracer */}
 
 
