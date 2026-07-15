@@ -48,7 +48,6 @@ export default function AdminLogin({ onSuccess, onBack }: { onSuccess: () => voi
               <KeyRound size={24} className="text-white" />
             </div>
             <h1 className="mt-4 text-xl font-bold text-white">Admin Access</h1>
-            <p className="mt-1 text-sm text-slate-300">Enter your Django superuser username and password to access the admin portal</p>
           </div>
 
           <form onSubmit={handleSubmit} className="relative z-10">
