@@ -58,8 +58,6 @@ export interface EventConfig {
   lateThreshold: string;
   timeOut: string;
   status: EventStatus;
-  logoUrl?: string;
-  subtitle?: string;
 }
 
 export interface StudentRecord {
