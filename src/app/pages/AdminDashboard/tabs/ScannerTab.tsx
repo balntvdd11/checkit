@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import Card from "../../../components/shared/Card";
 import StatusBadge from "../../../components/shared/StatusBadge";
 import type { EventConfig } from "../../../types";
-import { createAttendanceRecord, updateAttendanceRecord } from "../../../services/attendance";
+import { createAttendanceRecord, updateAttendanceRecord, fetchAttendance } from "../../../services/attendance";
 import { useStore } from "../../../state/store";
 import { cn } from "../../../lib/utils";
 
@@ -15,6 +15,15 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
   const [scanResults, setScanResults] = useState<{ id: string; name: string; status: "success" | "invalid" | "duplicate"; action?: "present" | "late" | "time-out" | "early-timeout"; time: string }[]>([]);
   const [scanAlert, setScanAlert] = useState<{ name: string; visible: boolean } | null>(null);
   const { state, dispatch } = useStore();
+  
+  // Refs for current state to avoid scanner restart on every scan
+  const stateRef = useRef(state);
+  const eventsRef = useRef(events);
+  
+  useEffect(() => {
+    stateRef.current = state;
+    eventsRef.current = events;
+  }, [state, events]);
   
   // Keep track of recently scanned QR codes to prevent rapid duplicates
   const recentlyScanned = useRef<Set<string>>(new Set());
@@ -48,8 +57,8 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
               // Cleanup memory after 5 seconds
               setTimeout(() => recentlyScanned.current.delete(scanKey), 5000);
 
-              const activeEvent = events.find(e => e.id === selectedScanEVENTS);
-              const student = state.students.find(s => s.studentId === studentId);
+              const activeEvent = eventsRef.current.find(e => e.id === selectedScanEVENTS);
+              const student = stateRef.current.students.find(s => s.studentId === studentId);
 
               // We need a strictly formatted HH:mm for reliable string comparison
               const now = new Date();
@@ -62,9 +71,13 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
                 return;
               }
 
+              // Fetch latest attendance to prevent cross-device duplicates
+              const latestAttendance = await fetchAttendance();
+              dispatch({ type: "SET_ATTENDANCE", payload: latestAttendance });
+
               // Check if student already has attendance for this event today
               const today = new Date().toISOString().split('T')[0];
-              const existingRecord = state.attendance.find(a => 
+              const existingRecord = latestAttendance.find(a => 
                 a.studentId === student.studentId && 
                 a.EVENTSCode === activeEvent.checkItCode && 
                 a.date === today
@@ -153,7 +166,7 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
         html5QrCode.stop().then(() => html5QrCode?.clear()).catch(console.error);
       }
     };
-  }, [scanning, selectedScanEVENTS, events, state.students, state.attendance, dispatch]);
+  }, [scanning, selectedScanEVENTS, dispatch]);
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
