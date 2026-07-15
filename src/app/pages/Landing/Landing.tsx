@@ -31,7 +31,7 @@ export default function LandingPage({ onStudent, onAdmin }: { onStudent: () => v
             </div>
           </div>
           <div className="relative -translate-y-10 sm:-translate-y-15 flex flex-col items-center justify-center w-full">
-            <p className="text-white text-sm sm:text-lg font-medium text-center my-0 max-w-2xl px-2">
+            <p className="text-black text-sm sm:text-lg font-medium text-center my-0 max-w-2xl px-2">
               Fast and Secure Event Attendance for COA students
             </p>
             <div className="mt-0 flex items-center justify-center gap-2 text-white/35 text-xs">

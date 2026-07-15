@@ -274,7 +274,7 @@
   }
 
   .checkit-wordmark__check {
-    color: #FFFFFF;
+    color: #000000;
     font-weight: 700;
     -webkit-font-smoothing: antialiased;
   }
@@ -291,7 +291,7 @@
   }
 
   .landing-page-black {
-    background-color: #000000;
+    background-color: #ffffff;
     background-image: none;
   }
 
@@ -409,7 +409,7 @@
   }
 
   .page-diamond-bg {
-    background-color: #000000;
+    background-color: #ffffff;
     background-image: none;
   }
 
