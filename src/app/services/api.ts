@@ -26,6 +26,7 @@ async function handleResponse(response: Response) {
 export async function apiFetch(path: string, options: RequestInit = {}) {
   const url = `${API_BASE}${path}`;
   const response = await fetch(url, {
+    cache: "no-store",
     ...options,
     headers: getHeaders(options.headers as Record<string, string>),
   });

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { LogOut, LayoutDashboard, Users, ScanLine, FileText, CalendarCheck2 } from "lucide-react";
+import { LogOut, LayoutDashboard, Users, ScanLine, FileText, CalendarCheck2, RefreshCw } from "lucide-react";
 import COAccessLogo from "../../components/shared/COAccessLogo";
 import DashboardTab from "./tabs/DashboardTab";
 import StudentsTab from "./tabs/StudentsTab";
@@ -22,6 +22,23 @@ export default function AdminDashboard({ onLogout }: {
   const { state, dispatch } = useStore();
   const selectors = useSelectors();
   const events = state.events;
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      const [eventsData, studentsData, attendanceData] = await Promise.all([
+        fetchEvents(),
+        fetchStudents(),
+        fetchAttendance(),
+      ]);
+      dispatch({ type: 'INIT_LOAD', payload: { students: studentsData, events: eventsData, attendance: attendanceData } });
+    } catch (error) {
+      console.error('Failed to refresh admin backend data', error);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   useEffect(() => {
     const token = localStorage.getItem('checkit_admin_token');
@@ -54,15 +71,14 @@ export default function AdminDashboard({ onLogout }: {
       <header className="bg-[var(--secondary)] px-5 py-3.5 flex items-center justify-between sticky top-0 z-30 shadow-md">
         <div className="flex items-center gap-4">
           <COAccessLogo inverted size="sm" />
-          <div className="w-px h-5 bg-white/20 hidden sm:block" />
-          <span className="text-white/50 font-semibold text-sm hidden sm:block">Admin Portal</span>
+          <div className="w-px h-5 bg-white/20" />
+          <span className="text-white/50 font-semibold text-sm">Admin Portal</span>
         </div>
-        
+
         <div className="flex items-center gap-4">
-          <div className="hidden md:flex items-center gap-1.5 mr-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-500" />
-            <span className="text-xs font-semibold text-white/55">System Online</span>
-          </div>
+          <button onClick={handleRefresh} disabled={isRefreshing} className="flex items-center gap-1.5 text-white/55 hover:text-white text-sm transition-colors mr-2">
+            <RefreshCw size={14} className={cn(isRefreshing && "animate-spin")} /> <span className="hidden sm:inline">{isRefreshing ? "Refreshing..." : "Refresh"}</span>
+          </button>
           <button onClick={onLogout} className="flex items-center gap-1.5 text-white/55 hover:text-white text-sm transition-colors">
             <LogOut size={14} /> <span className="hidden sm:inline">Sign out</span>
           </button>
@@ -90,7 +106,7 @@ export default function AdminDashboard({ onLogout }: {
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto p-2 sm:p-4 md:p-6 lg:p-8 pt-4 sm:pt-10">
-        <div className="bg-black/30 backdrop-blur-xl border border-white/10 rounded-2xl sm:rounded-[2.5rem] p-3 sm:p-6 md:p-10 shadow-2xl">
+        <div className="bg-blue/30 backdrop-blur-xl border border-white/10 rounded-2xl sm:rounded-[2.5rem] p-3 sm:p-6 md:p-10 shadow-2xl">
           <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
             {tab === "dashboard" && <DashboardTab />}
             {tab === "students" && <StudentsTab />}
@@ -101,6 +117,6 @@ export default function AdminDashboard({ onLogout }: {
         </div>
       </div>
       <DeveloperFooter />
-      </div>
+    </div>
   );
 }

@@ -122,21 +122,21 @@ export default function QRPassGenerator({ student, EVENTSCode, onBack, onLogout 
             {isActive ? (
               <>
                 <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                <span className="text-sm font-semibold text-emerald-400">Live — Ready to scan</span>
+                <span className="text-sm font-semibold text-emerald-600">Live — Ready to scan</span>
               </>
             ) : (
               <>
                 <span className="w-2 h-2 bg-red-500 rounded-full" />
-                <span className="text-sm font-semibold text-red-400">Security Check Failed</span>
+                <span className="text-sm font-semibold text-red-600">Security Check Failed</span>
               </>
             )}
           </div>
 
-          <div className="!bg-black border border-white/10 rounded-2xl shadow-[0_32px_80px_rgba(0,0,0,0.35)] relative overflow-hidden group premium-border-card">
+          <div className="bg-gradient-to-br from-[#0a2472]/85 via-[#123499]/90 to-[#72caec] border border-white/10 rounded-2xl shadow-[0_32px_80px_rgba(0,0,0,0.35)] relative overflow-hidden group premium-border-card">
 
 
             {/* Student header */}
-            <div className="bg-[var(--secondary)] px-6 py-5 relative z-10">
+            <div className="bg-black/20 px-6 py-5 relative z-10">
               <div className="flex items-center gap-3">
                 <div className="w-11 h-11 rounded-xl bg-white/15 flex items-center justify-center shrink-0">
                   <GraduationCap size={22} className="text-[var(--primary)]" />
@@ -178,15 +178,8 @@ export default function QRPassGenerator({ student, EVENTSCode, onBack, onLogout 
                   </div>
                 </div>
 
-                <button 
-                  onClick={handleDownloadQR}
-                  className="mt-4 flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-colors text-sm font-semibold"
-                >
-                  <Download size={16} /> Download QR
-                </button>
-
-                <p className="mt-4 text-xs text-center text-slate-400 leading-relaxed max-w-[200px]">
-                  Show this QR to your instructor's scanner. Keep this screen active.
+                <p className="mt-4 text-xs text-center text-white leading-relaxed max-w-[200px]">
+                  Show this QR to your admin's scanner. Keep this screen active.
                 </p>
               </div>
             ) : (

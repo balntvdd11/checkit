@@ -12,7 +12,7 @@ import { cn } from "../../../lib/utils";
 export default function ScannerTab({ events }: { events: EventConfig[] }) {
   const [selectedScanEVENTS, setSelectedScanEVENTS] = useState("");
   const [scanning, setScanning] = useState(false);
-  const [scanResults, setScanResults] = useState<{ id: string; name: string; status: "success" | "invalid" | "duplicate"; action?: "present" | "late" | "time-out"; time: string }[]>([]);
+  const [scanResults, setScanResults] = useState<{ id: string; name: string; status: "success" | "invalid" | "duplicate"; action?: "present" | "late" | "time-out" | "early-timeout"; time: string }[]>([]);
   const [scanAlert, setScanAlert] = useState<{ name: string; visible: boolean } | null>(null);
   const { state, dispatch } = useStore();
   
@@ -77,6 +77,15 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
                   return;
                 } else {
                   // Second scan: Record Time-Out
+                  if (activeEvent.timeOut && time24 < activeEvent.timeOut) {
+                    setScanResults(prev => [{ id: `scan-${Date.now()}`, name: student.name, status: "invalid", action: "early-timeout", time: displayTime }, ...prev]);
+                    setScanAlert({ name: `${student.name} (Too Early to Time Out)`, visible: true });
+                    setTimeout(() => {
+                      setScanAlert(prev => prev ? { ...prev, visible: false } : null);
+                    }, 3000);
+                    return;
+                  }
+
                   // Use the internal backend ID which should be in the store if it's fetched, 
                   // but we might need to handle if it's missing. Assuming record has `id` if fetched from API.
                   const recordId = (existingRecord as any).id;
@@ -151,7 +160,6 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-2">
         <div>
           <h2 className="text-xl font-bold text-white">Scanner Station</h2>
-          <p className="text-sm text-white mt-1">Select a EVENTS to begin scanning QR passes</p>
         </div>
         {!scanning && (
             <select value={selectedScanEVENTS} onChange={e => { setSelectedScanEVENTS(e.target.value); setScanResults([]); }}
@@ -256,7 +264,11 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
                                res.action === "late" ? "Marked Late" : "Marked Present"}
                             </span>
                           ) :
-                           res.status === "invalid" ? <span className="text-rose-600">Invalid / Spoofed QR</span> :
+                           res.status === "invalid" ? (
+                             <span className="text-rose-600">
+                               {res.action === "early-timeout" ? "Too Early to Time Out" : "Invalid / Spoofed QR"}
+                             </span>
+                           ) :
                            <span className="text-amber-600">Already Scanned</span>}
                         </p>
                       </div>
@@ -273,10 +285,7 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
           <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-slate-100">
             <ScanLine size={28} className="text-slate-300" />
           </div>
-          <h3 className="text-lg font-bold text-slate-700">No EVENTS Selected</h3>
-          <p className="text-sm text-slate-500 mt-2 max-w-sm mx-auto">
-            Please select an active EVENTS from the dropdown above to start scanning QR passes for that class.
-          </p>
+          <h3 className="text-lg font-bold text-slate-700">No Event Selected</h3>
         </Card>
       )}
     </div>

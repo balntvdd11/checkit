@@ -96,7 +96,7 @@ export default function StudentAuthGate({
       <AnimatedBackground />
       <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.35 }} className="w-full relative z-10 flex flex-col items-center justify-center min-h-[500px]">
         <div className="w-full max-w-[400px] mb-6">
-          <button onClick={handleBack} className="flex items-center gap-1.5 text-sm text-white/70 hover:text-white transition-colors">
+          <button onClick={handleBack} className="flex items-center gap-1.5 text-sm font-bold text-[#0a2472] hover:text-[#123499] transition-colors drop-shadow-sm">
             <ChevronRight size={15} className="rotate-180" /> Back to home
           </button>
         </div>

@@ -265,7 +265,8 @@
 
   /* COAccess wordmark styles */
   .checkit-wordmark {
-    font-family: 'Orbitron', 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-family: 'Montserrat', system-ui, sans-serif;
+    font-weight: 800;
     text-transform: none;
     letter-spacing: 0.02em;
     display: inline-flex;
@@ -273,16 +274,13 @@
     line-height: 1;
   }
 
-  .checkit-wordmark__check {
-    color: #FFFFFF;
-    font-weight: 700;
+  .checkit-wordmark__coa {
+    color: #0a2472;
     -webkit-font-smoothing: antialiased;
   }
 
-  .checkit-wordmark__it {
-    color: var(--primary);
-    font-weight: 800;
-    margin-left: 0.125rem;
+  .checkit-wordmark__ccess {
+    color: #123499;
   }
 
   .premium-border-card {
@@ -291,7 +289,7 @@
   }
 
   .landing-page-black {
-    background-color: #000000;
+    background-color: #ffffff;
     background-image: none;
   }
 
@@ -409,7 +407,7 @@
   }
 
   .page-diamond-bg {
-    background-color: #000000;
+    background-color: #ffffff;
     background-image: none;
   }
 

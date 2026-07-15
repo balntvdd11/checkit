@@ -75,16 +75,16 @@ export default function StudentRegistration({ email, onSubmit, onBack }: { email
         transition={{ duration: 0.35 }}
         className="w-full max-w-md relative z-10"
       >
-        <button onClick={onBack} className="flex items-center gap-1.5 text-sm text-white/70 hover:text-white mb-8 transition-colors">
+        <button onClick={onBack} className="flex items-center gap-1.5 text-sm font-bold text-[#0a2472] hover:text-[#123499] mb-8 transition-colors drop-shadow-sm">
           <ChevronRight size={15} className="rotate-180" /> Back
         </button>
 
-        <Card className="p-8 !bg-black border border-white/10 shadow-[0_32px_80px_rgba(0,0,0,0.35)] relative overflow-hidden group premium-border-card">
+        <Card className="p-8 bg-gradient-to-br from-[#0a2472]/85 via-[#123499]/90 to-[#72caec] border border-white/10 shadow-[0_32px_80px_rgba(0,0,0,0.35)] relative overflow-hidden group premium-border-card">
 
           {/* Header */}
           <div className="relative z-10 flex flex-col items-center text-center mb-8">
-            <COAccessLogo size="md" />
-            <div className="mt-7 w-16 h-16 rounded-2xl bg-[#0B2A4D] flex items-center justify-center shadow-[0_0_15px_rgba(10,42,77,0.35)]">
+            <COAccessLogo size="md" inverted />
+            <div className="mt-7 w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center shadow-sm border border-white/10">
               <ClipboardList size={28} className="text-white" />
             </div>
             <h1 className="mt-4 text-xl font-bold text-white">Complete Registration</h1>

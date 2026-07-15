@@ -22,3 +22,42 @@ export function generateCheckItCode(eventName: string): string {
 
   return compact.length > 8 ? compact.slice(0, 8) : compact || "EVT";
 }
+
+export function formatTime12Hour(time24: string | undefined | null): string {
+  if (!time24) return "";
+  const [hoursStr, minutesStr] = time24.split(":");
+  if (!hoursStr || !minutesStr) return time24;
+  let hours = parseInt(hoursStr, 10);
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12;
+  hours = hours ? hours : 12; 
+  return `${hours}:${minutesStr} ${ampm}`;
+}
+
+export function formatNameLastFirst(fullName: string): string {
+  if (!fullName) return "";
+  const parts = fullName.trim().split(/\s+/);
+  if (parts.length <= 1) return fullName;
+
+  const suffixes = new Set(["JR", "JR.", "SR", "SR.", "II", "III", "IV", "V", "VI"]);
+  let suffix = "";
+  
+  if (suffixes.has(parts[parts.length - 1].toUpperCase())) {
+    suffix = parts.pop()!;
+  }
+
+  if (parts.length === 0) return suffix;
+
+  let lastName = parts.pop()!;
+  const particles = new Set(["DE", "DELA", "SAN", "DEL", "LA", "LOS", "MAC", "MC", "VON", "VAN", "DER"]);
+  
+  if (parts.length > 0 && particles.has(parts[parts.length - 1].toUpperCase())) {
+    lastName = `${parts.pop()!} ${lastName}`;
+  }
+  
+  if (suffix) {
+    return `${lastName}, ${parts.join(" ")}, ${suffix}`;
+  }
+  
+  return `${lastName}, ${parts.join(" ")}`;
+}

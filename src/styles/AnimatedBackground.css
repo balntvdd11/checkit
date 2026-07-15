@@ -3,7 +3,7 @@
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background: #000000;
+  background: #ffffff;
 }
 
 .blobs {
@@ -25,7 +25,7 @@
   width: 900px;
   height: 900px;
   transform: translate(-50%, -50%);
-  background: radial-gradient(circle at center, rgba(30, 58, 95, 0.10) 0%, rgba(11, 11, 12, 0.03) 55%, rgba(0, 0, 0, 0) 75%);
+  background: radial-gradient(circle at center, rgba(135, 206, 235, 0.5) 0%, rgba(135, 206, 235, 0.2) 55%, rgba(135, 206, 235, 0) 75%);
   filter: blur(90px);
   z-index: 0;
 }
@@ -34,7 +34,7 @@
 
 .css-blob {
   position: absolute;
-  mix-blend-mode: screen;
+  mix-blend-mode: normal;
   will-change: border-radius, transform, opacity;
 }
 
@@ -43,18 +43,21 @@
   top: -140px;
   width: 750px;
   height: 750px;
-  background: radial-gradient(circle at 35% 30%, #8FC2FF 0%, #1a2552 55%, rgba(37, 99, 235, 0) 75%);
+  background: radial-gradient(circle at 35% 30%, rgba(114, 202, 236, 0.8) 0%, rgba(135, 206, 235, 0.4) 55%, rgba(135, 206, 235, 0) 75%);
   border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%;
-  animation: morphBlue 9s ease-in-out infinite; 
-  opacity: 0.95;
+  animation: morphBlue 9s ease-in-out infinite;
+  opacity: 0.9;
   z-index: 3;
 }
 
 @keyframes morphBlue {
-  0%, 100% {
+
+  0%,
+  100% {
     border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%;
     transform: rotate(0deg) scale(1);
   }
+
   50% {
     border-radius: 58% 42% 30% 70% / 55% 55% 45% 45%;
     transform: rotate(8deg) scale(1.05);
@@ -66,18 +69,21 @@
   top: -100px;
   width: 800px;
   height: 800px;
-  background: radial-gradient(circle at 55% 35%, #C8CFD4 0%, #23272e 50%, rgba(55, 65, 81, 0) 75%);
+  background: radial-gradient(circle at 55% 35%, rgba(176, 226, 255, 0.8) 0%, rgba(176, 226, 255, 0.4) 50%, rgba(176, 226, 255, 0) 75%);
   border-radius: 60% 40% 35% 65% / 55% 40% 60% 45%;
   animation: morphGray 12s ease-in-out infinite;
-  opacity: 0.85;
+  opacity: 0.9;
   z-index: 2;
 }
 
 @keyframes morphGray {
-  0%, 100% {
+
+  0%,
+  100% {
     border-radius: 60% 40% 35% 65% / 55% 40% 60% 45%;
     transform: rotate(0deg) scale(1);
   }
+
   50% {
     border-radius: 40% 60% 65% 35% / 45% 60% 40% 55%;
     transform: rotate(-6deg) scale(0.97);
@@ -89,18 +95,21 @@
   top: 40px;
   width: 480px;
   height: 480px;
-  background: radial-gradient(circle at 50% 60%, #3D5468 0%, #111827 50%, rgba(17, 24, 39, 0) 75%);
+  background: radial-gradient(circle at 50% 60%, rgba(70, 175, 225, 0.8) 0%, rgba(70, 175, 225, 0.4) 50%, rgba(70, 175, 225, 0) 75%);
   border-radius: 50% 50% 40% 60% / 60% 45% 55% 40%;
   animation: morphDark 7s ease-in-out infinite;
-  opacity: 0.75;
+  opacity: 0.85;
   z-index: 1;
 }
 
 @keyframes morphDark {
-  0%, 100% {
+
+  0%,
+  100% {
     border-radius: 50% 50% 40% 60% / 60% 45% 55% 40%;
     transform: rotate(0deg) scale(1);
   }
+
   50% {
     border-radius: 40% 60% 60% 40% / 45% 55% 40% 60%;
     transform: rotate(10deg) scale(1.04);
@@ -108,12 +117,17 @@
 }
 
 /* keep blobs behind content */
-.animated-background, .blobs, .css-blob { z-index: 0; }
+.animated-background,
+.blobs,
+.css-blob {
+  z-index: 0;
+}
 
 @media (max-width: 768px) {
   .css-blob {
     animation: none !important;
   }
+
   .ambient-glow {
     filter: blur(40px) !important;
   }
@@ -177,7 +191,8 @@
   filter: blur(var(--bloom-blur, 8px));
 }
 
-img[alt="Student portal"], img[alt="Admin portal"] {
+img[alt="Student portal"],
+img[alt="Admin portal"] {
   position: relative;
   z-index: 5;
 }

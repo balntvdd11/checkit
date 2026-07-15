@@ -88,13 +88,13 @@ export default function BrowserActivation({
         transition={{ duration: 0.35 }}
         className="w-full max-w-md relative z-10"
       >
-        <Card className="p-8 !bg-black border border-white/10 shadow-[0_32px_80px_rgba(0,0,0,0.35)] relative overflow-hidden group premium-border-card">
+        <Card className="p-8 bg-gradient-to-br from-[#0a2472]/85 via-[#123499]/90 to-[#72caec] border border-white/10 shadow-[0_32px_80px_rgba(0,0,0,0.35)] relative overflow-hidden group premium-border-card">
           {/* Border tracer */}
 
 
           {/* Header */}
           <div className="relative z-10 flex flex-col items-center text-center mb-8">
-            <COAccessLogo size="md" />
+            <COAccessLogo size="md" inverted />
             <div className="mt-7 relative">
               <div className="w-20 h-20 rounded-2xl bg-[#0B2A4D] flex items-center justify-center shadow-[0_0_15px_rgba(10,42,77,0.35)]">
                 <AnimatePresence mode="wait">
@@ -217,7 +217,7 @@ export default function BrowserActivation({
             )}
           </AnimatePresence>
 
-          <p className="relative z-10 mt-4 text-center text-xs text-slate-500">
+          <p className="relative z-10 mt-4 text-center text-xs text-white">
             Activating for: <span className="font-semibold text-white/70">{student.studentId}</span>
           </p>
         </Card>

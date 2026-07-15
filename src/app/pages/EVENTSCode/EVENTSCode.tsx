@@ -4,6 +4,7 @@ import { LogOut, ChevronRight, Hash, RefreshCw, QrCode } from "lucide-react";
 import COAccessLogo from "../../components/shared/COAccessLogo";
 import Card from "../../components/shared/Card";
 import { cn } from "../../lib/utils";
+import { formatTime12Hour } from "../../lib/utils";
 import type { Student, EventConfig } from "../../types";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
 import coaLogo from "../../../asset/coalogo.png";
@@ -54,26 +55,26 @@ export default function EVENTSCodeEntry({ student, events, onSubmit, onViewHisto
 
       <div className="relative z-10 flex items-center justify-center min-h-[calc(100vh-57px)] p-4">
         <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="w-full max-w-md">
-          <button onClick={onViewHistory} className="flex items-center gap-1.5 text-sm text-white/70 hover:text-white mb-6 transition-colors">
+          <button onClick={onViewHistory} className="flex items-center gap-1.5 text-sm text-[#0a2472]/70 hover:text-[#0a2472] mb-6 transition-colors font-medium">
             <ChevronRight size={15} className="rotate-180" /> Back to dashboard
           </button>
           <div className="mb-6 text-center">
-            <p className="text-sm text-white/70">Welcome back,</p>
-            <h1 className="text-2xl font-bold text-white mt-0.5">{student.name}</h1>
-            <p className="text-xs text-white/70 mt-1 font-mono">{student.studentId} · {student.section}</p>
+            <p className="text-sm text-[#0a2472]/70 font-medium">Welcome back,</p>
+            <h1 className="text-2xl font-bold text-[#0a2472] mt-0.5">{student.name}</h1>
+            <p className="text-xs text-[#0a2472]/70 mt-1 font-mono font-medium">{student.studentId} · {student.section}</p>
           </div>
 
-          <Card className="p-8 relative !bg-black premium-border-card border-[1.5px] border-[#7EEAF8]/24 overflow-hidden">
+          <Card className="p-8 relative bg-gradient-to-br from-[#0a2472]/85 via-[#123499]/90 to-[#72caec] premium-border-card border border-white/10 overflow-hidden shadow-[0_32px_80px_rgba(0,0,0,0.35)]">
 
             <form onSubmit={handleSubmit} className="relative z-10 flex flex-col gap-4">
               <div className="flex flex-col items-center text-center mb-7">
-                <img src={coaLogo} alt="COAccess logo" className="w-28 h-28 object-contain drop-shadow-xl mb-4 rounded-full" />
+                <img src={coaLogo} alt="COAccess logo" className="w-28 h-28 object-contain brightness-0 invert mb-4" />
                 <h2 className="text-lg font-bold text-white">Select COAccess Event</h2>
                 <p className="text-sm text-slate-300 mt-1">Choose today's event from the list</p>
               </div>
 
               {activeEvents.length === 0 ? (
-                <div className="p-4 text-center text-[#7A6268] text-sm">
+                <div className="p-4 text-center text-white/80 text-sm">
                   <p>No active events available at this time.</p>
                   <p className="text-xs mt-1">Please check with your instructor.</p>
                 </div>
@@ -101,7 +102,7 @@ export default function EVENTSCodeEntry({ student, events, onSubmit, onViewHisto
                         <Hash size={13} className="text-white/70" />
                         <span className="text-xs font-mono font-bold text-white">{selectedEvent.checkItCode}</span>
                         <span className="text-xs text-slate-300">·</span>
-                        <span className="text-xs text-slate-300">{selectedEvent.timeIn} – {selectedEvent.timeOut}</span>
+                        <span className="text-xs text-slate-300">{formatTime12Hour(selectedEvent.timeIn)} – {formatTime12Hour(selectedEvent.timeOut)}</span>
                       </div>
                     </div>
                   )}
