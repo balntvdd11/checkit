@@ -74,7 +74,7 @@ export default function AdminDashboard({ onLogout }: {
           <div className="w-px h-5 bg-white/20" />
           <span className="text-white/50 font-semibold text-sm">Admin Portal</span>
         </div>
-        
+
         <div className="flex items-center gap-4">
           <button onClick={handleRefresh} disabled={isRefreshing} className="flex items-center gap-1.5 text-white/55 hover:text-white text-sm transition-colors mr-2">
             <RefreshCw size={14} className={cn(isRefreshing && "animate-spin")} /> <span className="hidden sm:inline">{isRefreshing ? "Refreshing..." : "Refresh"}</span>
@@ -106,7 +106,7 @@ export default function AdminDashboard({ onLogout }: {
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto p-2 sm:p-4 md:p-6 lg:p-8 pt-4 sm:pt-10">
-        <div className="bg-black/30 backdrop-blur-xl border border-white/10 rounded-2xl sm:rounded-[2.5rem] p-3 sm:p-6 md:p-10 shadow-2xl">
+        <div className="bg-blue/30 backdrop-blur-xl border border-white/10 rounded-2xl sm:rounded-[2.5rem] p-3 sm:p-6 md:p-10 shadow-2xl">
           <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
             {tab === "dashboard" && <DashboardTab />}
             {tab === "students" && <StudentsTab />}
@@ -117,6 +117,6 @@ export default function AdminDashboard({ onLogout }: {
         </div>
       </div>
       <DeveloperFooter />
-      </div>
+    </div>
   );
 }
