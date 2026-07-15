@@ -178,15 +178,8 @@ export default function QRPassGenerator({ student, EVENTSCode, onBack, onLogout 
                   </div>
                 </div>
 
-                <button 
-                  onClick={handleDownloadQR}
-                  className="mt-4 flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-colors text-sm font-semibold"
-                >
-                  <Download size={16} /> Download QR
-                </button>
-
-                <p className="mt-4 text-xs text-center text-slate-400 leading-relaxed max-w-[200px]">
-                  Show this QR to your instructor's scanner. Keep this screen active.
+                <p className="mt-4 text-xs text-center text-white leading-relaxed max-w-[200px]">
+                  Show this QR to your admin's scanner. Keep this screen active.
                 </p>
               </div>
             ) : (
