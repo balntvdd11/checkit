@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Search, Filter, AlertCircle, RefreshCw, Trash2 } from "lucide-react";
 import Card from "../../../components/shared/Card";
+import { formatNameLastFirst } from "../../../lib/utils";
 import { useSelectors, useStore } from "../../../state/store";
 import { resetStudentDevice, deleteStudent } from "../../../services/students";
 
@@ -46,7 +47,7 @@ export default function StudentsTab() {
                         s.studentId.includes(searchStudents);
     const matchSection = sectionFilter === "All Sections" || s.section === sectionFilter;
     return matchSearch && matchSection;
-  });
+  }).sort((a, b) => formatNameLastFirst(a.name).localeCompare(formatNameLastFirst(b.name)));
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
@@ -96,7 +97,7 @@ export default function StudentsTab() {
               {filteredStudents.map((student, idx) => (
                 <tr key={idx} className="hover:bg-slate-50/30 transition-colors whitespace-nowrap">
                   <td className="px-5 py-4">
-                    <p className="font-semibold text-slate-700">{student.name}</p>
+                    <p className="font-semibold text-slate-700">{formatNameLastFirst(student.name)}</p>
                     <p className="text-xs text-slate-400 mt-0.5">{student.email}</p>
                   </td>
                   <td className="px-5 py-4 font-mono text-slate-600">

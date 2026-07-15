@@ -7,7 +7,7 @@ import { createEvent, updateEvent } from "../../../services/events";
 import { useStore, useSelectors } from "../../../state/store";
 
 export default function CreateEventTab() {
-  const [eventForm, setEventForm] = useState({ name: "", timeIn: "08:00", lateThreshold: "08:15", timeOut: "17:00", status: "active" as const });
+  const [eventForm, setEventForm] = useState<{ name: string; timeIn: string; lateThreshold: string; timeOut: string; status: EventConfig["status"] }>({ name: "", timeIn: "08:00", lateThreshold: "08:15", timeOut: "17:00", status: "active" });
   const { dispatch } = useStore();
   const { events } = useSelectors();
   
