@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Download, Filter, FileText, Calendar, Building2, Search } from "lucide-react";
 import Card from "../../../components/shared/Card";
 import StatusBadge from "../../../components/shared/StatusBadge";
 import type { EventConfig } from "../../../types";
-import { useSelectors } from "../../../state/store";
+import { useStore, useSelectors } from "../../../state/store";
+import { fetchAttendance } from "../../../services/attendance";
 import { formatTime12Hour, formatNameLastFirst } from "../../../lib/utils";
 
 declare global {
@@ -18,6 +19,19 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
   const [reportDateFilter, setReportDateFilter] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const { attendance } = useSelectors();
+  const { dispatch } = useStore();
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      try {
+        const data = await fetchAttendance();
+        dispatch({ type: "SET_ATTENDANCE", payload: data });
+      } catch (err) {
+        console.error("Failed to auto-refresh attendance data", err);
+      }
+    }, 5000); // Auto-refresh every 5 seconds
+    return () => clearInterval(interval);
+  }, [dispatch]);
 
   const filteredReports = attendance.filter(r => {
     const matchSec = reportSectionFilter === "All" || r.section === reportSectionFilter;
