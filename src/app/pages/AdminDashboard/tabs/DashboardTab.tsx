@@ -62,7 +62,7 @@ export default function DashboardTab() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
-              {events.map((evt, idx) => (
+              {events.filter(evt => evt.status === 'active').map((evt, idx) => (
                 <tr key={evt.id} className="hover:bg-slate-50/30 transition-colors">
                   <td className="px-5 py-4 font-mono text-slate-600">{evt.checkItCode}</td>
                   <td className="px-5 py-4">
