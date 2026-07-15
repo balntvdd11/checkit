@@ -4,6 +4,7 @@ import studentPortalIcon from "../../../asset/studentportalICON.png";
 import adminPortalIcon from "../../../asset/adminportalICON.png";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
 import DeveloperFooter from "../../components/shared/DeveloperFooter";
+import COAccessLogo from "../../components/shared/COAccessLogo";
 
 // ─── Landing Page ─────────────────────────────────────────────────────────────
 
@@ -11,6 +12,9 @@ export default function LandingPage({ onStudent, onAdmin }: { onStudent: () => v
 
   return (
     <div className="min-h-screen pb-[180px] sm:pb-[220px] landing-page-black flex flex-col items-center justify-center relative overflow-hidden">
+      <div className="absolute top-6 left-6 sm:top-8 sm:left-8 z-50">
+        <COAccessLogo size="sm" />
+      </div>
       <AnimatedBackground />
       <div className="absolute inset-0 opacity-0 pointer-events-none" />
 
