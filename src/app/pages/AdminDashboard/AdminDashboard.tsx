@@ -54,8 +54,8 @@ export default function AdminDashboard({ onLogout }: {
       <header className="bg-[var(--secondary)] px-5 py-3.5 flex items-center justify-between sticky top-0 z-30 shadow-md">
         <div className="flex items-center gap-4">
           <COAccessLogo inverted size="sm" />
-          <div className="w-px h-5 bg-white/20 hidden sm:block" />
-          <span className="text-white/50 font-semibold text-sm hidden sm:block">Admin Portal</span>
+          <div className="w-px h-5 bg-white/20" />
+          <span className="text-white/50 font-semibold text-sm">Admin Portal</span>
         </div>
         
         <div className="flex items-center gap-4">
