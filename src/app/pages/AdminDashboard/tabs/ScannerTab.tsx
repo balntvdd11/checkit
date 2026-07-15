@@ -12,7 +12,7 @@ import { cn } from "../../../lib/utils";
 export default function ScannerTab({ events }: { events: EventConfig[] }) {
   const [selectedScanEVENTS, setSelectedScanEVENTS] = useState("");
   const [scanning, setScanning] = useState(false);
-  const [scanResults, setScanResults] = useState<{ id: string; name: string; status: "success" | "invalid" | "duplicate"; action?: "present" | "late" | "time-out"; time: string }[]>([]);
+  const [scanResults, setScanResults] = useState<{ id: string; name: string; status: "success" | "invalid" | "duplicate"; action?: "present" | "late" | "time-out" | "early-timeout"; time: string }[]>([]);
   const [scanAlert, setScanAlert] = useState<{ name: string; visible: boolean } | null>(null);
   const { state, dispatch } = useStore();
   
@@ -77,6 +77,15 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
                   return;
                 } else {
                   // Second scan: Record Time-Out
+                  if (activeEvent.timeOut && time24 < activeEvent.timeOut) {
+                    setScanResults(prev => [{ id: `scan-${Date.now()}`, name: student.name, status: "invalid", action: "early-timeout", time: displayTime }, ...prev]);
+                    setScanAlert({ name: `${student.name} (Too Early to Time Out)`, visible: true });
+                    setTimeout(() => {
+                      setScanAlert(prev => prev ? { ...prev, visible: false } : null);
+                    }, 3000);
+                    return;
+                  }
+
                   // Use the internal backend ID which should be in the store if it's fetched, 
                   // but we might need to handle if it's missing. Assuming record has `id` if fetched from API.
                   const recordId = (existingRecord as any).id;
@@ -256,7 +265,11 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
                                res.action === "late" ? "Marked Late" : "Marked Present"}
                             </span>
                           ) :
-                           res.status === "invalid" ? <span className="text-rose-600">Invalid / Spoofed QR</span> :
+                           res.status === "invalid" ? (
+                             <span className="text-rose-600">
+                               {res.action === "early-timeout" ? "Too Early to Time Out" : "Invalid / Spoofed QR"}
+                             </span>
+                           ) :
                            <span className="text-amber-600">Already Scanned</span>}
                         </p>
                       </div>
