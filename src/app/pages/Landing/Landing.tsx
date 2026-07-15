@@ -30,7 +30,7 @@ export default function LandingPage({ onStudent, onAdmin }: { onStudent: () => v
               <span className="checkit-wordmark__it">Access</span>
             </div>
           </div>
-          <div className="relative -translate-y-10 sm:-translate-y-15 flex flex-col items-center justify-center w-full">
+          <div className="relative sm:-translate-y-12 flex flex-col items-center justify-center w-full">
             <p className="text-black text-sm sm:text-lg font-medium text-center my-0 max-w-2xl px-2">
               Fast and Secure Event Attendance for COA students
             </p>
