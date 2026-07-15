@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Download, Filter, FileText, Calendar, Building2 } from "lucide-react";
+import { Download, Filter, FileText, Calendar, Building2, Search } from "lucide-react";
 import Card from "../../../components/shared/Card";
 import StatusBadge from "../../../components/shared/StatusBadge";
 import type { EventConfig } from "../../../types";
@@ -16,13 +16,17 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
   const [reportEVENTS, setReportEVENTS] = useState("");
   const [reportSectionFilter, setReportSectionFilter] = useState("All");
   const [reportDateFilter, setReportDateFilter] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const { attendance } = useSelectors();
 
   const filteredReports = attendance.filter(r => {
     const matchSec = reportSectionFilter === "All" || r.section === reportSectionFilter;
     const matchDate = !reportDateFilter || r.date === reportDateFilter;
     const matchEvent = !reportEVENTS || r.EVENTSCode === events.find(ev => ev.id === reportEVENTS)?.checkItCode;
-    return matchSec && matchDate && matchEvent;
+    const matchSearch = !searchQuery || 
+      r.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      r.studentId.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchSec && matchDate && matchEvent && matchSearch;
   });
 
   const reportPresent = filteredReports.filter(r => r.status === "present").length;
@@ -151,10 +155,20 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
       </div>
 
       <Card className="border border-slate-100 overflow-hidden">
-        <div className="px-5 py-4 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
-          <h3 className="font-bold text-slate-800 flex items-center gap-2">
+        <div className="px-5 py-4 border-b border-slate-100 bg-slate-50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <h3 className="font-bold text-slate-800 flex items-center gap-2 shrink-0">
             <FileText size={16} className="text-indigo-600" /> Detailed Records
           </h3>
+          <div className="relative w-full sm:w-72">
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input 
+              type="text" 
+              placeholder="Search name or ID..." 
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              className="w-full pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+            />
+          </div>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
