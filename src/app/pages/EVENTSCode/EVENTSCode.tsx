@@ -4,6 +4,7 @@ import { LogOut, ChevronRight, Hash, RefreshCw, QrCode } from "lucide-react";
 import COAccessLogo from "../../components/shared/COAccessLogo";
 import Card from "../../components/shared/Card";
 import { cn } from "../../lib/utils";
+import { formatTime12Hour } from "../../lib/utils";
 import type { Student, EventConfig } from "../../types";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
 import coaLogo from "../../../asset/coalogo.png";
@@ -101,7 +102,7 @@ export default function EVENTSCodeEntry({ student, events, onSubmit, onViewHisto
                         <Hash size={13} className="text-white/70" />
                         <span className="text-xs font-mono font-bold text-white">{selectedEvent.checkItCode}</span>
                         <span className="text-xs text-slate-300">·</span>
-                        <span className="text-xs text-slate-300">{selectedEvent.timeIn} – {selectedEvent.timeOut}</span>
+                        <span className="text-xs text-slate-300">{formatTime12Hour(selectedEvent.timeIn)} – {formatTime12Hour(selectedEvent.timeOut)}</span>
                       </div>
                     </div>
                   )}

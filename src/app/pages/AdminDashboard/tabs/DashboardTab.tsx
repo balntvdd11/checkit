@@ -2,6 +2,7 @@ import { LayoutDashboard, Users, Hash, UsersRound, BookOpen } from "lucide-react
 import Card from "../../../components/shared/Card";
 import StatusBadge from "../../../components/shared/StatusBadge";
 import { useSelectors } from "../../../state/store";
+import { formatTime12Hour } from "../../../lib/utils";
 
 export default function DashboardTab() {
   const { activeEvents, totalStudents, totalPresent, totalAbsent, events } = useSelectors();
@@ -69,7 +70,7 @@ export default function DashboardTab() {
                     <p className="text-xs text-slate-400 font-mono mt-0.5">&nbsp;</p>
                   </td>
                   <td className="px-5 py-4 text-slate-600 text-xs">
-                    {evt.timeIn} – {evt.timeOut}
+                    {formatTime12Hour(evt.timeIn)} – {formatTime12Hour(evt.timeOut)}
                   </td>
                   <td className="px-5 py-4"><StatusBadge status={evt.status as any} /></td>
                 </tr>

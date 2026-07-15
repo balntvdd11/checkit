@@ -4,6 +4,7 @@ import Card from "../../../components/shared/Card";
 import StatusBadge from "../../../components/shared/StatusBadge";
 import type { EventConfig } from "../../../types";
 import { useSelectors } from "../../../state/store";
+import { formatTime12Hour } from "../../../lib/utils";
 
 declare global {
   interface Window {
@@ -32,7 +33,7 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
   const handleExportCSV = () => {
     if (filteredReports.length === 0) return alert("No data to export.");
     const headers = ["Student Name", "ID", "Section", "Date", "Time In", "Time Out", "Status"];
-    const rows = filteredReports.map(r => [r.name, r.studentId, r.section, r.date, r.timeIn, r.timeOut || "Did Not Time-out", r.status]);
+    const rows = filteredReports.map(r => [r.name, r.studentId, r.section, r.date, formatTime12Hour(r.timeIn), r.timeOut ? formatTime12Hour(r.timeOut) : "Did Not Time-out", r.status]);
     const csvContent = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
@@ -63,7 +64,7 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
     doc.autoTable({
       startY: 30,
       head: [["Student Name", "ID", "Section", "Date", "Time In", "Time Out", "Status"]],
-      body: filteredReports.map(r => [r.name, r.studentId, r.section, r.date, r.timeIn, r.timeOut || "Did Not Time-out", r.status]),
+      body: filteredReports.map(r => [r.name, r.studentId, r.section, r.date, formatTime12Hour(r.timeIn), r.timeOut ? formatTime12Hour(r.timeOut) : "Did Not Time-out", r.status]),
     });
     
     doc.save("attendance_report.pdf");
@@ -177,8 +178,8 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
                     <p className="text-xs text-slate-400">{r.section}</p>
                   </td>
                   <td className="px-5 py-3 text-slate-600">{r.date}</td>
-                  <td className="px-5 py-3 font-mono text-slate-600">{r.timeIn}</td>
-                  <td className="px-5 py-3 font-mono text-slate-600">{r.timeOut || "Did Not Time-out"}</td>
+                  <td className="px-5 py-3 font-mono text-slate-600">{formatTime12Hour(r.timeIn)}</td>
+                  <td className="px-5 py-3 font-mono text-slate-600">{r.timeOut ? formatTime12Hour(r.timeOut) : "Did Not Time-out"}</td>
                   <td className="px-5 py-3"><StatusBadge status={r.status} /></td>
                 </tr>
               ))}

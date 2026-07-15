@@ -5,6 +5,7 @@ import StatusBadge from "../../components/shared/StatusBadge";
 import Card from "../../components/shared/Card";
 import type { Student, AttendanceRecord } from "../../types";
 import { useSelectors } from "../../state/store";
+import { formatTime12Hour } from "../../lib/utils";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
 import DeveloperFooter from "../../components/shared/DeveloperFooter";
 
@@ -104,8 +105,8 @@ export default function StudentDashboard({ student, onLogout, onGeneratePass }: 
                           <p className="font-semibold text-slate-700">{record.subject}</p>
                           <p className="text-xs text-slate-400 font-mono mt-0.5">{record.EVENTSCode}</p>
                         </td>
-                        <td className="px-5 py-4 font-mono text-slate-600">{record.timeIn}</td>
-                        <td className="px-5 py-4 font-mono text-slate-600">{record.timeOut || "—"}</td>
+                        <td className="px-5 py-4 font-mono text-slate-600">{formatTime12Hour(record.timeIn)}</td>
+                        <td className="px-5 py-4 font-mono text-slate-600">{record.timeOut ? formatTime12Hour(record.timeOut) : "—"}</td>
                         <td className="px-5 py-4"><StatusBadge status={record.status} /></td>
                       </tr>
                     ))}
