@@ -40,9 +40,16 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
 
   const handleExportCSV = () => {
     if (filteredReports.length === 0) return alert("No data to export.");
+    const selectedEventName = reportEVENTS ? events.find(ev => ev.id === reportEVENTS)?.name : null;
     const headers = ["Student Name", "ID", "Section", "Date", "Time In", "Time Out", "Status"];
     const rows = filteredReports.map(r => [formatNameLastFirst(r.name), r.studentId, r.section, r.date, formatTime12Hour(r.timeIn), r.timeOut ? formatTime12Hour(r.timeOut) : "Did Not Time-out", r.status]);
-    const csvContent = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+    
+    let csvContent = "";
+    if (selectedEventName) {
+      csvContent += `Event:,${selectedEventName}\n\n`;
+    }
+    csvContent += [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+    
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -59,9 +66,17 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
     
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
+    const selectedEventName = reportEVENTS ? events.find(ev => ev.id === reportEVENTS)?.name : null;
+
     doc.text("COAccess Attendance Report", 14, 15);
     doc.setFontSize(10);
     doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 22);
+    
+    let startY = 30;
+    if (selectedEventName) {
+      doc.text(`Event: ${selectedEventName}`, 14, 29);
+      startY = 35;
+    }
     
     // The autotable plugin automatically attaches itself to the jsPDF instance via window
     if (typeof doc.autoTable !== "function") {
@@ -70,7 +85,7 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
     }
 
     doc.autoTable({
-      startY: 30,
+      startY,
       head: [["Student Name", "ID", "Section", "Date", "Time In", "Time Out", "Status"]],
       body: filteredReports.map(r => [formatNameLastFirst(r.name), r.studentId, r.section, r.date, formatTime12Hour(r.timeIn), r.timeOut ? formatTime12Hour(r.timeOut) : "Did Not Time-out", r.status]),
     });
