@@ -21,8 +21,8 @@ export default function LandingPage({ onStudent, onAdmin }: { onStudent: () => v
         {/* Wordmark */}
         <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}
           className="flex flex-col items-center mb-1 -translate-y-16 sm:-translate-y-16">
-          <div className="mb-4 sm:mb-8 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
-            <div className="relative w-40 sm:w-56 h-40 sm:h-56 shrink-0">
+          <div className="mb-2 sm:mb-6 flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-4">
+            <div className="relative w-32 sm:w-48 h-32 sm:h-48 shrink-0">
               <img src={coaLogo} alt="COAccess logo" className="relative z-10 w-full h-full object-contain drop-shadow-2xl rounded-full" />
             </div>
             <div className="flex items-center gap-0 checkit-wordmark text-5xl sm:text-7xl">
@@ -30,8 +30,8 @@ export default function LandingPage({ onStudent, onAdmin }: { onStudent: () => v
               <span className="checkit-wordmark__it">Access</span>
             </div>
           </div>
-          <div className="relative sm:-translate-y-12 flex flex-col items-center justify-center w-full">
-            <p className="text-black text-sm sm:text-lg font-medium text-center my-0 max-w-2xl px-2">
+          <div className="relative sm:-translate-y-12 flex flex-col items-center justify-center w-full mt-2 sm:mt-0">
+            <p className="bg-white text-[#123499] px-5 py-2 rounded-full shadow-sm text-sm sm:text-lg font-bold text-center my-0 max-w-2xl">
               Fast and Secure Event Attendance for COA students
             </p>
             <div className="mt-0 flex items-center justify-center gap-2 text-white/35 text-xs">
