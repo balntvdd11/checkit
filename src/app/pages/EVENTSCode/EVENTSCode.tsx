@@ -67,7 +67,7 @@ export default function EVENTSCodeEntry({ student, events, onSubmit, onViewHisto
 
             <form onSubmit={handleSubmit} className="relative z-10 flex flex-col gap-4">
               <div className="flex flex-col items-center text-center mb-7">
-                <img src={coaLogo} alt="COAccess logo" className="w-28 h-28 object-contain drop-shadow-xl mb-4 rounded-full" />
+                <img src={coaLogo} alt="COAccess logo" className="w-28 h-28 object-contain brightness-0 invert mb-4" />
                 <h2 className="text-lg font-bold text-white">Select COAccess Event</h2>
                 <p className="text-sm text-slate-300 mt-1">Choose today's event from the list</p>
               </div>
