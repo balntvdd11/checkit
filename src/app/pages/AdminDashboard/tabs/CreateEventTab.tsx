@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Copy, CheckCircle2, Clock, MapPin, Hash, Building2, Ticket, Archive, Trash2, ArrowLeft } from "lucide-react";
 import Card from "../../../components/shared/Card";
-import { generateCheckItCode, cn } from "../../../lib/utils";
+import { generateCheckItCode, cn, formatTime12Hour } from "../../../lib/utils";
 import type { EventConfig } from "../../../types";
 import { createEvent, updateEvent } from "../../../services/events";
 import { useStore, useSelectors } from "../../../state/store";
@@ -64,7 +64,6 @@ export default function CreateEventTab() {
         <div className="flex justify-between items-center mb-6">
         <div>
           <h2 className="text-xl font-bold text-white">Event Management</h2>
-          <p className="text-sm text-white mt-1">Create and manage institutional events and seminars</p>
         </div>
         <div className="flex items-center gap-3">
           <button onClick={() => { setShowArchivedEvents(!showArchivedEvents); setShowEventForm(false); }}
@@ -159,7 +158,7 @@ export default function CreateEventTab() {
                       )}
                     </div>
                     <div className="flex items-center gap-4 text-xs text-slate-500">
-                      <span className="flex items-center gap-1.5"><Clock size={12} /> {evt.timeIn} – {evt.timeOut}</span>
+                      <span className="flex items-center gap-1.5"><Clock size={12} /> {formatTime12Hour(evt.timeIn)} – {formatTime12Hour(evt.timeOut)}</span>
                       <span className="flex items-center gap-1.5"><MapPin size={12} /> UA Campus</span>
                     </div>
                   </div>
@@ -225,7 +224,7 @@ export default function CreateEventTab() {
                   <div>
                     <h4 className="font-bold text-slate-700 line-through">{evt.name}</h4>
                     <div className="flex items-center gap-4 text-xs text-slate-500 mt-1">
-                      <span className="flex items-center gap-1.5"><Clock size={12} /> {evt.timeIn} – {evt.timeOut}</span>
+                      <span className="flex items-center gap-1.5"><Clock size={12} /> {formatTime12Hour(evt.timeIn)} – {formatTime12Hour(evt.timeOut)}</span>
                     </div>
                   </div>
                 </div>

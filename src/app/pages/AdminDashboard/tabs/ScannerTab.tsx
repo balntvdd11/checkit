@@ -160,7 +160,6 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-2">
         <div>
           <h2 className="text-xl font-bold text-white">Scanner Station</h2>
-          <p className="text-sm text-white mt-1">Select a EVENTS to begin scanning QR passes</p>
         </div>
         {!scanning && (
             <select value={selectedScanEVENTS} onChange={e => { setSelectedScanEVENTS(e.target.value); setScanResults([]); }}
@@ -286,10 +285,7 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
           <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-slate-100">
             <ScanLine size={28} className="text-slate-300" />
           </div>
-          <h3 className="text-lg font-bold text-slate-700">No EVENTS Selected</h3>
-          <p className="text-sm text-slate-500 mt-2 max-w-sm mx-auto">
-            Please select an active EVENTS from the dropdown above to start scanning QR passes for that class.
-          </p>
+          <h3 className="text-lg font-bold text-slate-700">No Event Selected</h3>
         </Card>
       )}
     </div>
