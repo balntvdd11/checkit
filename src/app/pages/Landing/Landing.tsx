@@ -21,11 +21,11 @@ export default function LandingPage({ onStudent, onAdmin }: { onStudent: () => v
         {/* Logo and Subtitle */}
         <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}
           className="flex flex-col items-center mb-8 sm:mb-12 mt-4 sm:mt-0">
-          <div className="relative w-48 sm:w-72 h-48 sm:h-72 shrink-0 mb-4 sm:mb-6">
+          <div className="relative w-64 sm:w-80 h-64 sm:h-80 shrink-0 mb-1 sm:mb-2">
             <img src={coaLogo} alt="COA logo" className="relative z-10 w-full h-full object-contain drop-shadow-2xl rounded-full" />
           </div>
           <div className="relative flex flex-col items-center justify-center w-full">
-            <p className="bg-white text-[#123499] px-5 py-2 rounded-full shadow-sm text-sm sm:text-lg font-bold text-center my-0 max-w-2xl">
+            <p className="bg-white text-[#123499] px-3 sm:px-5 py-2 rounded-full shadow-sm text-[11px] sm:text-lg font-bold text-center my-0 whitespace-nowrap max-w-full">
               Fast and Secure Event Attendance for COA students
             </p>
           </div>
