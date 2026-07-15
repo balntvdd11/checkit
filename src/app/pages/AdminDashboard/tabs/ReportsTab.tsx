@@ -99,7 +99,7 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
     <div className="max-w-6xl mx-auto space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-2">
         <div>
-          <h2 className="text-xl font-bold text-white">Attendance Reports</h2>
+          <h2 className="text-xl font-bold text-[#123499]">Attendance Reports</h2>
         </div>
         <div className="flex gap-2 w-full sm:w-auto">
           <button onClick={handleExportCSV} className="flex-1 sm:flex-none px-5 py-2.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold rounded-xl transition-colors border border-indigo-100 flex items-center justify-center gap-2 text-sm shadow-sm">

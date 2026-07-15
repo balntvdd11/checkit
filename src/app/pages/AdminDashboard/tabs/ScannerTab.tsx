@@ -159,7 +159,7 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
     <div className="max-w-5xl mx-auto space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-2">
         <div>
-          <h2 className="text-xl font-bold text-white">Scanner Station</h2>
+          <h2 className="text-xl font-bold text-[#123499]">Scanner Station</h2>
         </div>
         {!scanning && (
             <select value={selectedScanEVENTS} onChange={e => { setSelectedScanEVENTS(e.target.value); setScanResults([]); }}
