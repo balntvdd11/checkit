@@ -20,14 +20,14 @@ export default function LandingPage({ onStudent, onAdmin }: { onStudent: () => v
 
         {/* Wordmark */}
         <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}
-          className="flex flex-col items-center mb-1 -translate-y-16 sm:-translate-y-16">
+          className="flex flex-col items-center mb-1 mt-8 sm:mt-0 sm:-translate-y-16">
           <div className="mb-2 sm:mb-6 flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-4">
             <div className="relative w-32 sm:w-48 h-32 sm:h-48 shrink-0">
               <img src={coaLogo} alt="COAccess logo" className="relative z-10 w-full h-full object-contain drop-shadow-2xl rounded-full" />
             </div>
             <div className="flex items-center gap-0 checkit-wordmark text-5xl sm:text-7xl">
-              <span className="checkit-wordmark__check">CO</span>
-              <span className="checkit-wordmark__it">Access</span>
+              <span className="checkit-wordmark__coa">COA</span>
+              <span className="checkit-wordmark__ccess">ccess</span>
             </div>
           </div>
           <div className="relative sm:-translate-y-12 flex flex-col items-center justify-center w-full mt-2 sm:mt-0">
