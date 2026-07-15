@@ -79,7 +79,7 @@ export default function StudentRegistration({ email, onSubmit, onBack }: { email
           <ChevronRight size={15} className="rotate-180" /> Back
         </button>
 
-        <Card className="p-8 bg-gradient-to-br from-[#0a2472]/85 via-[#123499]/90 to-[#72caec] hover:opacity-90 border border-white/10 shadow-[0_32px_80px_rgba(0,0,0,0.35)] relative overflow-hidden group premium-border-card">
+        <Card className="p-8 bg-gradient-to-br from-[#0a2472]/85 via-[#123499]/90 to-[#72caec] border border-white/10 shadow-[0_32px_80px_rgba(0,0,0,0.35)] relative overflow-hidden group premium-border-card">
 
           {/* Header */}
           <div className="relative z-10 flex flex-col items-center text-center mb-8">
