@@ -24,13 +24,12 @@ export default function BrowserActivation({
   student,
   onActivate,
   onCancel,
-  hasConflict,
+  onConflict,
 }: {
   student: Student;
   onActivate: () => void;
   onCancel: () => void;
   onConflict?: () => void;
-  hasConflict?: boolean;
 }) {
   const [phase, setPhase] = useState<Phase>("activating");
   const [error, setError] = useState<string | null>(null);
