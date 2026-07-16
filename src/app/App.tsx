@@ -131,13 +131,18 @@ function AppInner() {
           
           const currentFingerprint = await generateDeviceFingerprint();
           if (record.deviceFingerprint) {
-            const savedOS = record.deviceFingerprint.split("::")[0];
-            const currentOS = currentFingerprint.split("::")[0];
+            const savedFingerprints = record.deviceFingerprint.split(',');
+            const isMatch = savedFingerprints.includes(currentFingerprint);
 
-            if (savedOS && currentOS && savedOS !== currentOS) {
-              setLockedOS(savedOS);
-              setCurrentView("student-device-conflict");
-            } else if (!hasStoredPrivateKey(normalizedEmail) || record.deviceFingerprint !== currentFingerprint) {
+            if (!isMatch) {
+              const hasWeb = savedFingerprints.some(fp => !fp.startsWith('Mobile::'));
+              if (hasWeb) {
+                setLockedOS('Web Browser');
+                setCurrentView("student-device-conflict");
+              } else {
+                setCurrentView("student-activation");
+              }
+            } else if (!hasStoredPrivateKey(normalizedEmail)) {
               setCurrentView("student-activation");
             } else {
               setCurrentView("student-dashboard");
@@ -231,13 +236,18 @@ function AppInner() {
                 
                 const currentFingerprint = await generateDeviceFingerprint();
                 if (record.deviceFingerprint) {
-                  const savedOS = record.deviceFingerprint.split("::")[0];
-                  const currentOS = currentFingerprint.split("::")[0];
+                  const savedFingerprints = record.deviceFingerprint.split(',');
+                  const isMatch = savedFingerprints.includes(currentFingerprint);
 
-                  if (savedOS && currentOS && savedOS !== currentOS) {
-                    setLockedOS(savedOS);
-                    setCurrentView("student-device-conflict");
-                  } else if (!hasStoredPrivateKey(email) || record.deviceFingerprint !== currentFingerprint) {
+                  if (!isMatch) {
+                    const hasWeb = savedFingerprints.some(fp => !fp.startsWith('Mobile::'));
+                    if (hasWeb) {
+                      setLockedOS('Web Browser');
+                      setCurrentView("student-device-conflict");
+                    } else {
+                      setCurrentView("student-activation");
+                    }
+                  } else if (!hasStoredPrivateKey(email)) {
                     setCurrentView("student-activation");
                   } else {
                     setCurrentView("student-dashboard");

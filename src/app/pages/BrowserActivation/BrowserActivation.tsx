@@ -42,12 +42,8 @@ export default function BrowserActivation({
     const runActivation = async () => {
       const slowTimeout = setTimeout(() => setIsSlow(true), 4000);
       try {
-        // Step 1: ECC Browser Activation
+        // Step 1 & 2: ECC Browser Activation & Device Fingerprinting
         await activateBrowser(student.email);
-
-        // Step 2: Device Fingerprinting
-        const fingerprint = await generateDeviceFingerprint();
-        await sendFingerprintToBackend(student.email, fingerprint);
 
         if (mounted) {
           clearTimeout(slowTimeout);
