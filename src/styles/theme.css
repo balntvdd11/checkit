@@ -413,14 +413,3 @@
 
   /* Animated background moved to src/styles/AnimatedBackground.css */
 }
-
-@layer utilities {
-  .animate-flip {
-    animation: flip 8s linear infinite;
-  }
-}
-
-@keyframes flip {
-  0% { transform: perspective(600px) rotateY(0deg); }
-  100% { transform: perspective(600px) rotateY(360deg); }
-}
