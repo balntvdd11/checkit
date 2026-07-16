@@ -135,13 +135,7 @@ function AppInner() {
             const isMatch = savedFingerprints.includes(currentFingerprint);
 
             if (!isMatch) {
-              const hasWeb = savedFingerprints.some(fp => !fp.startsWith('Mobile::'));
-              if (hasWeb) {
-                setLockedOS('Web Browser');
-                setCurrentView("student-device-conflict");
-              } else {
-                setCurrentView("student-activation");
-              }
+              setCurrentView("student-activation");
             } else if (!hasStoredPrivateKey(normalizedEmail)) {
               setCurrentView("student-activation");
             } else {
@@ -240,13 +234,7 @@ function AppInner() {
                   const isMatch = savedFingerprints.includes(currentFingerprint);
 
                   if (!isMatch) {
-                    const hasWeb = savedFingerprints.some(fp => !fp.startsWith('Mobile::'));
-                    if (hasWeb) {
-                      setLockedOS('Web Browser');
-                      setCurrentView("student-device-conflict");
-                    } else {
-                      setCurrentView("student-activation");
-                    }
+                    setCurrentView("student-activation");
                   } else if (!hasStoredPrivateKey(email)) {
                     setCurrentView("student-activation");
                   } else {
