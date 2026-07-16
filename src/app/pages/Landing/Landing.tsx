@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import coaLogo from "../../../asset/coalogo.png";
+import coaLogo from "../../../asset/coachromelogo.png";
 import studentPortalIcon from "../../../asset/studentportalICON.png";
 import adminPortalIcon from "../../../asset/adminportalICON.png";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
