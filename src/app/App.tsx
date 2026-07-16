@@ -271,7 +271,7 @@ function AppInner() {
           student={currentStudent!}
           onActivate={() => setCurrentView("student-dashboard")}
           onCancel={handleStudentLogout}
-          onConflict={() => setCurrentView("device-conflict")}
+          onConflict={() => setCurrentView("student-device-conflict")}
         />
       )}
 
