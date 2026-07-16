@@ -157,31 +157,7 @@ export async function activateBrowser(email: string): Promise<void> {
   const record = await fetchStudentByEmail(email);
 
   let finalPublicKey = publicKeyPem;
-  if (record && record.publicKey) {
-    const existingKeys = record.publicKey.split(',');
-    if (!existingKeys.includes(publicKeyPem)) {
-      existingKeys.push(publicKeyPem);
-      // Keep only the last 3 keys to prevent bloat
-      if (existingKeys.length > 3) existingKeys.shift();
-      finalPublicKey = existingKeys.join(',');
-    } else {
-      finalPublicKey = record.publicKey;
-    }
-  }
-
   let finalFingerprint = fingerprint;
-  if (record && record.deviceFingerprint) {
-    const existingFPs = record.deviceFingerprint.split(',');
-    if (!existingFPs.includes(fingerprint)) {
-      // Remove any existing Web fingerprint so we don't allow multiple web browsers!
-      // This preserves the Mobile app fingerprint if it exists.
-      const filteredFPs = existingFPs.filter(fp => fp.startsWith('Mobile::'));
-      filteredFPs.push(fingerprint);
-      finalFingerprint = filteredFPs.join(',');
-    } else {
-      finalFingerprint = record.deviceFingerprint;
-    }
-  }
 
   await sendPublicKeyToBackend(email, finalPublicKey);
   await sendFingerprintToBackend(email, finalFingerprint);
