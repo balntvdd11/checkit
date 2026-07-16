@@ -29,6 +29,7 @@ export default function BrowserActivation({
   student: Student;
   onActivate: () => void;
   onCancel: () => void;
+  onConflict?: () => void;
   hasConflict?: boolean;
 }) {
   const [phase, setPhase] = useState<Phase>("activating");
@@ -52,6 +53,12 @@ export default function BrowserActivation({
       } catch (err) {
         if (mounted) {
           clearTimeout(slowTimeout);
+          if (err instanceof Error && err.message.includes("Device mismatch")) {
+            if (onConflict) {
+              onConflict();
+              return;
+            }
+          }
           setPhase("error");
           setError(err instanceof Error ? err.message : "Browser activation failed. Please try again.");
         }
