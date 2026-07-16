@@ -73,7 +73,7 @@ export async function sendFingerprintToBackend(
   const response = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, deviceFingerprint: fingerprint }),
+    body: JSON.stringify({ email, deviceFingerprint: fingerprint, platform: 'web' }),
   });
 
   if (!response.ok) {

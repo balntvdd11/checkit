@@ -9,6 +9,8 @@ export interface StudentData {
   registered: boolean;
   registeredAt: string;
   deviceFingerprint?: string;
+  browserFingerprint?: string;
+  browserPublicKey?: string;
 }
 
 /**

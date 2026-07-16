@@ -130,18 +130,20 @@ function AppInner() {
           });
           
           const currentFingerprint = await generateDeviceFingerprint();
-          if (record.deviceFingerprint) {
-            const savedFingerprints = record.deviceFingerprint.split(',');
-            const isMatch = savedFingerprints.includes(currentFingerprint);
+          if (record.browserFingerprint) {
+            // Check if this browser's fingerprint matches the locked web browser
+            const isMatch = record.browserFingerprint === currentFingerprint;
 
             if (!isMatch) {
-              setCurrentView("student-activation");
+              // A different browser is already locked → show conflict immediately
+              setCurrentView("student-device-conflict");
             } else if (!hasStoredPrivateKey(normalizedEmail)) {
               setCurrentView("student-activation");
             } else {
               setCurrentView("student-dashboard");
             }
           } else {
+            // No browser registered yet → activate this browser
             setCurrentView("student-activation");
           }
         } else {
@@ -229,18 +231,20 @@ function AppInner() {
                 });
                 
                 const currentFingerprint = await generateDeviceFingerprint();
-                if (record.deviceFingerprint) {
-                  const savedFingerprints = record.deviceFingerprint.split(',');
-                  const isMatch = savedFingerprints.includes(currentFingerprint);
+                if (record.browserFingerprint) {
+                  // Check if this browser's fingerprint matches the locked web browser
+                  const isMatch = record.browserFingerprint === currentFingerprint;
 
                   if (!isMatch) {
-                    setCurrentView("student-activation");
+                    // A different browser is already registered → device conflict
+                    setCurrentView("student-device-conflict");
                   } else if (!hasStoredPrivateKey(email)) {
                     setCurrentView("student-activation");
                   } else {
                     setCurrentView("student-dashboard");
                   }
                 } else {
+                  // No browser registered yet → activate this browser
                   setCurrentView("student-activation");
                 }
               } else {

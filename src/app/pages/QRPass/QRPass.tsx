@@ -31,7 +31,7 @@ export default function QRPassGenerator({ student, EVENTSCode, onBack, onLogout 
         const currentFingerprint = await generateDeviceFingerprint();
         const record = await fetchStudentByEmail(student.email);
         if (mounted) {
-          if (!record || !hasStoredPrivateKey(student.email) || record.deviceFingerprint !== currentFingerprint) {
+          if (!record || !hasStoredPrivateKey(student.email) || record.browserFingerprint !== currentFingerprint) {
             setIsActive(false);
           } else {
             setIsActive(true);

@@ -120,7 +120,7 @@ export async function sendPublicKeyToBackend(
   const response = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, publicKey: publicKeyPem }),
+    body: JSON.stringify({ email, publicKey: publicKeyPem, platform: 'web' }),
   });
 
   if (!response.ok) {
