@@ -23,20 +23,29 @@ function getOSFamily(): string {
 }
 
 /**
- * Generates a SHA-256 hash based on several browser environment variables.
+ * Generates a stable DEVICE-level fingerprint.
+ * Uses ONLY signals that are identical across ALL browsers on the same
+ * physical device — so Chrome, Firefox, Edge, Safari on the same phone/PC
+ * all produce the exact same fingerprint.
+ *
+ * Excluded intentionally (browser-specific, would differ per browser):
+ *   - navigator.userAgent / OS string  (Chrome UA ≠ Firefox UA)
+ *   - screen.colorDepth                (may differ between browsers)
+ *   - navigator.hardwareConcurrency    (some browsers report different values)
  */
 export async function generateDeviceFingerprint(): Promise<string> {
-  const osString = navigator.userAgent.match(/\([^)]+\)/)?.[0] || 'unknown_os';
   const osFamily = getOSFamily();
 
+  // Only use signals that are 100% device-level, not browser-level:
   const components = [
-    navigator.language?.split('-')[0] || 'unknown',
-    screen.colorDepth,
+    // Screen resolution — same for all browsers on the device
     `${Math.max(screen.width, screen.height)}x${Math.min(screen.width, screen.height)}`,
+    // Timezone offset — same for all browsers
     new Date().getTimezoneOffset(),
+    // Named timezone — same for all browsers
     Intl.DateTimeFormat().resolvedOptions().timeZone,
-    navigator.hardwareConcurrency || 'unknown',
-    osString
+    // OS family derived from UA — Chrome/Firefox/Edge all report same OS
+    osFamily,
   ];
 
   const rawString = components.join('||');
