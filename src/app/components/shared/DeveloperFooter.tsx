@@ -12,15 +12,15 @@ export default function DeveloperFooter() {
           className="h-20 sm:h-24 w-auto object-contain drop-shadow-none" 
           style={{ filter: "brightness(0) saturate(100%) invert(13%) sepia(43%) saturate(4681%) hue-rotate(213deg) brightness(88%) contrast(101%)" }}
         />
-        <a href="https://ua-cit.com" target="_blank" rel="noopener noreferrer" className="pointer-events-auto">
+        <a href="https://ua-cit.com" target="_blank" rel="noopener noreferrer" className="pointer-events-auto -ml-3 sm:-ml-4">
           <img 
             src={citLogo} 
             alt="CIT Logo" 
-            className="h-10 sm:h-12 w-auto object-contain drop-shadow-none" 
+            className="h-12 sm:h-16 w-auto object-contain drop-shadow-none" 
           />
         </a>
       </div>
-      <div className="flex flex-wrap justify-center gap-x-3 sm:gap-x-4 gap-y-1.5 max-w-2xl mx-auto font-bold -mt-5 sm:-mt-7">
+      <div className="flex flex-wrap justify-center gap-x-3 sm:gap-x-4 gap-y-1.5 max-w-2xl mx-auto font-bold -mt-3 sm:-mt-4">
         <span className="whitespace-nowrap">BONDOC, K.</span>
         <span className="whitespace-nowrap">DAVID, C.</span>
         <span className="whitespace-nowrap">GIRADO, S.</span>
