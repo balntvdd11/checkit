@@ -93,15 +93,7 @@ export default function CreateEventTab() {
                     value={eventForm.name} onChange={e => setEventForm({ ...eventForm, name: e.target.value })}
                     className={inputCls} />
                 </div>
-                <div className="p-4 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-between">
-                  <div>
-                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Generated Code</p>
-                    <p className="font-mono text-xl font-bold text-[var(--secondary)]">{previewCheckItCode}</p>
-                  </div>
-                  <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm border border-slate-200">
-                    <Hash size={18} className="text-slate-400" />
-                  </div>
-                </div>
+
               </div>
 
               <div className="space-y-5">
@@ -164,8 +156,6 @@ export default function CreateEventTab() {
                   </div>
                 </div>
                 <div className="shrink-0 text-center sm:text-right bg-slate-50 sm:bg-transparent p-3 sm:p-0 rounded-lg space-y-2">
-                  <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">COAccess Code</p>
-                  <p className="font-mono text-lg font-bold text-[var(--secondary)]">{evt.checkItCode}</p>
                   <div className="mt-2 flex items-center justify-center sm:justify-end gap-2">
                     <button onClick={async () => {
                       const updatedEvent: EventConfig = {

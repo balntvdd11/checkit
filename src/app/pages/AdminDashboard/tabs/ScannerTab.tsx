@@ -195,7 +195,6 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /> Live Scanner Active
                   </div>
                   <h3 className="font-bold text-slate-800">{activeScanEVENTS?.name}</h3>
-                  <p className="text-sm text-slate-500">Code: {activeScanEVENTS?.checkItCode}</p>
                 </div>
                 
                 <div className="w-full max-w-sm relative rounded-2xl overflow-hidden bg-slate-50 mb-8 border border-slate-200">

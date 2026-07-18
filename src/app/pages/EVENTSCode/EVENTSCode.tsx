@@ -89,7 +89,7 @@ export default function EVENTSCodeEntry({ student, events, onSubmit, onViewHisto
                     <option value="" className="text-black">Select an event...</option>
                     {activeEvents.map(event => (
                       <option key={event.id} value={event.id} className="text-black">
-                        {event.name} · {event.checkItCode}
+                        {event.name}
                       </option>
                     ))}
                   </select>
@@ -99,9 +99,6 @@ export default function EVENTSCodeEntry({ student, events, onSubmit, onViewHisto
                           <p className="text-xs uppercase tracking-wide text-white/70 font-semibold">Event</p>
                       <p className="text-sm font-semibold text-white mt-1">{selectedEvent.name}</p>
                       <div className="flex items-center gap-2 mt-2 pt-2 border-t border-white/10">
-                        <Hash size={13} className="text-white/70" />
-                        <span className="text-xs font-mono font-bold text-white">{selectedEvent.checkItCode}</span>
-                        <span className="text-xs text-slate-300">·</span>
                         <span className="text-xs text-slate-300">{formatTime12Hour(selectedEvent.timeIn)} – {formatTime12Hour(selectedEvent.timeOut)}</span>
                       </div>
                     </div>
