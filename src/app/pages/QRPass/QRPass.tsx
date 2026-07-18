@@ -1,12 +1,13 @@
-import { useState, useEffect } from "react";
-import { motion } from "motion/react";
-import { GraduationCap, Hash, RefreshCw, ChevronRight, AlertTriangle, Download } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { GraduationCap, Hash, RefreshCw, ChevronRight, AlertTriangle, Download, CheckCircle2 } from "lucide-react";
 import COAccessLogo from "../../components/shared/COAccessLogo";
 import QRCodeDisplay from "../../components/shared/QRCodeDisplay";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
 import { cn } from "../../lib/utils";
 import type { Student, EventConfig } from "../../types";
 import { fetchStudentByEmail } from "../../services/studentCheck";
+import { fetchAttendance } from "../../services/attendance";
 import { generateDeviceFingerprint } from "../../services/fingerprint";
 import { hasStoredPrivateKey } from "../../services/browserActivation";
 import DeveloperFooter from "../../components/shared/DeveloperFooter";
@@ -31,6 +32,14 @@ export default function QRPassGenerator({ student, EVENTSCode, events, onBack, o
   const [qrSeed, setQrSeed] = useState(Date.now().toString());
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isActive, setIsActive] = useState<boolean | null>(null);
+
+  // ── Scan success modal (read-only: never touches QR/timer/nav) ────────────
+  type ScanModalType = "time-in" | "time-out" | null;
+  const [scanModal, setScanModal] = useState<ScanModalType>(null);
+  const scanModalTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Track what we've already seen so we only fire once per transition
+  const prevTimeInRef = useRef<string | null | undefined>(undefined);
+  const prevTimeOutRef = useRef<string | null | undefined>(undefined);
   const ringSize = 264;
 
   useEffect(() => {
@@ -68,6 +77,68 @@ export default function QRPassGenerator({ student, EVENTSCode, events, onBack, o
     }, 1000);
     return () => clearInterval(interval);
   }, [isActive]);
+
+  // ── Poll attendance to detect when admin scans this student's QR ──────────
+  // This is purely additive: it only reads from the backend and shows a modal.
+  // It does NOT touch the QR seed, timer, navigation, or any other state.
+  useEffect(() => {
+    if (isActive !== true) return;
+    const today = new Date().toISOString().split("T")[0];
+
+    const poll = async () => {
+      try {
+        const records = await fetchAttendance();
+        const myRecord = records.find(
+          (r: any) =>
+            r.studentId === student.studentId &&
+            r.EVENTSCode === EVENTSCode &&
+            r.date === today
+        );
+
+        const currentTimeIn = myRecord?.timeIn ?? null;
+        const currentTimeOut = (myRecord as any)?.timeOut ?? null;
+
+        // First run: just save current state, don't fire modal
+        if (prevTimeInRef.current === undefined) {
+          prevTimeInRef.current = currentTimeIn;
+          prevTimeOutRef.current = currentTimeOut;
+          return;
+        }
+
+        // Detect new Time Out (must check before Time In so it takes priority)
+        if (
+          currentTimeOut &&
+          currentTimeOut.trim() !== "" &&
+          currentTimeOut !== prevTimeOutRef.current
+        ) {
+          prevTimeOutRef.current = currentTimeOut;
+          // Show Time Out modal
+          if (scanModalTimerRef.current) clearTimeout(scanModalTimerRef.current);
+          setScanModal("time-out");
+          scanModalTimerRef.current = setTimeout(() => setScanModal(null), 2800);
+          return;
+        }
+
+        // Detect new Time In
+        if (currentTimeIn && currentTimeIn !== prevTimeInRef.current) {
+          prevTimeInRef.current = currentTimeIn;
+          // Show Time In modal
+          if (scanModalTimerRef.current) clearTimeout(scanModalTimerRef.current);
+          setScanModal("time-in");
+          scanModalTimerRef.current = setTimeout(() => setScanModal(null), 3600);
+        }
+      } catch {
+        // Silent fail — never disrupt the QR
+      }
+    };
+
+    poll();
+    const pollInterval = setInterval(poll, 4000);
+    return () => {
+      clearInterval(pollInterval);
+      if (scanModalTimerRef.current) clearTimeout(scanModalTimerRef.current);
+    };
+  }, [isActive, student.studentId, EVENTSCode]);
 
   const qrValue = `${student.studentId}:${EVENTSCode}:${qrSeed}`;
 
@@ -208,6 +279,54 @@ export default function QRPassGenerator({ student, EVENTSCode, events, onBack, o
         </motion.div>
       </div>
       <DeveloperFooter />
+
+      {/* ── Scan Success Modal (purely additive — does not affect QR/timer) ── */}
+      <AnimatePresence>
+        {scanModal && (
+          <motion.div
+            key="scan-modal-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="fixed inset-0 z-[9999] flex items-center justify-center"
+            style={{ backgroundColor: "rgba(0,0,0,0.25)" }}
+          >
+            <motion.div
+              key="scan-modal-card"
+              initial={{ opacity: 0, scale: 0.92 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.92 }}
+              transition={{ type: "spring", stiffness: 340, damping: 28 }}
+              className="bg-white rounded-2xl shadow-2xl px-8 py-7 flex flex-col items-center text-center max-w-[280px] w-full mx-4"
+            >
+              {/* Animated check icon */}
+              <motion.div
+                initial={{ scale: 0.4, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ type: "spring", stiffness: 420, damping: 22, delay: 0.08 }}
+                className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center mb-4"
+              >
+                <CheckCircle2 size={34} className="text-emerald-500" strokeWidth={2.2} />
+              </motion.div>
+
+              {scanModal === "time-in" ? (
+                <>
+                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1">Welcome to</p>
+                  <p className="text-base font-bold text-slate-800 leading-snug mb-2">{eventName}</p>
+                  <p className="text-sm font-semibold text-emerald-600">Time In Recorded ✓</p>
+                </>
+              ) : (
+                <>
+                  <p className="text-base font-bold text-slate-800 leading-snug mb-2">Time Out Recorded ✓</p>
+                  <p className="text-sm text-slate-500">Thank you for attending!</p>
+                </>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       </div>
   );
 }
