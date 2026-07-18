@@ -5,6 +5,7 @@ import { generateCheckItCode, cn, formatTime12Hour } from "../../../lib/utils";
 import type { EventConfig } from "../../../types";
 import { createEvent, updateEvent } from "../../../services/events";
 import { useStore, useSelectors } from "../../../state/store";
+import TimePicker from "../../../components/shared/TimePicker";
 
 export default function CreateEventTab() {
   const [eventForm, setEventForm] = useState<{ name: string; timeIn: string; lateThreshold: string; timeOut: string; status: EventConfig["status"] }>({ name: "", timeIn: "08:00", lateThreshold: "08:15", timeOut: "17:00", status: "active" });
@@ -103,16 +104,16 @@ export default function CreateEventTab() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-semibold text-slate-700 mb-1.5">Time In</label>
-                    <input type="time" required value={eventForm.timeIn} onChange={e => setEventForm({ ...eventForm, timeIn: e.target.value })} className={inputCls} />
+                    <TimePicker label="Time In" value={eventForm.timeIn} onChange={v => setEventForm({ ...eventForm, timeIn: v })} />
                   </div>
                   <div>
                     <label className="block text-sm font-semibold text-slate-700 mb-1.5">Late Threshold</label>
-                    <input type="time" required value={eventForm.lateThreshold} onChange={e => setEventForm({ ...eventForm, lateThreshold: e.target.value })} className={inputCls} />
+                    <TimePicker label="Late Threshold" value={eventForm.lateThreshold} onChange={v => setEventForm({ ...eventForm, lateThreshold: v })} />
                   </div>
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-1.5">Time Out</label>
-                  <input type="time" required value={eventForm.timeOut} onChange={e => setEventForm({ ...eventForm, timeOut: e.target.value })} className={inputCls} />
+                  <TimePicker label="Time Out" value={eventForm.timeOut} onChange={v => setEventForm({ ...eventForm, timeOut: v })} />
                 </div>
               </div>
             </div>
