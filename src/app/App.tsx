@@ -147,10 +147,9 @@ function AppInner() {
             setCurrentView("student-activation");
           }
         } else {
-          // Signed in but not yet registered — go to the auth gate which will
-          // detect the active session and route to registration
+          // Signed in but not yet registered — go straight to registration
           setCurrentStudentEmail(normalizedEmail);
-          setCurrentView("student-auth");
+          setCurrentView("student-register");
         }
       } catch {
         // Backend unreachable — fall back to the auth gate

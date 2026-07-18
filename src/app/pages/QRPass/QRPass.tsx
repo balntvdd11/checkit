@@ -156,7 +156,7 @@ export default function QRPassGenerator({ student, EVENTSCode, events, onBack, o
                 </div>
               </div>
               <div className="mt-3 pt-3 border-t border-white/10 flex items-center gap-2">
-                <span className="text-xs font-semibold text-white/80">{eventName}</span>
+                <span className="text-xs font-semibold text-white/80 uppercase">{eventName}</span>
               </div>
             </div>
 

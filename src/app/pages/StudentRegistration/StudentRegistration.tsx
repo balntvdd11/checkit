@@ -83,10 +83,7 @@ export default function StudentRegistration({ email, onSubmit, onBack }: { email
 
           {/* Header */}
           <div className="relative z-10 flex flex-col items-center text-center mb-8">
-            <COAccessLogo size="md" inverted />
-            <div className="mt-7 w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center shadow-sm border border-white/10">
-              <ClipboardList size={28} className="text-white" />
-            </div>
+            <COAccessLogo size="lg" inverted />
             <h1 className="mt-4 text-xl font-bold text-white">Complete Registration</h1>
             <p className="mt-1.5 text-sm text-slate-300 leading-relaxed max-w-[280px]">
               Welcome, <span className="font-semibold text-white">{form.name || email}</span>
