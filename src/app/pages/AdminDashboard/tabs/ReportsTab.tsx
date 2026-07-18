@@ -6,6 +6,8 @@ import type { EventConfig } from "../../../types";
 import { useStore, useSelectors } from "../../../state/store";
 import { fetchAttendance } from "../../../services/attendance";
 import { formatTime12Hour, formatNameLastFirst } from "../../../lib/utils";
+import uaLogoUrl from "../../../../asset/UALOGO.png";
+import jpiaLogoUrl from "../../../../asset/JPIALOGO.png";
 
 declare global {
   interface Window {
@@ -18,7 +20,7 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
   const [reportSectionFilter, setReportSectionFilter] = useState("All");
   const [reportDateFilter, setReportDateFilter] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-  const { attendance } = useSelectors();
+  const { attendance, students } = useSelectors();
   const { dispatch } = useStore();
 
   useEffect(() => {
@@ -33,78 +35,318 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
     return () => clearInterval(interval);
   }, [dispatch]);
 
-  const filteredReports = attendance.filter(r => {
-    const matchSec = reportSectionFilter === "All" || r.section === reportSectionFilter;
-    const matchDate = !reportDateFilter || r.date === reportDateFilter;
-    const matchEvent = !reportEVENTS || r.EVENTSCode === events.find(ev => ev.id === reportEVENTS)?.checkItCode;
-    const matchSearch = !searchQuery || 
-      r.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-      r.studentId.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchSec && matchDate && matchEvent && matchSearch;
-  }).sort((a, b) => {
-    const nameA = formatNameLastFirst(a.name).toLowerCase();
-    const nameB = formatNameLastFirst(b.name).toLowerCase();
-    return nameA.localeCompare(nameB);
-  });
+  // ── Helpers ──────────────────────────────────────────────────────────────────
+  const selectedEvent = reportEVENTS ? events.find(ev => ev.id === reportEVENTS) : null;
 
-  const reportPresent = filteredReports.filter(r => r.status === "present").length;
-  const reportLate = filteredReports.filter(r => r.status === "late").length;
-  const reportAbsent = filteredReports.filter(r => r.status === "absent").length;
-  const reportTotal = filteredReports.length;
+  /** Build the file-name stem: COAccess_EVENTNAME_YYYY-MM-DD */
+  const buildFileName = (ext: string) => {
+    const eventPart = selectedEvent ? selectedEvent.name.replace(/[^a-zA-Z0-9]+/g, "_") : "AllEvents";
+    const datePart = reportDateFilter || new Date().toISOString().split("T")[0];
+    return `COAccess_${eventPart}_${datePart}${ext}`;
+  };
 
+  // ── Build combined data: attendance records + absent students ───────────────
+  // Absent = registered student with NO timeIn record for the selected event+date
+  const buildCombinedRows = () => {
+    // Filter attendance records first
+    const attendedRows = attendance.filter(r => {
+      const matchSec = reportSectionFilter === "All" || r.section === reportSectionFilter;
+      const matchDate = !reportDateFilter || r.date === reportDateFilter;
+      const matchEvent = !reportEVENTS || r.EVENTSCode === selectedEvent?.checkItCode;
+      const matchSearch = !searchQuery ||
+        r.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        r.studentId.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchSec && matchDate && matchEvent && matchSearch;
+    });
+
+    // Sort attended alphabetically by surname
+    const sortedAttended = [...attendedRows].sort((a, b) => {
+      const nameA = formatNameLastFirst(a.name).toLowerCase();
+      const nameB = formatNameLastFirst(b.name).toLowerCase();
+      return nameA.localeCompare(nameB);
+    });
+
+    // Determine absent students: registered students who have NO attendance record
+    // matching the current filters (event + date)
+    const attendedStudentIds = new Set(attendedRows.map(r => r.studentId));
+
+    let absentStudents = students.filter(s => {
+      if (attendedStudentIds.has(s.studentId)) return false;
+      if (!s.registered) return false;
+      const matchSec = reportSectionFilter === "All" || s.section === reportSectionFilter;
+      const matchSearch = !searchQuery ||
+        s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        s.studentId.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchSec && matchSearch;
+    });
+
+    // Sort absent alphabetically by surname
+    absentStudents = [...absentStudents].sort((a, b) => {
+      const nameA = formatNameLastFirst(a.name).toLowerCase();
+      const nameB = formatNameLastFirst(b.name).toLowerCase();
+      return nameA.localeCompare(nameB);
+    });
+
+    return { sortedAttended, absentStudents };
+  };
+
+  const { sortedAttended, absentStudents } = buildCombinedRows();
+
+  const reportPresent = sortedAttended.filter(r => r.status === "present").length;
+  const reportLate = sortedAttended.filter(r => r.status === "late").length;
+  const reportAbsentCount = absentStudents.length;
+  const reportTotal = sortedAttended.length + reportAbsentCount;
+
+  // ── CSV Export ──────────────────────────────────────────────────────────────
   const handleExportCSV = () => {
-    if (filteredReports.length === 0) return alert("No data to export.");
-    const selectedEventName = reportEVENTS ? events.find(ev => ev.id === reportEVENTS)?.name : null;
+    if (sortedAttended.length === 0 && absentStudents.length === 0) return alert("No data to export.");
     const headers = ["Student Name", "ID", "Section", "Date", "Time In", "Time Out", "Status"];
-    const rows = filteredReports.map(r => [formatNameLastFirst(r.name), r.studentId, r.section, r.date, formatTime12Hour(r.timeIn), r.timeOut ? formatTime12Hour(r.timeOut) : "Did Not Time-out", r.status]);
-    
+
     let csvContent = "";
-    if (selectedEventName) {
-      csvContent += `Event:,${selectedEventName}\n\n`;
+    if (selectedEvent) {
+      csvContent += `Event:,${selectedEvent.name}\n\n`;
     }
-    csvContent += [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
-    
+    csvContent += headers.join(",") + "\n";
+
+    // Present / Late rows first
+    for (const r of sortedAttended) {
+      csvContent += [
+        formatNameLastFirst(r.name),
+        r.studentId,
+        r.section,
+        r.date,
+        formatTime12Hour(r.timeIn),
+        r.timeOut ? formatTime12Hour(r.timeOut) : "Did Not Time-out",
+        r.status,
+      ].join(",") + "\n";
+    }
+
+    // Blank separator + Absent section
+    if (absentStudents.length > 0) {
+      csvContent += "\n";
+      csvContent += "--- ABSENT STUDENTS ---\n";
+      for (const s of absentStudents) {
+        csvContent += [
+          formatNameLastFirst(s.name),
+          s.studentId,
+          s.section,
+          reportDateFilter || new Date().toISOString().split("T")[0],
+          "",
+          "",
+          "Absent",
+        ].join(",") + "\n";
+      }
+    }
+
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", "attendance_report.csv");
+    link.setAttribute("download", buildFileName(".csv"));
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
 
-  const handleExportPDF = () => {
-    if (filteredReports.length === 0) return alert("No data to export.");
+  // ── PDF Export ──────────────────────────────────────────────────────────────
+  const handleExportPDF = async () => {
+    if (sortedAttended.length === 0 && absentStudents.length === 0) return alert("No data to export.");
     if (!window.jspdf) return alert("PDF generator is still loading. Please try again in a moment.");
-    
+
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
-    const selectedEventName = reportEVENTS ? events.find(ev => ev.id === reportEVENTS)?.name : null;
 
-    doc.text("COAccess Attendance Report", 14, 15);
-    doc.setFontSize(10);
-    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 22);
-    
-    let startY = 30;
-    if (selectedEventName) {
-      doc.text(`Event: ${selectedEventName}`, 14, 29);
-      startY = 35;
-    }
-    
-    // The autotable plugin automatically attaches itself to the jsPDF instance via window
     if (typeof doc.autoTable !== "function") {
       alert("PDF table generator failed to load.");
       return;
     }
 
-    doc.autoTable({
-      startY,
-      head: [["Student Name", "ID", "Section", "Date", "Time In", "Time Out", "Status"]],
-      body: filteredReports.map(r => [formatNameLastFirst(r.name), r.studentId, r.section, r.date, formatTime12Hour(r.timeIn), r.timeOut ? formatTime12Hour(r.timeOut) : "Did Not Time-out", r.status]),
+    // ── Load logos as base64 ─────────────────────────────────────────────────
+    const loadImageAsBase64 = (src: string): Promise<string> =>
+      new Promise((resolve) => {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          canvas.width = img.naturalWidth;
+          canvas.height = img.naturalHeight;
+          const ctx = canvas.getContext("2d")!;
+          ctx.drawImage(img, 0, 0);
+          resolve(canvas.toDataURL("image/png"));
+        };
+        img.onerror = () => resolve("");
+        img.src = src;
+      });
+
+    const [uaBase64, jpiaBase64] = await Promise.all([
+      loadImageAsBase64(uaLogoUrl),
+      loadImageAsBase64(jpiaLogoUrl),
+    ]);
+
+    const pageW = doc.internal.pageSize.getWidth();
+
+    // ── Header with logos ────────────────────────────────────────────────────
+    const logoSize = 18;
+    const headerY = 10;
+
+    if (uaBase64) {
+      doc.addImage(uaBase64, "PNG", 14, headerY, logoSize, logoSize);
+    }
+    if (jpiaBase64) {
+      doc.addImage(jpiaBase64, "PNG", pageW - 14 - logoSize, headerY, logoSize, logoSize);
+    }
+
+    // Title block (centered between logos)
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(13);
+    doc.text("University of the Assumption", pageW / 2, headerY + 5, { align: "center" });
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.text("Junior Philippine Institute of Accountants", pageW / 2, headerY + 10, { align: "center" });
+    doc.text("City of San Fernando, Pampanga", pageW / 2, headerY + 15, { align: "center" });
+
+    // Divider line
+    const dividerY = headerY + logoSize + 4;
+    doc.setDrawColor(18, 52, 153); // #123499
+    doc.setLineWidth(0.6);
+    doc.line(14, dividerY, pageW - 14, dividerY);
+
+    // Report title
+    let cursorY = dividerY + 7;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(14);
+    doc.text("COAccess Attendance Report", pageW / 2, cursorY, { align: "center" });
+
+    cursorY += 7;
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    if (selectedEvent) {
+      doc.text(`Event: ${selectedEvent.name}`, 14, cursorY);
+      cursorY += 5;
+    }
+    if (reportSectionFilter !== "All") {
+      doc.text(`Section: ${reportSectionFilter}`, 14, cursorY);
+      cursorY += 5;
+    }
+    doc.text(`Date: ${reportDateFilter || new Date().toISOString().split("T")[0]}`, 14, cursorY);
+    doc.text(`Generated: ${new Date().toLocaleString()}`, pageW - 14, cursorY, { align: "right" });
+    cursorY += 4;
+
+    // Summary boxes
+    cursorY += 3;
+    doc.setFontSize(8);
+    doc.setFont("helvetica", "bold");
+    const summaryItems = [
+      { label: "Total", value: reportTotal },
+      { label: "Present", value: reportPresent },
+      { label: "Late", value: reportLate },
+      { label: "Absent", value: reportAbsentCount },
+    ];
+    const boxW = (pageW - 28 - 12) / 4; // 4 boxes with 4px gaps
+    summaryItems.forEach((item, i) => {
+      const x = 14 + i * (boxW + 4);
+      doc.setFillColor(245, 247, 250);
+      doc.roundedRect(x, cursorY, boxW, 10, 2, 2, "F");
+      doc.setTextColor(30, 41, 59);
+      doc.text(`${item.label}: ${item.value}`, x + boxW / 2, cursorY + 6.5, { align: "center" });
     });
-    
-    doc.save("attendance_report.pdf");
+    doc.setTextColor(0, 0, 0);
+    cursorY += 14;
+
+    // ── Attendance Table (Present + Late) ─────────────────────────────────────
+    const tableHead = [["#", "Student Name", "ID", "Section", "Date", "Time In", "Time Out", "Status"]];
+    const tableBody = sortedAttended.map((r, i) => [
+      String(i + 1),
+      formatNameLastFirst(r.name),
+      r.studentId,
+      r.section,
+      r.date,
+      formatTime12Hour(r.timeIn),
+      r.timeOut ? formatTime12Hour(r.timeOut) : "Did Not Time-out",
+      r.status.charAt(0).toUpperCase() + r.status.slice(1),
+    ]);
+
+    if (tableBody.length > 0) {
+      doc.autoTable({
+        startY: cursorY,
+        head: tableHead,
+        body: tableBody,
+        theme: "grid",
+        headStyles: {
+          fillColor: [18, 52, 153],
+          textColor: 255,
+          fontStyle: "bold",
+          fontSize: 8,
+          halign: "center",
+        },
+        bodyStyles: { fontSize: 7.5, cellPadding: 2 },
+        columnStyles: {
+          0: { halign: "center", cellWidth: 8 },
+          4: { halign: "center" },
+          5: { halign: "center" },
+          6: { halign: "center" },
+          7: { halign: "center" },
+        },
+        alternateRowStyles: { fillColor: [248, 250, 252] },
+        margin: { left: 14, right: 14 },
+      });
+    }
+
+    // ── Absent Table ──────────────────────────────────────────────────────────
+    if (absentStudents.length > 0) {
+      const absentStartY = tableBody.length > 0 ? doc.lastAutoTable.finalY + 10 : cursorY;
+
+      // Section header for absent
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(11);
+      doc.setTextColor(220, 38, 38); // rose-600
+      doc.text("Absent Students", 14, absentStartY);
+      doc.setTextColor(0, 0, 0);
+
+      const absentHead = [["#", "Student Name", "ID", "Section", "Status"]];
+      const absentBody = absentStudents.map((s, i) => [
+        String(i + 1),
+        formatNameLastFirst(s.name),
+        s.studentId,
+        s.section,
+        "Absent",
+      ]);
+
+      doc.autoTable({
+        startY: absentStartY + 4,
+        head: absentHead,
+        body: absentBody,
+        theme: "grid",
+        headStyles: {
+          fillColor: [220, 38, 38],
+          textColor: 255,
+          fontStyle: "bold",
+          fontSize: 8,
+          halign: "center",
+        },
+        bodyStyles: { fontSize: 7.5, cellPadding: 2 },
+        columnStyles: {
+          0: { halign: "center", cellWidth: 8 },
+          4: { halign: "center" },
+        },
+        alternateRowStyles: { fillColor: [255, 241, 242] },
+        margin: { left: 14, right: 14 },
+      });
+    }
+
+    // ── Footer on every page ──────────────────────────────────────────────────
+    const totalPages = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= totalPages; i++) {
+      doc.setPage(i);
+      const pageH = doc.internal.pageSize.getHeight();
+      doc.setFontSize(7);
+      doc.setFont("helvetica", "italic");
+      doc.setTextColor(148, 163, 184);
+      doc.text("COAccess — Attendance Management System", 14, pageH - 8);
+      doc.text(`Page ${i} of ${totalPages}`, pageW - 14, pageH - 8, { align: "right" });
+    }
+
+    doc.save(buildFileName(".pdf"));
   };
 
 
@@ -129,7 +371,7 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           <div>
               <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-2 flex items-center gap-1.5">
-                <Building2 size={14} /> Select Event / EVENTS
+                <Building2 size={14} /> Select Event
               </label>
               <select value={reportEVENTS} onChange={e => setReportEVENTS(e.target.value)}
               className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
@@ -182,7 +424,7 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
           <p className="text-[10px] font-bold text-amber-600 uppercase tracking-wide mt-1">Late</p>
         </Card>
         <Card className="p-4 border border-rose-100 bg-rose-50 flex flex-col items-center justify-center text-center">
-          <p className="text-2xl font-bold text-rose-700">{reportAbsent}</p>
+          <p className="text-2xl font-bold text-rose-700">{reportAbsentCount}</p>
           <p className="text-[10px] font-bold text-rose-600 uppercase tracking-wide mt-1">Absent</p>
         </Card>
       </div>
@@ -216,8 +458,9 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
-              {filteredReports.map((r, i) => (
-                <tr key={i} className="hover:bg-slate-50/50 transition-colors whitespace-nowrap">
+              {/* Present / Late rows */}
+              {sortedAttended.map((r, i) => (
+                <tr key={`att-${i}`} className="hover:bg-slate-50/50 transition-colors whitespace-nowrap">
                   <td className="px-5 py-3 font-semibold text-slate-700">{formatNameLastFirst(r.name)}</td>
                   <td className="px-5 py-3">
                     <p className="font-mono text-slate-600">{r.studentId}</p>
@@ -229,9 +472,34 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
                   <td className="px-5 py-3"><StatusBadge status={r.status} /></td>
                 </tr>
               ))}
-              {filteredReports.length === 0 && (
+
+              {/* Absent separator */}
+              {absentStudents.length > 0 && sortedAttended.length > 0 && (
                 <tr>
-                  <td colSpan={5} className="px-5 py-12 text-center text-slate-500">
+                  <td colSpan={6} className="px-5 py-2 bg-rose-50 text-rose-700 text-xs font-bold uppercase tracking-wider text-center border-y border-rose-100">
+                    Absent Students
+                  </td>
+                </tr>
+              )}
+
+              {/* Absent rows */}
+              {absentStudents.map((s, i) => (
+                <tr key={`abs-${i}`} className="hover:bg-rose-50/30 transition-colors whitespace-nowrap bg-rose-50/10">
+                  <td className="px-5 py-3 font-semibold text-slate-700">{formatNameLastFirst(s.name)}</td>
+                  <td className="px-5 py-3">
+                    <p className="font-mono text-slate-600">{s.studentId}</p>
+                    <p className="text-xs text-slate-400">{s.section}</p>
+                  </td>
+                  <td className="px-5 py-3 text-slate-600">{reportDateFilter || "—"}</td>
+                  <td className="px-5 py-3 font-mono text-slate-400">—</td>
+                  <td className="px-5 py-3 font-mono text-slate-400">—</td>
+                  <td className="px-5 py-3"><StatusBadge status="absent" /></td>
+                </tr>
+              ))}
+
+              {sortedAttended.length === 0 && absentStudents.length === 0 && (
+                <tr>
+                  <td colSpan={6} className="px-5 py-12 text-center text-slate-500">
                     No records found for the selected filters.
                   </td>
                 </tr>
