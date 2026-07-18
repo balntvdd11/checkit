@@ -177,7 +177,7 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
         {!scanning && (
             <select value={selectedScanEVENTS} onChange={e => { setSelectedScanEVENTS(e.target.value); setScanResults([]); }}
             className="w-full sm:w-auto px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[var(--primary)] bg-white shadow-sm">
-            <option value="">Select active EVENTS...</option>
+            <option value="">Select Events</option>
             {events.filter(s => s.status === "active").map(s => (
               <option key={s.id} value={s.id}>{s.name}</option>
             ))}
