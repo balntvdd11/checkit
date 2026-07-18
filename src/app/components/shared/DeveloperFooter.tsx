@@ -12,11 +12,11 @@ export default function DeveloperFooter() {
           className="h-20 sm:h-24 w-auto object-contain drop-shadow-none" 
           style={{ filter: "brightness(0) saturate(100%) invert(13%) sepia(43%) saturate(4681%) hue-rotate(213deg) brightness(88%) contrast(101%)" }}
         />
-        <a href="https://ua-cit.com" target="_blank" rel="noopener noreferrer" className="pointer-events-auto ml-2">
+        <a href="https://ua-cit.com" target="_blank" rel="noopener noreferrer" className="pointer-events-auto">
           <img 
             src={citLogo} 
             alt="CIT Logo" 
-            className="h-16 sm:h-20 w-auto object-contain drop-shadow-none" 
+            className="h-10 sm:h-12 w-auto object-contain drop-shadow-none" 
           />
         </a>
       </div>
