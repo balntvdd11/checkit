@@ -157,18 +157,7 @@ function AppInner() {
     };
 
     resolve();
-
-    // If Clerk isn't loaded yet, poll until it is (it loads within ~200 ms)
-    if (!clerk.loaded) {
-      const interval = setInterval(() => {
-        if (clerk.loaded) {
-          clearInterval(interval);
-          resolve();
-        }
-      }, 50);
-      return () => clearInterval(interval);
-    }
-  }, [currentView, clerk]);
+  }, [currentView, isLoaded, user]);
 
   return (
     <>
