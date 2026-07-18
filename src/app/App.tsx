@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useClerk } from "@clerk/clerk-react";
+import { useClerk, useUser } from "@clerk/clerk-react";
 import LandingPage from "./pages/Landing/Landing";
 import StudentAuthGate from "./pages/StudentAuth/StudentAuth";
 import StudentRegistration from "./pages/StudentRegistration/StudentRegistration";
@@ -55,6 +55,15 @@ function AppInner() {
   const [currentEVENTSCode, setCurrentEVENTSCode] = useState<string>("");
   const [lockedOS, setLockedOS] = useState<string | undefined>(undefined);
   const clerk = useClerk();
+  const { user, isSignedIn, isLoaded: userLoaded } = useUser();
+
+  // If the user visits the root / and is already signed in (e.g. returning from Clerk OAuth
+  // or a previous session), instantly route them to the resolving flow.
+  useEffect(() => {
+    if (currentView === "landing" && userLoaded && isSignedIn) {
+      setCurrentView("student-resolving");
+    }
+  }, [currentView, userLoaded, isSignedIn]);
 
   const handleStudentLogout = () => {
     // "Sign Out" in COAccess only clears application state and returns to the
