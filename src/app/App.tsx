@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useClerk } from "@clerk/clerk-react";
+import { useClerk, useUser } from "@clerk/clerk-react";
 import LandingPage from "./pages/Landing/Landing";
 import StudentAuthGate from "./pages/StudentAuth/StudentAuth";
 import StudentRegistration from "./pages/StudentRegistration/StudentRegistration";
@@ -55,6 +55,7 @@ function AppInner() {
   const [currentEVENTSCode, setCurrentEVENTSCode] = useState<string>("");
   const [lockedOS, setLockedOS] = useState<string | undefined>(undefined);
   const clerk = useClerk();
+  const { isLoaded, user } = useUser();
 
   const handleStudentLogout = () => {
     // "Sign Out" in COAccess only clears application state and returns to the
@@ -97,9 +98,7 @@ function AppInner() {
 
     const resolve = async () => {
       // Wait until Clerk has finished initialising its auth state
-      if (!clerk.loaded) return;
-
-      const user = clerk.user;
+      if (!isLoaded) return;
 
       if (!user) {
         // Not signed in — show the normal sign-in gate
