@@ -17,7 +17,7 @@ export default function DashboardTab() {
           </div>
           <div>
             <p className="text-2xl font-bold text-slate-800">{activeEVENTSCount}</p>
-            <p className="text-xs text-slate-500 font-medium">Active EVENTS</p>
+            <p className="text-xs text-slate-500 font-medium">Active Events</p>
           </div>
         </Card>
         <Card className="p-5 border border-slate-100 flex items-center gap-4">
@@ -49,7 +49,7 @@ export default function DashboardTab() {
         </Card>
       </div>
 
-      <h3 className="text-lg font-bold text-[#123499] mt-8 mb-4">Today's EVENTS</h3>
+      <h3 className="text-lg font-bold text-[#123499] mt-8 mb-4">Today's Events</h3>
       <Card className="border border-slate-100 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">

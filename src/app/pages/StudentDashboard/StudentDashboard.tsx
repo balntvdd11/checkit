@@ -98,7 +98,7 @@ export default function StudentDashboard({ student, onLogout, onGeneratePass }: 
                   <thead className="bg-slate-50/50 text-[var(--muted-foreground)] font-semibold border-b border-slate-100">
                     <tr>
                       <th className="px-5 py-4 whitespace-nowrap">Date</th>
-                      <th className="px-5 py-4">Event / EVENTS</th>
+                      <th className="px-5 py-4">Event</th>
                       <th className="px-5 py-4">Time In</th>
                       <th className="px-5 py-4">Time Out</th>
                       <th className="px-5 py-4">Status</th>

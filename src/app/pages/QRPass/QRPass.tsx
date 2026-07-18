@@ -116,7 +116,7 @@ export default function QRPassGenerator({ student, EVENTSCode, events, onBack, o
         </div>
         <div className="flex items-center gap-3">
           <button onClick={onBack} className="text-sm text-white/55 hover:text-white transition-colors flex items-center gap-1.5">
-            <ChevronRight size={14} className="rotate-180" /> Change EVENTS
+            <ChevronRight size={14} className="rotate-180" /> Change Events
           </button>
           <button onClick={onLogout} className="flex items-center gap-1.5 text-white/55 hover:text-white text-sm transition-colors">
           </button>
@@ -156,7 +156,7 @@ export default function QRPassGenerator({ student, EVENTSCode, events, onBack, o
                 </div>
               </div>
               <div className="mt-3 pt-3 border-t border-white/10 flex items-center gap-2">
-                <span className="text-xs font-semibold text-white/80 uppercase">{eventName}</span>
+                <span className="text-xs font-semibold text-white/80">{eventName}</span>
               </div>
             </div>
 
