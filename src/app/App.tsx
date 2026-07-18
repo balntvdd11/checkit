@@ -312,6 +312,7 @@ function AppInner() {
         <QRPassGenerator
           student={currentStudent}
           EVENTSCode={currentEVENTSCode}
+          events={state.events}
           onLogout={handleStudentLogout}
           onBack={() => setCurrentView("student-EVENTS-code")}
         />

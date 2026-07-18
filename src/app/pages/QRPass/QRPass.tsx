@@ -5,7 +5,7 @@ import COAccessLogo from "../../components/shared/COAccessLogo";
 import QRCodeDisplay from "../../components/shared/QRCodeDisplay";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
 import { cn } from "../../lib/utils";
-import type { Student } from "../../types";
+import type { Student, EventConfig } from "../../types";
 import { fetchStudentByEmail } from "../../services/studentCheck";
 import { generateDeviceFingerprint } from "../../services/fingerprint";
 import { hasStoredPrivateKey } from "../../services/browserActivation";
@@ -15,9 +15,18 @@ import DeveloperFooter from "../../components/shared/DeveloperFooter";
 
 const REFRESH_INTERVAL = 15;
 
-export default function QRPassGenerator({ student, EVENTSCode, onBack, onLogout }: {
-  student: Student; EVENTSCode: string; onBack: () => void; onLogout: () => void;
+export default function QRPassGenerator({ student, EVENTSCode, events, onBack, onLogout }: {
+  student: Student; EVENTSCode: string; events: EventConfig[]; onBack: () => void; onLogout: () => void;
 }) {
+  const getInitials = (name: string) => {
+    if (!name) return "";
+    const parts = name.trim().split(/\s+/);
+    if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  };
+  const initials = getInitials(student.name);
+  const activeEvent = events?.find((e) => e.checkItCode === EVENTSCode);
+  const eventName = activeEvent?.name || "Event";
   const [timeLeft, setTimeLeft] = useState(REFRESH_INTERVAL);
   const [qrSeed, setQrSeed] = useState(Date.now().toString());
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -138,8 +147,8 @@ export default function QRPassGenerator({ student, EVENTSCode, onBack, onLogout 
             {/* Student header */}
             <div className="bg-black/20 px-6 py-5 relative z-10">
               <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-xl bg-white/15 flex items-center justify-center shrink-0">
-                  <GraduationCap size={22} className="text-[var(--primary)]" />
+                <div className="w-11 h-11 rounded-xl bg-white flex items-center justify-center shrink-0 shadow-sm">
+                  <span className="text-[var(--primary)] font-bold text-lg">{initials}</span>
                 </div>
                 <div className="min-w-0">
                   <p className="font-bold text-white text-sm leading-tight truncate">{student.name}</p>
@@ -147,8 +156,7 @@ export default function QRPassGenerator({ student, EVENTSCode, onBack, onLogout 
                 </div>
               </div>
               <div className="mt-3 pt-3 border-t border-white/10 flex items-center gap-2">
-                <Hash size={11} className="text-[var(--primary)]" />
-                <span className="text-xs font-mono text-white/60 tracking-widest">{EVENTSCode}</span>
+                <span className="text-xs font-semibold text-white/80">{eventName}</span>
               </div>
             </div>
 

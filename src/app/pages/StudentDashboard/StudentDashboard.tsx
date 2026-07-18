@@ -14,6 +14,13 @@ import DeveloperFooter from "../../components/shared/DeveloperFooter";
 export default function StudentDashboard({ student, onLogout, onGeneratePass }: {
   student: Student; onLogout: () => void; onGeneratePass: () => void;
 }) {
+  const getInitials = (name: string) => {
+    if (!name) return "";
+    const parts = name.trim().split(/\s+/);
+    if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  };
+  const initials = getInitials(student.name);
   const { attendance } = useSelectors();
   const studentAttendance = attendance.filter(a => a.studentId === student.studentId || a.email === student.email);
 
@@ -42,8 +49,8 @@ export default function StudentDashboard({ student, onLogout, onGeneratePass }: 
         <div className="bg-black/30 backdrop-blur-xl border border-white/10 rounded-2xl sm:rounded-[2.5rem] p-4 sm:p-6 md:p-10 shadow-2xl">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-[var(--primary)]/10 flex items-center justify-center shrink-0">
-              <GraduationCap size={28} className="text-[var(--primary)]" />
+            <div className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center shrink-0 shadow-sm">
+              <span className="text-[var(--primary)] font-bold text-2xl">{initials}</span>
             </div>
             <div>
               <h1 className="text-2xl font-bold text-white">{student.name}</h1>
