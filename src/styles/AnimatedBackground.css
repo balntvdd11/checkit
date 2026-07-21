@@ -127,6 +127,13 @@
   .ambient-glow {
     filter: blur(40px) !important;
   }
+  .css-blob {
+    animation: none !important;
+    will-change: auto;
+  }
+  .ambient-layer {
+    display: none !important;
+  }
 }
 
 /* ─── Pointer-reactive logo glow (unchanged behavior) ──────────────── */
