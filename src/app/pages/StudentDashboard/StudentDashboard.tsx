@@ -1,11 +1,13 @@
+import { useState } from "react";
 import { motion } from "motion/react";
 import { LogOut, RefreshCw, Smartphone, GraduationCap, CheckCircle2, History, AlertCircle } from "lucide-react";
 import COAccessLogo from "../../components/shared/COAccessLogo";
 import StatusBadge from "../../components/shared/StatusBadge";
 import Card from "../../components/shared/Card";
 import type { Student, AttendanceRecord } from "../../types";
-import { useSelectors } from "../../state/store";
-import { formatTime12Hour } from "../../lib/utils";
+import { useStore, useSelectors } from "../../state/store";
+import { fetchAttendance } from "../../services/attendance";
+import { cn, formatTime12Hour } from "../../lib/utils";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
 import DeveloperFooter from "../../components/shared/DeveloperFooter";
 
@@ -14,6 +16,21 @@ import DeveloperFooter from "../../components/shared/DeveloperFooter";
 export default function StudentDashboard({ student, onLogout, onGeneratePass }: {
   student: Student; onLogout: () => void; onGeneratePass: () => void;
 }) {
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const { dispatch } = useStore();
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      const attendanceData = await fetchAttendance();
+      dispatch({ type: 'SET_ATTENDANCE', payload: attendanceData });
+    } catch (error) {
+      console.error('Failed to refresh attendance data', error);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
   const getInitials = (name: string) => {
     if (!name) return "";
     const parts = name.trim().split(/\s+/);
@@ -39,8 +56,11 @@ export default function StudentDashboard({ student, onLogout, onGeneratePass }: 
           <span className="text-white/50 text-sm">Student Portal</span>
         </div>
         <div className="flex items-center gap-4">
+          <button onClick={handleRefresh} disabled={isRefreshing} className="flex items-center gap-1.5 text-white/55 hover:text-white text-sm transition-colors mr-2">
+            <RefreshCw size={14} className={cn(isRefreshing && "animate-spin")} /> <span className="hidden sm:inline">{isRefreshing ? "Refreshing..." : "Refresh"}</span>
+          </button>
           <button onClick={onLogout} className="flex items-center gap-1.5 text-white/55 hover:text-white text-sm transition-colors">
-            <LogOut size={14} /> Sign out
+            <LogOut size={14} /> <span className="hidden sm:inline">Sign out</span>
           </button>
         </div>
       </header>
