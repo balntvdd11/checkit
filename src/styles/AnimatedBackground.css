@@ -125,11 +125,7 @@
 
 @media (max-width: 768px) {
   .ambient-glow {
-    filter: blur(40px) !important;
-  }
-  .css-blob {
-    animation: none !important;
-    will-change: auto;
+    filter: blur(20px) !important;
   }
   .ambient-layer {
     display: none !important;

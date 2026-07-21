@@ -39,9 +39,8 @@ export default function LandingPage({ onStudent, onAdmin }: { onStudent: () => v
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-4xl">
           <motion.button
             initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }}
-            whileHover={{ y: -6, transition: { duration: 0.2 } }}
             onClick={onStudent}
-            className="group relative premium-border-card border-[1.5px] text-left rounded-2xl border border-[#7EEAF8]/24 bg-gradient-to-br from-[#0a2472]/85 via-[#123499]/90 to-[#72caec] hover:opacity-90 shadow-xl shadow-[#123499]/20 transition-all duration-300 p-6 sm:p-9 flex flex-col gap-4 sm:gap-6 cursor-pointer min-h-[200px] sm:min-h-[265px] h-auto overflow-hidden"
+            className="group relative premium-border-card border-[1.5px] text-left rounded-2xl border border-[#7EEAF8]/24 bg-gradient-to-br from-[#0a2472]/85 via-[#123499]/90 to-[#72caec] md:hover:opacity-90 md:hover:-translate-y-1.5 shadow-xl shadow-[#123499]/20 transition-all duration-300 p-6 sm:p-9 flex flex-col gap-4 sm:gap-6 cursor-pointer min-h-[200px] sm:min-h-[265px] h-auto overflow-hidden"
           >
 
             <img src={studentPortalIcon} alt="Student portal" className="w-16 h-16 sm:w-24 sm:h-24 object-contain drop-shadow-md" />
@@ -54,9 +53,8 @@ export default function LandingPage({ onStudent, onAdmin }: { onStudent: () => v
 
           <motion.button
             initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.35 }}
-            whileHover={{ y: -6, transition: { duration: 0.2 } }}
             onClick={onAdmin}
-            className="group relative premium-border-card border-[1.5px] text-left rounded-2xl border border-[#7EEAF8]/24 bg-gradient-to-br from-[#0a2472]/85 via-[#123499]/90 to-[#72caec] hover:opacity-90 shadow-xl shadow-[#123499]/20 transition-all duration-300 p-6 sm:p-9 flex flex-col gap-4 sm:gap-6 cursor-pointer min-h-[200px] sm:min-h-[265px] h-auto overflow-hidden"
+            className="group relative premium-border-card border-[1.5px] text-left rounded-2xl border border-[#7EEAF8]/24 bg-gradient-to-br from-[#0a2472]/85 via-[#123499]/90 to-[#72caec] md:hover:opacity-90 md:hover:-translate-y-1.5 shadow-xl shadow-[#123499]/20 transition-all duration-300 p-6 sm:p-9 flex flex-col gap-4 sm:gap-6 cursor-pointer min-h-[200px] sm:min-h-[265px] h-auto overflow-hidden"
           >
 
             <img src={adminPortalIcon} alt="Admin portal" className="w-24 h-24 object-contain drop-shadow-md" />
