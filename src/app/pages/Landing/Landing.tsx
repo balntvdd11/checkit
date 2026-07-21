@@ -11,7 +11,7 @@ import COAccessLogo from "../../components/shared/COAccessLogo";
 export default function LandingPage({ onStudent, onAdmin }: { onStudent: () => void; onAdmin: () => void }) {
 
   return (
-    <div className="min-h-screen pb-[180px] sm:pb-[220px] landing-page-black flex flex-col items-center justify-center relative overflow-hidden">
+    <div className="min-h-[100dvh] pb-[180px] sm:pb-[220px] landing-page-black flex flex-col items-center justify-center relative overflow-hidden">
       <div className="absolute top-6 left-6 sm:top-8 sm:left-8 z-50">
         <COAccessLogo size="sm" clean />
       </div>

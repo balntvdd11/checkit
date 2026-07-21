@@ -29,7 +29,7 @@ export default function StudentDashboard({ student, onLogout, onGeneratePass }: 
   const absentCount = studentAttendance.filter(r => r.status === "absent").length;
 
   return (
-    <div className="min-h-screen pb-[180px] sm:pb-[220px] landing-page-black relative overflow-hidden">
+    <div className="min-h-[100dvh] pb-[180px] sm:pb-[220px] landing-page-black relative overflow-hidden">
       <AnimatedBackground />
       <div className="absolute inset-0 opacity-0 pointer-events-none" />
       <header className="bg-[var(--secondary)] px-5 py-3.5 flex items-center justify-between shrink-0 sticky top-0 z-20 shadow-md">

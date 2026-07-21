@@ -173,7 +173,7 @@ function AppInner() {
       {/* Silent loading screen — shown while we wait for Clerk to initialise.
           Matches the app's dark theme so there is no visible flash. */}
       {currentView === "student-resolving" && (
-        <div className="min-h-screen landing-page-black flex items-center justify-center" aria-label="Loading…">
+        <div className="min-h-[100dvh] landing-page-black flex items-center justify-center" aria-label="Loading…">
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
             <svg
               width="36"

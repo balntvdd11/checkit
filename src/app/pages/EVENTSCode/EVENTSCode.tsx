@@ -33,7 +33,7 @@ export default function EVENTSCodeEntry({ student, events, onSubmit, onViewHisto
   };
 
   return (
-    <div className="min-h-screen pb-[180px] sm:pb-[220px] landing-page-black relative overflow-hidden">
+    <div className="min-h-[100dvh] pb-[180px] sm:pb-[220px] landing-page-black relative overflow-hidden">
       <AnimatedBackground />
       <div className="absolute inset-0 opacity-0 pointer-events-none" />
       <header className="relative z-10 bg-[var(--secondary)] px-5 py-3.5 flex items-center justify-between shrink-0">
@@ -53,7 +53,7 @@ export default function EVENTSCodeEntry({ student, events, onSubmit, onViewHisto
         </div>
       </header>
 
-      <div className="relative z-10 flex items-center justify-center min-h-[calc(100vh-57px)] p-4">
+      <div className="relative z-10 flex items-center justify-center min-h-[calc(100dvh-57px)] p-4">
         <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="w-full max-w-md">
           <button onClick={onViewHistory} className="flex items-center gap-1.5 text-sm text-[#0a2472]/70 hover:text-[#0a2472] mb-6 transition-colors font-medium">
             <ChevronRight size={15} className="rotate-180" /> Back to dashboard

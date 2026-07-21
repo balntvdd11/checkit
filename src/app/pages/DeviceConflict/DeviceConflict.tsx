@@ -15,7 +15,7 @@ export default function DeviceConflict({ email, savedOS, onCancel }: { email: st
   };
 
   return (
-    <div className="relative min-h-screen pb-[180px] sm:pb-[220px] bg-slate-900 flex flex-col items-center justify-center p-4 overflow-hidden">
+    <div className="relative min-h-[100dvh] pb-[180px] sm:pb-[220px] bg-slate-900 flex flex-col items-center justify-center p-4 overflow-hidden">
       <AnimatedBackground />
 
       <div className="relative z-10 w-full max-w-sm">
