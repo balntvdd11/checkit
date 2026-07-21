@@ -6,6 +6,7 @@ import type { EventConfig } from "../../../types";
 import { useStore, useSelectors } from "../../../state/store";
 import { fetchAttendance } from "../../../services/attendance";
 import { formatTime12Hour, formatNameLastFirst } from "../../../lib/utils";
+import { toast } from "sonner";
 import uaLogoUrl from "../../../../asset/UALOGO.png";
 import jpiaLogoUrl from "../../../../asset/JPIALOGO.png";
 
@@ -99,7 +100,7 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
 
   // ── CSV Export ──────────────────────────────────────────────────────────────
   const handleExportCSV = () => {
-    if (sortedAttended.length === 0 && absentStudents.length === 0) return alert("No data to export.");
+    if (sortedAttended.length === 0 && absentStudents.length === 0) { toast.error("No data to export."); return; }
     const headers = ["Student Name", "ID", "Section", "Date", "Time In", "Time Out", "Status"];
 
     let csvContent = "";
@@ -150,14 +151,14 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
 
   // ── PDF Export ──────────────────────────────────────────────────────────────
   const handleExportPDF = async () => {
-    if (sortedAttended.length === 0 && absentStudents.length === 0) return alert("No data to export.");
-    if (!window.jspdf) return alert("PDF generator is still loading. Please try again in a moment.");
+    if (sortedAttended.length === 0 && absentStudents.length === 0) { toast.error("No data to export."); return; }
+    if (!window.jspdf) { toast.error("PDF generator is still loading. Please try again in a moment."); return; }
 
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
     if (typeof doc.autoTable !== "function") {
-      alert("PDF table generator failed to load.");
+      toast.error("PDF table generator failed to load.");
       return;
     }
 

@@ -6,6 +6,7 @@ import type { EventConfig } from "../../../types";
 import { createEvent, updateEvent } from "../../../services/events";
 import { useStore, useSelectors } from "../../../state/store";
 import TimePicker from "../../../components/shared/TimePicker";
+import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "../../../components/ui/alert-dialog";
 
 export default function CreateEventTab() {
   const [eventForm, setEventForm] = useState<{ name: string; timeIn: string; lateThreshold: string; timeOut: string; status: EventConfig["status"] }>({ name: "", timeIn: "08:00", lateThreshold: "08:15", timeOut: "17:00", status: "active" });
@@ -16,6 +17,31 @@ export default function CreateEventTab() {
   const [showArchivedEvents, setShowArchivedEvents] = useState(false);
   const [copiedCode, setCopiedCode] = useState(false);
   const [editingEventId, setEditingEventId] = useState<string | null>(null);
+  const [confirmAction, setConfirmAction] = useState<{ type: 'delete' | 'restore', evt: EventConfig } | null>(null);
+
+  const confirmDeleteEvent = (evt: EventConfig) => {
+    setConfirmAction({ type: "delete", evt });
+  };
+
+  const confirmRestoreEvent = (evt: EventConfig) => {
+    setConfirmAction({ type: "restore", evt });
+  };
+
+  const executeConfirmAction = async () => {
+    if (!confirmAction) return;
+    const { type, evt } = confirmAction;
+    setConfirmAction(null);
+
+    if (type === "delete") {
+      const updatedEvent: EventConfig = { ...evt, status: "archived" };
+      const saved = await updateEvent(updatedEvent);
+      dispatch({ type: "UPDATE_EVENT", payload: saved });
+    } else if (type === "restore") {
+      const updatedEvent: EventConfig = { ...evt, status: "inactive" };
+      const saved = await updateEvent(updatedEvent);
+      dispatch({ type: "UPDATE_EVENT", payload: saved });
+    }
+  };
 
   const activeEventsList = events.filter(e => e.status !== "archived");
   const archivedEventsList = events.filter(e => e.status === "archived");
@@ -178,13 +204,7 @@ export default function CreateEventTab() {
                       className="px-3 py-1 text-xs font-semibold rounded-lg border transition-colors bg-[var(--primary)] text-white hover:bg-[#A61831]">
                       Edit
                     </button>
-                    <button onClick={async () => {
-                      if (window.confirm("Are you sure you want to delete this event? It will be moved to Archives.")) {
-                        const updatedEvent: EventConfig = { ...evt, status: "archived" };
-                        const saved = await updateEvent(updatedEvent);
-                        dispatch({ type: "UPDATE_EVENT", payload: saved });
-                      }
-                    }}
+                    <button onClick={() => confirmDeleteEvent(evt)}
                       className="px-3 py-1 text-xs font-semibold rounded-lg border transition-colors bg-rose-50 text-rose-600 hover:bg-rose-100 border-rose-200">
                       <Trash2 size={14} className="inline-block mr-1" /> Delete
                     </button>
@@ -220,13 +240,7 @@ export default function CreateEventTab() {
                   </div>
                 </div>
                 <div className="shrink-0 text-center sm:text-right p-3 sm:p-0">
-                  <button onClick={async () => {
-                    if (window.confirm("Are you sure you want to restore this event?")) {
-                      const updatedEvent: EventConfig = { ...evt, status: "inactive" };
-                      const saved = await updateEvent(updatedEvent);
-                      dispatch({ type: "UPDATE_EVENT", payload: saved });
-                    }
-                  }}
+                  <button onClick={() => confirmRestoreEvent(evt)}
                     className="px-4 py-2 text-xs font-semibold rounded-lg border transition-colors bg-white text-slate-600 hover:bg-slate-100">
                     Restore Event
                   </button>
@@ -239,6 +253,27 @@ export default function CreateEventTab() {
           </div>
         </Card>
       )}
+
+      <AlertDialog open={!!confirmAction} onOpenChange={(open) => !open && setConfirmAction(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {confirmAction?.type === "delete" ? "Delete Event" : "Restore Event"}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {confirmAction?.type === "delete" 
+                ? "Are you sure you want to delete this event? It will be moved to Archives." 
+                : "Are you sure you want to restore this event?"}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={executeConfirmAction} className={confirmAction?.type === 'delete' ? 'bg-rose-600 hover:bg-rose-700 focus:ring-rose-600' : ''}>
+              {confirmAction?.type === "delete" ? "Delete" : "Restore"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

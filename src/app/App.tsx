@@ -12,6 +12,7 @@ import AdminLogin from "./pages/AdminLogin/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard/AdminDashboard";
 import InAppBrowserWarning from "./pages/InAppBrowserWarning/InAppBrowserWarning";
 import { StoreProvider, useStore } from "./state/store";
+import { Toaster } from "./components/ui/sonner";
 import { fetchEvents } from "./services/events";
 import { fetchStudents } from "./services/students";
 import { fetchAttendance } from "./services/attendance";
@@ -323,6 +324,7 @@ export default function App() {
   return (
     <StoreProvider>
       <AppInner />
+      <Toaster position="top-center" richColors />
     </StoreProvider>
   );
 }
