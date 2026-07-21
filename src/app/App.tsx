@@ -37,15 +37,17 @@ export const isInAppBrowser = () => {
 function AppInner() {
   const [currentView, setCurrentView] = useState<View>(() => {
     // When the user successfully signs in with Clerk, they are redirected back to the
-    // origin with ?login=success in the URL. We catch this here so they instantly
-    // resolve their session and proceed to registration or dashboard, rather than
-    // being stuck on the landing page.
+    // origin. We catch this here so they instantly resolve their session and proceed 
+    // to registration or dashboard, rather than being stuck on the landing page.
     if (isInAppBrowser()) {
       return "in-app-browser-warning";
     }
-    if (window.location.search.includes("login=success")) {
+    
+    const url = window.location.href;
+    if (url.includes("login=success") || url.includes("__clerk")) {
       return "student-resolving";
     }
+    
     return "landing";
   });
   const { state, dispatch } = useStore();
