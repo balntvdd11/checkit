@@ -358,10 +358,10 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
           <h2 className="text-xl font-bold text-[#123499]">Attendance Reports</h2>
         </div>
         <div className="flex gap-2 w-full sm:w-auto">
-          <button onClick={handleExportCSV} className="flex-1 sm:flex-none px-5 py-2.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold rounded-xl transition-colors border border-indigo-100 flex items-center justify-center gap-2 text-sm shadow-sm">
+          <button onClick={handleExportCSV} disabled={!reportEVENTS} className="flex-1 sm:flex-none px-5 py-2.5 bg-indigo-50 hover:bg-indigo-100 disabled:opacity-50 disabled:pointer-events-none text-indigo-700 font-semibold rounded-xl transition-colors border border-indigo-100 flex items-center justify-center gap-2 text-sm shadow-sm">
             <Download size={16} /> Export CSV
           </button>
-          <button onClick={handleExportPDF} className="flex-1 sm:flex-none px-5 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold rounded-xl transition-colors border border-rose-100 flex items-center justify-center gap-2 text-sm shadow-sm">
+          <button onClick={handleExportPDF} disabled={!reportEVENTS} className="flex-1 sm:flex-none px-5 py-2.5 bg-rose-50 hover:bg-rose-100 disabled:opacity-50 disabled:pointer-events-none text-rose-700 font-semibold rounded-xl transition-colors border border-rose-100 flex items-center justify-center gap-2 text-sm shadow-sm">
             <FileText size={16} /> Export PDF
           </button>
         </div>
@@ -410,104 +410,114 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
         </div>
       </Card>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card className="p-4 border border-slate-100 flex flex-col items-center justify-center text-center">
-          <p className="text-2xl font-bold text-slate-800">{reportTotal}</p>
-          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wide mt-1">Total Records</p>
-        </Card>
-        <Card className="p-4 border border-emerald-100 bg-emerald-50 flex flex-col items-center justify-center text-center">
-          <p className="text-2xl font-bold text-emerald-700">{reportPresent}</p>
-          <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-wide mt-1">Present</p>
-        </Card>
-        <Card className="p-4 border border-amber-100 bg-amber-50 flex flex-col items-center justify-center text-center">
-          <p className="text-2xl font-bold text-amber-700">{reportLate}</p>
-          <p className="text-[10px] font-bold text-amber-600 uppercase tracking-wide mt-1">Late</p>
-        </Card>
-        <Card className="p-4 border border-rose-100 bg-rose-50 flex flex-col items-center justify-center text-center">
-          <p className="text-2xl font-bold text-rose-700">{reportAbsentCount}</p>
-          <p className="text-[10px] font-bold text-rose-600 uppercase tracking-wide mt-1">Absent</p>
-        </Card>
-      </div>
-
-      <Card className="border border-slate-100 overflow-hidden">
-        <div className="px-5 py-4 border-b border-slate-100 bg-slate-50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <h3 className="font-bold text-slate-800 flex items-center gap-2 shrink-0">
-            <FileText size={16} className="text-indigo-600" /> Detailed Records
-          </h3>
-          <div className="relative w-full sm:w-72">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input 
-              type="text" 
-              placeholder="Search name or ID..." 
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
-            />
+      {reportEVENTS ? (
+        <>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <Card className="p-4 border border-slate-100 flex flex-col items-center justify-center text-center">
+              <p className="text-2xl font-bold text-slate-800">{reportTotal}</p>
+              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wide mt-1">Total Records</p>
+            </Card>
+            <Card className="p-4 border border-emerald-100 bg-emerald-50 flex flex-col items-center justify-center text-center">
+              <p className="text-2xl font-bold text-emerald-700">{reportPresent}</p>
+              <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-wide mt-1">Present</p>
+            </Card>
+            <Card className="p-4 border border-amber-100 bg-amber-50 flex flex-col items-center justify-center text-center">
+              <p className="text-2xl font-bold text-amber-700">{reportLate}</p>
+              <p className="text-[10px] font-bold text-amber-600 uppercase tracking-wide mt-1">Late</p>
+            </Card>
+            <Card className="p-4 border border-rose-100 bg-rose-50 flex flex-col items-center justify-center text-center">
+              <p className="text-2xl font-bold text-rose-700">{reportAbsentCount}</p>
+              <p className="text-[10px] font-bold text-rose-600 uppercase tracking-wide mt-1">Absent</p>
+            </Card>
           </div>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-white text-slate-500 font-semibold border-b border-slate-100 whitespace-nowrap">
-              <tr>
-                <th className="px-5 py-3">Student Name</th>
-                <th className="px-5 py-3">ID / Section</th>
-                <th className="px-5 py-3">Date</th>
-                <th className="px-5 py-3">Time In</th>
-                <th className="px-5 py-3">Time Out</th>
-                <th className="px-5 py-3">Status</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-50">
-              {/* Present / Late rows */}
-              {sortedAttended.map((r, i) => (
-                <tr key={`att-${i}`} className="hover:bg-slate-50/50 transition-colors whitespace-nowrap">
-                  <td className="px-5 py-3 font-semibold text-slate-700">{formatNameLastFirst(r.name)}</td>
-                  <td className="px-5 py-3">
-                    <p className="font-mono text-slate-600">{r.studentId}</p>
-                    <p className="text-xs text-slate-400">{r.section}</p>
-                  </td>
-                  <td className="px-5 py-3 text-slate-600">{r.date}</td>
-                  <td className="px-5 py-3 font-mono text-slate-600">{formatTime12Hour(r.timeIn)}</td>
-                  <td className="px-5 py-3 font-mono text-slate-600">{r.timeOut ? formatTime12Hour(r.timeOut) : "Did Not Time-out"}</td>
-                  <td className="px-5 py-3"><StatusBadge status={r.status} /></td>
-                </tr>
-              ))}
 
-              {/* Absent separator */}
-              {absentStudents.length > 0 && sortedAttended.length > 0 && (
-                <tr>
-                  <td colSpan={6} className="px-5 py-2 bg-rose-50 text-rose-700 text-xs font-bold uppercase tracking-wider text-center border-y border-rose-100">
-                    Absent Students
-                  </td>
-                </tr>
-              )}
+          <Card className="border border-slate-100 overflow-hidden">
+            <div className="px-5 py-4 border-b border-slate-100 bg-slate-50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <h3 className="font-bold text-slate-800 flex items-center gap-2 shrink-0">
+                <FileText size={16} className="text-indigo-600" /> Detailed Records
+              </h3>
+              <div className="relative w-full sm:w-72">
+                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input 
+                  type="text" 
+                  placeholder="Search name or ID..." 
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
+                  className="w-full pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                />
+              </div>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-white text-slate-500 font-semibold border-b border-slate-100 whitespace-nowrap">
+                  <tr>
+                    <th className="px-5 py-3">Student Name</th>
+                    <th className="px-5 py-3">ID / Section</th>
+                    <th className="px-5 py-3">Date</th>
+                    <th className="px-5 py-3">Time In</th>
+                    <th className="px-5 py-3">Time Out</th>
+                    <th className="px-5 py-3">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-50">
+                  {/* Present / Late rows */}
+                  {sortedAttended.map((r, i) => (
+                    <tr key={`att-${i}`} className="hover:bg-slate-50/50 transition-colors whitespace-nowrap">
+                      <td className="px-5 py-3 font-semibold text-slate-700">{formatNameLastFirst(r.name)}</td>
+                      <td className="px-5 py-3">
+                        <p className="font-mono text-slate-600">{r.studentId}</p>
+                        <p className="text-xs text-slate-400">{r.section}</p>
+                      </td>
+                      <td className="px-5 py-3 text-slate-600">{r.date}</td>
+                      <td className="px-5 py-3 font-mono text-slate-600">{formatTime12Hour(r.timeIn)}</td>
+                      <td className="px-5 py-3 font-mono text-slate-600">{r.timeOut ? formatTime12Hour(r.timeOut) : "Did Not Time-out"}</td>
+                      <td className="px-5 py-3"><StatusBadge status={r.status} /></td>
+                    </tr>
+                  ))}
 
-              {/* Absent rows */}
-              {absentStudents.map((s, i) => (
-                <tr key={`abs-${i}`} className="hover:bg-rose-50/30 transition-colors whitespace-nowrap bg-rose-50/10">
-                  <td className="px-5 py-3 font-semibold text-slate-700">{formatNameLastFirst(s.name)}</td>
-                  <td className="px-5 py-3">
-                    <p className="font-mono text-slate-600">{s.studentId}</p>
-                    <p className="text-xs text-slate-400">{s.section}</p>
-                  </td>
-                  <td className="px-5 py-3 text-slate-600">{reportDateFilter || "—"}</td>
-                  <td className="px-5 py-3 font-mono text-slate-400">—</td>
-                  <td className="px-5 py-3 font-mono text-slate-400">—</td>
-                  <td className="px-5 py-3"><StatusBadge status="absent" /></td>
-                </tr>
-              ))}
+                  {/* Absent separator */}
+                  {absentStudents.length > 0 && sortedAttended.length > 0 && (
+                    <tr>
+                      <td colSpan={6} className="px-5 py-2 bg-rose-50 text-rose-700 text-xs font-bold uppercase tracking-wider text-center border-y border-rose-100">
+                        Absent Students
+                      </td>
+                    </tr>
+                  )}
 
-              {sortedAttended.length === 0 && absentStudents.length === 0 && (
-                <tr>
-                  <td colSpan={6} className="px-5 py-12 text-center text-slate-500">
-                    No records found for the selected filters.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </Card>
+                  {/* Absent rows */}
+                  {absentStudents.map((s, i) => (
+                    <tr key={`abs-${i}`} className="hover:bg-rose-50/30 transition-colors whitespace-nowrap bg-rose-50/10">
+                      <td className="px-5 py-3 font-semibold text-slate-700">{formatNameLastFirst(s.name)}</td>
+                      <td className="px-5 py-3">
+                        <p className="font-mono text-slate-600">{s.studentId}</p>
+                        <p className="text-xs text-slate-400">{s.section}</p>
+                      </td>
+                      <td className="px-5 py-3 text-slate-600">{reportDateFilter || "—"}</td>
+                      <td className="px-5 py-3 font-mono text-slate-400">—</td>
+                      <td className="px-5 py-3 font-mono text-slate-400">—</td>
+                      <td className="px-5 py-3"><StatusBadge status="absent" /></td>
+                    </tr>
+                  ))}
+
+                  {sortedAttended.length === 0 && absentStudents.length === 0 && (
+                    <tr>
+                      <td colSpan={6} className="px-5 py-12 text-center text-slate-500">
+                        No records found for the selected filters.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </Card>
+        </>
+      ) : (
+        <Card className="p-12 border border-slate-100 flex flex-col items-center justify-center text-center bg-slate-50/50">
+          <Calendar size={48} className="text-indigo-200 mb-4" />
+          <h3 className="text-lg font-bold text-slate-700 mb-1">Select an Event</h3>
+          <p className="text-slate-500 text-sm max-w-sm mx-auto">Please select a specific event from the dropdown above to view its attendance statistics and detailed student records.</p>
+        </Card>
+      )}
     </div>
   );
 }
