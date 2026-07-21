@@ -251,7 +251,9 @@ function AppInner() {
       {currentView === "student-register" && (
         <StudentRegistration
           email={currentStudentEmail}
-          onBack={() => setCurrentView("student-auth")}
+          onBack={() => {
+            clerk.signOut().then(() => setCurrentView("landing"));
+          }}
           onSubmit={(studentData) => {
             // Registration saved — now activate this browser with ECC keys
             setCurrentStudent(studentData);
