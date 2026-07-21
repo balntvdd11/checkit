@@ -1,12 +1,9 @@
 import { AlertTriangle, ExternalLink } from "lucide-react";
-import { useEffect, useRef } from "react";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
 import COAccessLogo from "../../components/shared/COAccessLogo";
 import DeveloperFooter from "../../components/shared/DeveloperFooter";
 
 export default function InAppBrowserWarning() {
-  const attempted = useRef(false);
-
   const handleAction = () => {
     const url = window.location.href;
     if (/android/i.test(navigator.userAgent)) {
@@ -28,18 +25,6 @@ export default function InAppBrowserWarning() {
       }, 500);
     }
   };
-
-  useEffect(() => {
-    // Automatically attempt redirect once on mount
-    if (!attempted.current) {
-      attempted.current = true;
-      // Slight delay to allow UI to render first
-      const timer = setTimeout(() => {
-        handleAction();
-      }, 800);
-      return () => clearTimeout(timer);
-    }
-  }, []);
 
   return (
     <div className="min-h-[100dvh] pb-[180px] sm:pb-[220px] landing-page-black flex flex-col items-center justify-center p-4 relative overflow-hidden">
