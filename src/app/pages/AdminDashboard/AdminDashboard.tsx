@@ -112,7 +112,7 @@ export default function AdminDashboard({ onLogout }: {
             {tab === "students" && <StudentsTab />}
             {tab === "create-event" && <CreateEventTab />}
             {tab === "scanner" && <ScannerTab events={events.filter(e => e.status !== "archived")} />}
-            {tab === "reports" && <ReportsTab events={events} />}
+            {tab === "reports" && <ReportsTab events={events.filter(e => e.status !== "archived")} />}
           </div>
         </div>
       </div>
