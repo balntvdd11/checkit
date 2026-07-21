@@ -115,10 +115,10 @@ export default function StudentRegistration({ email, onSubmit, onBack }: { email
                 onChange={e => setForm({ ...form, section: e.target.value })}
                 className={cn(inputCls(errors.section), !form.section && "text-slate-500")}
               >
-                <option value="" className="bg-[#0B0F1A] text-slate-400">Select your section</option>
+                <option value="" className="bg-[#123499] text-blue-200">Select your section</option>
                 {sections.map(g => (
-                  <optgroup key={g.group} label={g.group} className="text-slate-400 font-semibold bg-[#0B0F1A]">
-                    {g.options.map(s => <option key={s} value={s} className="bg-[#0B0F1A] text-white font-normal">{s}</option>)}
+                  <optgroup key={g.group} label={g.group} className="text-blue-200 font-semibold bg-[#123499]">
+                    {g.options.map(s => <option key={s} value={s} className="bg-[#123499] text-white font-normal">{s}</option>)}
                   </optgroup>
                 ))}
               </select>

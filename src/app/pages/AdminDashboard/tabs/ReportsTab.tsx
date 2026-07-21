@@ -386,18 +386,18 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
             </label>
             <select value={reportSectionFilter} onChange={e => setReportSectionFilter(e.target.value)}
               className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
-              <option value="All">All Sections</option>
-              <optgroup label="First Year">
-                <option value="BSA 1A">BSA 1A</option><option value="BSA 1B">BSA 1B</option><option value="BSA 1C">BSA 1C</option><option value="BSA 1D">BSA 1D</option>
+              <option value="All" className="bg-[#123499] text-blue-200">All Sections</option>
+              <optgroup label="First Year" className="bg-[#123499] text-blue-200 font-semibold">
+                <option value="BSA 1A" className="bg-[#123499] text-white font-normal">BSA 1A</option><option value="BSA 1B" className="bg-[#123499] text-white font-normal">BSA 1B</option><option value="BSA 1C" className="bg-[#123499] text-white font-normal">BSA 1C</option><option value="BSA 1D" className="bg-[#123499] text-white font-normal">BSA 1D</option>
               </optgroup>
-              <optgroup label="Second Year">
-                <option value="BSA 2A">BSA 2A</option><option value="BSA 2B">BSA 2B</option><option value="BSAIS 2A">BSAIS 2A</option>
+              <optgroup label="Second Year" className="bg-[#123499] text-blue-200 font-semibold">
+                <option value="BSA 2A" className="bg-[#123499] text-white font-normal">BSA 2A</option><option value="BSA 2B" className="bg-[#123499] text-white font-normal">BSA 2B</option><option value="BSAIS 2A" className="bg-[#123499] text-white font-normal">BSAIS 2A</option>
               </optgroup>
-              <optgroup label="Third Year">
-                <option value="BSA 3A">BSA 3A</option><option value="BSAIS 3A">BSAIS 3A</option><option value="BSAIS 3B">BSAIS 3B</option>
+              <optgroup label="Third Year" className="bg-[#123499] text-blue-200 font-semibold">
+                <option value="BSA 3A" className="bg-[#123499] text-white font-normal">BSA 3A</option><option value="BSAIS 3A" className="bg-[#123499] text-white font-normal">BSAIS 3A</option><option value="BSAIS 3B" className="bg-[#123499] text-white font-normal">BSAIS 3B</option>
               </optgroup>
-              <optgroup label="Fourth Year">
-                <option value="BSA 4A">BSA 4A</option><option value="BSAIS 4A">BSAIS 4A</option>
+              <optgroup label="Fourth Year" className="bg-[#123499] text-blue-200 font-semibold">
+                <option value="BSA 4A" className="bg-[#123499] text-white font-normal">BSA 4A</option><option value="BSAIS 4A" className="bg-[#123499] text-white font-normal">BSAIS 4A</option>
               </optgroup>
             </select>
           </div>
