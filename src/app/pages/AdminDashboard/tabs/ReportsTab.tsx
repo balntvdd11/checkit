@@ -139,20 +139,18 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
 
   // ── CSV Export ──────────────────────────────────────────────────────────────
   const escapeCSV = (val: any): string => {
-    const str = String(val ?? "").trim();
-    if (str.includes(",") || str.includes('"') || str.includes("\n")) {
-      return `"${str.replace(/"/g, '""')}"`;
-    }
-    return str;
+    if (val === null || val === undefined) return '""';
+    const str = String(val).trim();
+    return `"${str.replace(/"/g, '""')}"`;
   };
 
   const handleExportCSV = () => {
     if (sortedAttended.length === 0 && absentStudents.length === 0) { toast.error("No data to export."); return; }
     const headers = ["Student Name", "ID", "Email", "Section", "Date", "Time In", "Time Out", "Status"];
 
-    let csvContent = "";
+    let csvContent = "\uFEFF";
     if (selectedEvent) {
-      csvContent += `Event:,${escapeCSV(selectedEvent.name)}\n\n`;
+      csvContent += `${escapeCSV("Event:")},${escapeCSV(selectedEvent.name)}\n\n`;
     }
     csvContent += headers.map(escapeCSV).join(",") + "\n";
 
@@ -173,7 +171,7 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
     // Blank separator + Absent section
     if (absentStudents.length > 0) {
       csvContent += "\n";
-      csvContent += "--- ABSENT STUDENTS ---\n";
+      csvContent += `${escapeCSV("--- ABSENT STUDENTS ---")}\n`;
       for (const s of absentStudents) {
         csvContent += [
           escapeCSV(formatNameLastFirst(s.name)),
@@ -181,9 +179,9 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
           escapeCSV(resolveStudentEmail(s.studentId, s.email, s.name)),
           escapeCSV(s.section),
           escapeCSV(reportDateFilter || new Date().toISOString().split("T")[0]),
-          "",
-          "",
-          "Absent",
+          escapeCSV("—"),
+          escapeCSV("—"),
+          escapeCSV("Absent"),
         ].join(",") + "\n";
       }
     }
