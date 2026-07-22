@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { LogOut, LayoutDashboard, Users, ScanLine, FileText, CalendarCheck2, RefreshCw } from "lucide-react";
+import { LayoutDashboard, Users, ScanLine, FileText, CalendarCheck2, RefreshCw } from "lucide-react";
 import COAccessLogo from "../../components/shared/COAccessLogo";
 import DashboardTab from "./tabs/DashboardTab";
 import StudentsTab from "./tabs/StudentsTab";
@@ -7,7 +7,7 @@ import CreateEventTab from "./tabs/CreateEventTab";
 import ScannerTab from "./tabs/ScannerTab";
 import ReportsTab from "./tabs/ReportsTab";
 import { cn } from "../../lib/utils";
-import type { AdminTab, EventConfig } from "../../types";
+import type { AdminTab } from "../../types";
 import { useStore, useSelectors } from "../../state/store";
 import { fetchEvents } from "../../services/events";
 import { fetchStudents } from "../../services/students";
@@ -15,9 +15,9 @@ import { fetchAttendance } from "../../services/attendance";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
 import DeveloperFooter from "../../components/shared/DeveloperFooter";
 
-export default function AdminDashboard({ onLogout }: {
-  onLogout: () => void;
-}) {
+// ─── Admin Dashboard ──────────────────────────────────────────────────────────
+
+export default function AdminDashboard({ onLogout }: { onLogout?: () => void }) {
   const [tab, setTab] = useState<AdminTab>("dashboard");
   const { state, dispatch } = useStore();
   const selectors = useSelectors();
@@ -76,11 +76,8 @@ export default function AdminDashboard({ onLogout }: {
         </div>
 
         <div className="flex items-center gap-4">
-          <button onClick={handleRefresh} disabled={isRefreshing} className="flex items-center gap-1.5 text-white/55 hover:text-white text-sm transition-colors mr-2">
+          <button onClick={handleRefresh} disabled={isRefreshing} className="flex items-center gap-1.5 text-white/55 hover:text-white text-sm transition-colors">
             <RefreshCw size={14} className={cn(isRefreshing && "animate-spin")} /> <span className="hidden sm:inline">{isRefreshing ? "Refreshing..." : "Refresh"}</span>
-          </button>
-          <button onClick={onLogout} className="flex items-center gap-1.5 text-white/55 hover:text-white text-sm transition-colors">
-            <LogOut size={14} /> <span className="hidden sm:inline">Sign out</span>
           </button>
         </div>
       </header>

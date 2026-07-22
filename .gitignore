@@ -1,0 +1,6 @@
+node_modules
+checkit_backend
+gh_cli
+gh.zip
+*.log
+.env

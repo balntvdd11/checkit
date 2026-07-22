@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { LogOut, ChevronRight, Hash, RefreshCw, QrCode } from "lucide-react";
+import { ChevronRight, Hash, RefreshCw, QrCode } from "lucide-react";
 import COAccessLogo from "../../components/shared/COAccessLogo";
 import Card from "../../components/shared/Card";
 import { cn } from "../../lib/utils";
@@ -18,9 +18,17 @@ export default function EVENTSCodeEntry({ student, events, onSubmit, onViewHisto
   const [selectedEventId, setSelectedEventId] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const activeEvents = events.filter(e => e.status === "active");
   const selectedEvent = activeEvents.find(e => e.id === selectedEventId);
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    setTimeout(() => {
+      window.location.reload();
+    }, 400);
+  };
 
   const handleSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
@@ -47,8 +55,8 @@ export default function EVENTSCodeEntry({ student, events, onSubmit, onViewHisto
             <p className="text-white text-xs font-semibold">{student.name}</p>
             <p className="text-white/45 text-xs">{student.section}</p>
           </div>
-          <button onClick={onLogout} className="flex items-center gap-1.5 text-white/55 hover:text-white text-sm transition-colors">
-            <LogOut size={14} /> Sign out
+          <button onClick={handleRefresh} disabled={isRefreshing} className="flex items-center gap-1.5 text-white/55 hover:text-white text-sm transition-colors">
+            <RefreshCw size={14} className={cn(isRefreshing && "animate-spin")} /> {isRefreshing ? "Refreshing..." : "Refresh"}
           </button>
         </div>
       </header>

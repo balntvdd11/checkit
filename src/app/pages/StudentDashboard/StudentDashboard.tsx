@@ -1,11 +1,12 @@
+import { useState } from "react";
 import { motion } from "motion/react";
-import { LogOut, RefreshCw, Smartphone, GraduationCap, CheckCircle2, History, AlertCircle } from "lucide-react";
+import { RefreshCw, Smartphone, GraduationCap, CheckCircle2, History, AlertCircle } from "lucide-react";
 import COAccessLogo from "../../components/shared/COAccessLogo";
 import StatusBadge from "../../components/shared/StatusBadge";
 import Card from "../../components/shared/Card";
 import type { Student, AttendanceRecord } from "../../types";
 import { useSelectors } from "../../state/store";
-import { formatTime12Hour } from "../../lib/utils";
+import { formatTime12Hour, cn } from "../../lib/utils";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
 import DeveloperFooter from "../../components/shared/DeveloperFooter";
 
@@ -15,7 +16,15 @@ export default function StudentDashboard({ student, onLogout, onGeneratePass }: 
   student: Student; onLogout: () => void; onGeneratePass: () => void;
 }) {
   const { attendance } = useSelectors();
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const studentAttendance = attendance.filter(a => a.studentId === student.studentId || a.email === student.email);
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    setTimeout(() => {
+      window.location.reload();
+    }, 400);
+  };
 
   const presentCount = studentAttendance.filter(r => r.status === "present").length;
   const lateCount = studentAttendance.filter(r => r.status === "late").length;
@@ -32,8 +41,8 @@ export default function StudentDashboard({ student, onLogout, onGeneratePass }: 
           <span className="text-white/50 text-sm">Student Portal</span>
         </div>
         <div className="flex items-center gap-4">
-          <button onClick={onLogout} className="flex items-center gap-1.5 text-white/55 hover:text-white text-sm transition-colors">
-            <LogOut size={14} /> Sign out
+          <button onClick={handleRefresh} disabled={isRefreshing} className="flex items-center gap-1.5 text-white/55 hover:text-white text-sm transition-colors">
+            <RefreshCw size={14} className={cn(isRefreshing && "animate-spin")} /> {isRefreshing ? "Refreshing..." : "Refresh"}
           </button>
         </div>
       </header>
