@@ -307,6 +307,7 @@ function AppInner() {
           events={state.events}
           onLogout={handleStudentLogout}
           onBack={() => setCurrentView("student-EVENTS-code")}
+          onGoToDashboard={() => setCurrentView("student-dashboard")}
         />
       )}
 

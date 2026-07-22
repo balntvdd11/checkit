@@ -16,8 +16,8 @@ import DeveloperFooter from "../../components/shared/DeveloperFooter";
 
 const REFRESH_INTERVAL = 15;
 
-export default function QRPassGenerator({ student, EVENTSCode, events, onBack, onLogout }: {
-  student: Student; EVENTSCode: string; events: EventConfig[]; onBack: () => void; onLogout: () => void;
+export default function QRPassGenerator({ student, EVENTSCode, events, onBack, onGoToDashboard, onLogout }: {
+  student: Student; EVENTSCode: string; events: EventConfig[]; onBack: () => void; onGoToDashboard?: () => void; onLogout?: () => void;
 }) {
   const getInitials = (name: string) => {
     if (!name) return "";
@@ -32,6 +32,15 @@ export default function QRPassGenerator({ student, EVENTSCode, events, onBack, o
   const [qrSeed, setQrSeed] = useState(Date.now().toString());
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isActive, setIsActive] = useState<boolean | null>(null);
+
+  const handleManualRefresh = () => {
+    setIsRefreshing(true);
+    setTimeout(() => {
+      setQrSeed(Date.now().toString());
+      setTimeLeft(REFRESH_INTERVAL);
+      setIsRefreshing(false);
+    }, 450);
+  };
 
   // ── Scan success modal (read-only: never touches QR/timer/nav) ────────────
   type ScanModalType = "time-in" | "time-out" | null;
@@ -186,16 +195,28 @@ export default function QRPassGenerator({ student, EVENTSCode, events, onBack, o
           <span className="text-white/50 text-sm">Student Portal</span>
         </div>
         <div className="flex items-center gap-3">
+          {onGoToDashboard && (
+            <button onClick={onGoToDashboard} className="text-sm text-white/55 hover:text-white transition-colors flex items-center gap-1.5 hidden sm:flex">
+              <ChevronRight size={14} className="rotate-180" /> Back to Dashboard
+            </button>
+          )}
           <button onClick={onBack} className="text-sm text-white/55 hover:text-white transition-colors flex items-center gap-1.5">
             <ChevronRight size={14} className="rotate-180" /> Change Events
           </button>
-          <button onClick={onLogout} className="flex items-center gap-1.5 text-white/55 hover:text-white text-sm transition-colors">
+          <button onClick={handleManualRefresh} disabled={isRefreshing} className="flex items-center gap-1.5 text-white/55 hover:text-white text-sm transition-colors">
+            <RefreshCw size={14} className={cn(isRefreshing && "animate-spin")} /> {isRefreshing ? "Refreshing..." : "Refresh"}
           </button>
         </div>
       </header>
 
       <div className="flex items-center justify-center min-h-[calc(100dvh-57px)] p-4 relative z-10">
         <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-sm">
+
+          {onGoToDashboard && (
+            <button onClick={onGoToDashboard} className="flex items-center gap-1.5 text-sm text-[#0a2472]/70 hover:text-[#0a2472] mb-4 transition-colors font-medium">
+              <ChevronRight size={15} className="rotate-180" /> Back to Dashboard
+            </button>
+          )}
 
           {/* Live indicator */}
           <div className="flex items-center justify-center gap-2 mb-5">
