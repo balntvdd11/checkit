@@ -99,9 +99,15 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
   const reportTotal = sortedAttended.length + reportAbsentCount;
 
   // ── CSV Export ──────────────────────────────────────────────────────────────
+  const resolveStudentEmail = (studentId: string, recordEmail?: string, name?: string) => {
+    if (recordEmail && recordEmail.trim()) return recordEmail;
+    const match = students.find(s => s.studentId === studentId || s.name === name);
+    return match?.email || "—";
+  };
+
   const handleExportCSV = () => {
     if (sortedAttended.length === 0 && absentStudents.length === 0) { toast.error("No data to export."); return; }
-    const headers = ["Student Name", "ID", "Section", "Date", "Time In", "Time Out", "Status"];
+    const headers = ["Student Name", "ID", "Email", "Section", "Date", "Time In", "Time Out", "Status"];
 
     let csvContent = "";
     if (selectedEvent) {
@@ -114,6 +120,7 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
       csvContent += [
         formatNameLastFirst(r.name),
         r.studentId,
+        resolveStudentEmail(r.studentId, r.email, r.name),
         r.section,
         r.date,
         formatTime12Hour(r.timeIn),
@@ -130,6 +137,7 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
         csvContent += [
           formatNameLastFirst(s.name),
           s.studentId,
+          s.email || "—",
           s.section,
           reportDateFilter || new Date().toISOString().split("T")[0],
           "",
@@ -255,11 +263,12 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
     cursorY += 14;
 
     // ── Attendance Table (Present + Late) ─────────────────────────────────────
-    const tableHead = [["#", "Student Name", "ID", "Section", "Date", "Time In", "Time Out", "Status"]];
+    const tableHead = [["#", "Student Name", "ID", "Email", "Section", "Date", "Time In", "Time Out", "Status"]];
     const tableBody = sortedAttended.map((r, i) => [
       String(i + 1),
       formatNameLastFirst(r.name),
       r.studentId,
+      resolveStudentEmail(r.studentId, r.email, r.name),
       r.section,
       r.date,
       formatTime12Hour(r.timeIn),
@@ -277,16 +286,18 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
           fillColor: [18, 52, 153],
           textColor: 255,
           fontStyle: "bold",
-          fontSize: 8,
+          fontSize: 7.5,
           halign: "center",
         },
-        bodyStyles: { fontSize: 7.5, cellPadding: 2 },
+        bodyStyles: { fontSize: 7, cellPadding: 1.5 },
         columnStyles: {
-          0: { halign: "center", cellWidth: 8 },
-          4: { halign: "center" },
+          0: { halign: "center", cellWidth: 7 },
+          2: { cellWidth: 20 },
+          3: { cellWidth: 38 },
           5: { halign: "center" },
           6: { halign: "center" },
           7: { halign: "center" },
+          8: { halign: "center" },
         },
         alternateRowStyles: { fillColor: [248, 250, 252] },
         margin: { left: 14, right: 14 },
@@ -304,11 +315,12 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
       doc.text("Absent Students", 14, absentStartY);
       doc.setTextColor(0, 0, 0);
 
-      const absentHead = [["#", "Student Name", "ID", "Section", "Status"]];
+      const absentHead = [["#", "Student Name", "ID", "Email", "Section", "Status"]];
       const absentBody = absentStudents.map((s, i) => [
         String(i + 1),
         formatNameLastFirst(s.name),
         s.studentId,
+        s.email || "—",
         s.section,
         "Absent",
       ]);
@@ -322,13 +334,15 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
           fillColor: [220, 38, 38],
           textColor: 255,
           fontStyle: "bold",
-          fontSize: 8,
+          fontSize: 7.5,
           halign: "center",
         },
-        bodyStyles: { fontSize: 7.5, cellPadding: 2 },
+        bodyStyles: { fontSize: 7, cellPadding: 1.5 },
         columnStyles: {
-          0: { halign: "center", cellWidth: 8 },
-          4: { halign: "center" },
+          0: { halign: "center", cellWidth: 7 },
+          2: { cellWidth: 20 },
+          3: { cellWidth: 45 },
+          5: { halign: "center" },
         },
         alternateRowStyles: { fillColor: [255, 241, 242] },
         margin: { left: 14, right: 14 },
