@@ -54,7 +54,6 @@ export interface EventConfig {
   id: string;
   name: string;
   checkItCode: string;
-  date?: string;
   timeIn: string;
   lateThreshold: string;
   timeOut: string;

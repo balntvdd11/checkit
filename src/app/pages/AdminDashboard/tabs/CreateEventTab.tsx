@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Copy, CheckCircle2, Clock, MapPin, Hash, Building2, Ticket, Archive, Trash2, ArrowLeft, Calendar } from "lucide-react";
+import { Copy, CheckCircle2, Clock, MapPin, Hash, Building2, Ticket, Archive, Trash2, ArrowLeft } from "lucide-react";
 import Card from "../../../components/shared/Card";
 import { generateCheckItCode, cn, formatTime12Hour } from "../../../lib/utils";
 import type { EventConfig } from "../../../types";
@@ -9,14 +9,7 @@ import TimePicker from "../../../components/shared/TimePicker";
 import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "../../../components/ui/alert-dialog";
 
 export default function CreateEventTab() {
-  const [eventForm, setEventForm] = useState<{ name: string; date: string; timeIn: string; lateThreshold: string; timeOut: string; status: EventConfig["status"] }>({
-    name: "",
-    date: new Date().toISOString().split("T")[0],
-    timeIn: "08:00",
-    lateThreshold: "08:15",
-    timeOut: "17:00",
-    status: "active"
-  });
+  const [eventForm, setEventForm] = useState<{ name: string; timeIn: string; lateThreshold: string; timeOut: string; status: EventConfig["status"] }>({ name: "", timeIn: "08:00", lateThreshold: "08:15", timeOut: "17:00", status: "active" });
   const { dispatch } = useStore();
   const { events } = useSelectors();
   
@@ -60,7 +53,6 @@ export default function CreateEventTab() {
         id: editingEventId,
         name: eventForm.name,
         checkItCode: events.find(e => e.id === editingEventId)?.checkItCode || generateCheckItCode(eventForm.name),
-        date: eventForm.date,
         timeIn: eventForm.timeIn,
         lateThreshold: eventForm.lateThreshold,
         timeOut: eventForm.timeOut,
@@ -72,23 +64,17 @@ export default function CreateEventTab() {
       });
       setEditingEventId(null);
       setShowEventForm(false);
-      setEventForm({ name: "", date: new Date().toISOString().split("T")[0], timeIn: "08:00", lateThreshold: "08:15", timeOut: "17:00", status: "active" });
+      setEventForm({ name: "", timeIn: "08:00", lateThreshold: "08:15", timeOut: "17:00", status: "active" });
       return;
     }
 
     const newEvent: EventConfig = {
-      id: `e${Date.now()}`,
-      name: eventForm.name,
-      checkItCode: generateCheckItCode(eventForm.name),
-      date: eventForm.date,
-      timeIn: eventForm.timeIn,
-      lateThreshold: eventForm.lateThreshold,
-      timeOut: eventForm.timeOut,
-      status: eventForm.status,
+      id: `e${Date.now()}`, name: eventForm.name, checkItCode: generateCheckItCode(eventForm.name),
+      timeIn: eventForm.timeIn, lateThreshold: eventForm.lateThreshold, timeOut: eventForm.timeOut, status: eventForm.status,
     };
     createEvent(newEvent).then(res => dispatch({ type: "ADD_EVENT", payload: res }));
     setShowEventForm(false);
-    setEventForm({ name: "", date: new Date().toISOString().split("T")[0], timeIn: "08:00", lateThreshold: "08:15", timeOut: "17:00", status: "active" });
+    setEventForm({ name: "", timeIn: "08:00", lateThreshold: "08:15", timeOut: "17:00", status: "active" });
   };
 
   const copyToClipboard = (text: string) => {
@@ -141,10 +127,6 @@ export default function CreateEventTab() {
                 <h3 className="font-semibold text-slate-800 flex items-center gap-2 border-b border-slate-100 pb-3">
                   <Clock size={16} className="text-[var(--primary)]" /> Time & Logistics
                 </h3>
-                <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">Event Date</label>
-                  <input type="date" required value={eventForm.date} onChange={e => setEventForm({ ...eventForm, date: e.target.value })} className={inputCls} />
-                </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-semibold text-slate-700 mb-1.5">Time In</label>
@@ -195,7 +177,6 @@ export default function CreateEventTab() {
                       )}
                     </div>
                     <div className="flex items-center gap-4 text-xs text-slate-500">
-                      <span className="flex items-center gap-1.5"><Calendar size={12} /> {evt.date || new Date().toISOString().split("T")[0]}</span>
                       <span className="flex items-center gap-1.5"><Clock size={12} /> {formatTime12Hour(evt.timeIn)} – {formatTime12Hour(evt.timeOut)}</span>
                       <span className="flex items-center gap-1.5"><MapPin size={12} /> UA Campus</span>
                     </div>
@@ -217,7 +198,7 @@ export default function CreateEventTab() {
                     <button onClick={() => {
                       // start editing
                       setEditingEventId(evt.id);
-                      setEventForm({ name: evt.name, date: evt.date || new Date().toISOString().split("T")[0], timeIn: evt.timeIn, lateThreshold: evt.lateThreshold, timeOut: evt.timeOut, status: evt.status });
+                      setEventForm({ name: evt.name, timeIn: evt.timeIn, lateThreshold: evt.lateThreshold, timeOut: evt.timeOut, status: evt.status });
                       setShowEventForm(true);
                     }}
                       className="px-3 py-1 text-xs font-semibold rounded-lg border transition-colors bg-[var(--primary)] text-white hover:bg-[#A61831]">
