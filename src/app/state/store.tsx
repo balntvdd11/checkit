@@ -26,7 +26,10 @@ type Action =
   // WebSocket-pushed actions
   | { type: "WS_ATTENDANCE_CREATED"; payload: AttendanceRecord }
   | { type: "WS_ATTENDANCE_UPDATED"; payload: AttendanceRecord }
-  | { type: "WS_EVENT_UPDATED"; payload: EventConfig };
+  | { type: "WS_EVENT_UPDATED"; payload: EventConfig }
+  | { type: "WS_STUDENT_CREATED"; payload: StudentRecord }
+  | { type: "WS_STUDENT_UPDATED"; payload: StudentRecord }
+  | { type: "WS_STUDENT_DELETED"; payload: { id: string } };
 
 const initialState: State = { students: [], events: [], attendance: [], loading: false, error: null };
 
@@ -60,7 +63,6 @@ function reducer(state: State, action: Action): State {
       return { ...state, attendance: state.attendance.map(a => (a as any).id === (action.payload as any).id ? action.payload : a) };
     // ── WebSocket-pushed actions ──────────────────────────────────────
     case "WS_ATTENDANCE_CREATED": {
-      // Deduplicate: only add if not already in the list
       const exists = state.attendance.some(a => (a as any).id === (action.payload as any).id);
       if (exists) return state;
       return { ...state, attendance: [action.payload, ...state.attendance] };
@@ -72,9 +74,17 @@ function reducer(state: State, action: Action): State {
       if (idx >= 0) {
         return { ...state, events: state.events.map(e => e.id === action.payload.id ? action.payload : e) };
       }
-      // New event — add to the front
       return { ...state, events: [action.payload, ...state.events] };
     }
+    case "WS_STUDENT_CREATED": {
+      const exists = state.students.some(s => s.id === action.payload.id);
+      if (exists) return state;
+      return { ...state, students: [action.payload, ...state.students] };
+    }
+    case "WS_STUDENT_UPDATED":
+      return { ...state, students: state.students.map(s => s.id === action.payload.id ? action.payload : s) };
+    case "WS_STUDENT_DELETED":
+      return { ...state, students: state.students.filter(s => s.id !== action.payload.id) };
     default:
       return state;
   }
