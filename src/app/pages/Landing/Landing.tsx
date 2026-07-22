@@ -36,14 +36,15 @@ export default function LandingPage({ onStudent, onAdmin }: { onStudent: () => v
         </motion.div>
 
         {/* Portal cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-4xl">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 w-full max-w-4xl">
           <motion.button
             initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }}
             onClick={onStudent}
-            className="group relative premium-border-card border-[1.5px] text-left rounded-2xl border border-[#7EEAF8]/24 bg-gradient-to-br from-[#0a2472]/85 via-[#123499]/90 to-[#72caec] md:hover:opacity-90 md:hover:-translate-y-1.5 shadow-xl shadow-[#123499]/20 transition-all duration-300 p-6 sm:p-9 flex flex-col gap-4 sm:gap-6 cursor-pointer min-h-[200px] sm:min-h-[265px] h-auto overflow-hidden"
+            className="group relative premium-border-card border-[1.5px] text-left rounded-2xl border border-[#7EEAF8]/24 bg-gradient-to-br from-[#0a2472]/85 via-[#123499]/90 to-[#72caec] md:hover:opacity-90 md:hover:-translate-y-1.5 shadow-xl shadow-[#123499]/20 transition-all duration-300 p-6 sm:p-8 flex flex-col gap-4 sm:gap-6 cursor-pointer min-h-[200px] sm:min-h-[250px] h-auto overflow-hidden"
           >
-
-            <img src={studentPortalIcon} alt="Student portal" className="w-16 h-16 sm:w-24 sm:h-24 object-contain drop-shadow-md" />
+            <div className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-start shrink-0">
+              <img src={studentPortalIcon} alt="Student portal" className="w-full h-full object-contain object-left drop-shadow-md" />
+            </div>
             <div>
               <h2 className="text-lg sm:text-xl font-bold text-white drop-shadow-sm mb-1.5">Student Portal</h2>
               <p className="text-white/90 font-medium text-xs sm:text-sm leading-relaxed drop-shadow-sm">Generate Event Passes</p>
@@ -54,13 +55,14 @@ export default function LandingPage({ onStudent, onAdmin }: { onStudent: () => v
           <motion.button
             initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.35 }}
             onClick={onAdmin}
-            className="group relative premium-border-card border-[1.5px] text-left rounded-2xl border border-[#7EEAF8]/24 bg-gradient-to-br from-[#0a2472]/85 via-[#123499]/90 to-[#72caec] md:hover:opacity-90 md:hover:-translate-y-1.5 shadow-xl shadow-[#123499]/20 transition-all duration-300 p-6 sm:p-9 flex flex-col gap-4 sm:gap-6 cursor-pointer min-h-[200px] sm:min-h-[265px] h-auto overflow-hidden"
+            className="group relative premium-border-card border-[1.5px] text-left rounded-2xl border border-[#7EEAF8]/24 bg-gradient-to-br from-[#0a2472]/85 via-[#123499]/90 to-[#72caec] md:hover:opacity-90 md:hover:-translate-y-1.5 shadow-xl shadow-[#123499]/20 transition-all duration-300 p-6 sm:p-8 flex flex-col gap-4 sm:gap-6 cursor-pointer min-h-[200px] sm:min-h-[250px] h-auto overflow-hidden"
           >
-
-            <img src={adminPortalIcon} alt="Admin portal" className="w-24 h-24 object-contain drop-shadow-md" />
+            <div className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-start shrink-0">
+              <img src={adminPortalIcon} alt="Admin portal" className="w-full h-full object-contain object-left drop-shadow-md" />
+            </div>
             <div>
-              <h2 className="text-xl font-bold text-white drop-shadow-sm mb-1.5">Admin Portal</h2>
-              <p className="text-white/90 font-medium text-sm leading-relaxed drop-shadow-sm">Manage Events and Reports</p>
+              <h2 className="text-lg sm:text-xl font-bold text-white drop-shadow-sm mb-1.5">Admin Portal</h2>
+              <p className="text-white/90 font-medium text-xs sm:text-sm leading-relaxed drop-shadow-sm">Manage Events and Reports</p>
             </div>
             <div className="mt-auto" />
           </motion.button>
