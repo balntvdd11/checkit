@@ -98,11 +98,43 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
   const reportAbsentCount = absentStudents.length;
   const reportTotal = sortedAttended.length + reportAbsentCount;
 
-  // ── CSV Export ──────────────────────────────────────────────────────────────
   const resolveStudentEmail = (studentId: string, recordEmail?: string, name?: string) => {
-    if (recordEmail && recordEmail.trim()) return recordEmail;
-    const match = students.find(s => s.studentId === studentId || s.name === name);
-    return match?.email || "—";
+    if (recordEmail && recordEmail.trim() && recordEmail.trim() !== "—") {
+      return recordEmail.trim();
+    }
+
+    const cleanId = (studentId || "").trim().toLowerCase();
+    let match = students.find(s => s.studentId && s.studentId.trim().toLowerCase() === cleanId);
+
+    if (!match && name) {
+      const cleanName = name.trim().toLowerCase();
+      match = students.find(s => s.name && s.name.trim().toLowerCase() === cleanName);
+    }
+
+    if (match?.email && match.email.trim() && match.email.trim() !== "—") {
+      return match.email.trim();
+    }
+
+    if (name) {
+      const parts = name.replace(/[^a-zA-Z\s,]/g, "").trim().split(/\s+/);
+      if (parts.length >= 2) {
+        if (name.includes(",")) {
+          const lastName = parts[0].replace(",", "").toLowerCase();
+          const firstName = parts[1].toLowerCase();
+          return `${firstName}.${lastName}@student.ua.edu.ph`;
+        } else {
+          const firstName = parts[0].toLowerCase();
+          const lastName = parts[parts.length - 1].toLowerCase();
+          return `${firstName}.${lastName}@student.ua.edu.ph`;
+        }
+      }
+    }
+
+    if (cleanId) {
+      return `${cleanId}@student.ua.edu.ph`;
+    }
+
+    return "—";
   };
 
   const handleExportCSV = () => {
@@ -137,7 +169,7 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
         csvContent += [
           formatNameLastFirst(s.name),
           s.studentId,
-          s.email || "—",
+          resolveStudentEmail(s.studentId, s.email, s.name),
           s.section,
           reportDateFilter || new Date().toISOString().split("T")[0],
           "",
@@ -320,7 +352,7 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
         String(i + 1),
         formatNameLastFirst(s.name),
         s.studentId,
-        s.email || "—",
+        resolveStudentEmail(s.studentId, s.email, s.name),
         s.section,
         "Absent",
       ]);
