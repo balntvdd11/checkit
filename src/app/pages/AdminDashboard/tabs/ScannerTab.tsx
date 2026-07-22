@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import Card from "../../../components/shared/Card";
 import StatusBadge from "../../../components/shared/StatusBadge";
 import type { EventConfig } from "../../../types";
-import { createAttendanceRecord, updateAttendanceRecord, fetchAttendance } from "../../../services/attendance";
+import { createAttendanceRecord, updateAttendanceRecord } from "../../../services/attendance";
 import { useStore } from "../../../state/store";
 import { cn } from "../../../lib/utils";
 
@@ -71,9 +71,9 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
                 return;
               }
 
-              // Fetch latest attendance to prevent cross-device duplicates
-              const latestAttendance = await fetchAttendance();
-              dispatch({ type: "SET_ATTENDANCE", payload: latestAttendance });
+              // Use the WebSocket-synced store to check for duplicates
+              // instead of making an HTTP call on every scan.
+              const latestAttendance = stateRef.current.attendance;
 
               // Check if student already has attendance for this event today
               const today = new Date().toISOString().split('T')[0];

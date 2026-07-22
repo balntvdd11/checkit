@@ -22,7 +22,11 @@ type Action =
   | { type: "ADD_ATTENDANCE_RECORD"; payload: AttendanceRecord }
   | { type: "UPDATE_ATTENDANCE_RECORD"; payload: AttendanceRecord }
   | { type: "SET_ATTENDANCE"; payload: AttendanceRecord[] }
-  | { type: "DELETE_STUDENT"; payload: { id: string } };
+  | { type: "DELETE_STUDENT"; payload: { id: string } }
+  // WebSocket-pushed actions
+  | { type: "WS_ATTENDANCE_CREATED"; payload: AttendanceRecord }
+  | { type: "WS_ATTENDANCE_UPDATED"; payload: AttendanceRecord }
+  | { type: "WS_EVENT_UPDATED"; payload: EventConfig };
 
 const initialState: State = { students: [], events: [], attendance: [], loading: false, error: null };
 
@@ -54,6 +58,23 @@ function reducer(state: State, action: Action): State {
       return { ...state, attendance: [action.payload, ...state.attendance] };
     case "UPDATE_ATTENDANCE_RECORD":
       return { ...state, attendance: state.attendance.map(a => (a as any).id === (action.payload as any).id ? action.payload : a) };
+    // ── WebSocket-pushed actions ──────────────────────────────────────
+    case "WS_ATTENDANCE_CREATED": {
+      // Deduplicate: only add if not already in the list
+      const exists = state.attendance.some(a => (a as any).id === (action.payload as any).id);
+      if (exists) return state;
+      return { ...state, attendance: [action.payload, ...state.attendance] };
+    }
+    case "WS_ATTENDANCE_UPDATED":
+      return { ...state, attendance: state.attendance.map(a => (a as any).id === (action.payload as any).id ? action.payload : a) };
+    case "WS_EVENT_UPDATED": {
+      const idx = state.events.findIndex(e => e.id === action.payload.id);
+      if (idx >= 0) {
+        return { ...state, events: state.events.map(e => e.id === action.payload.id ? action.payload : e) };
+      }
+      // New event — add to the front
+      return { ...state, events: [action.payload, ...state.events] };
+    }
     default:
       return state;
   }

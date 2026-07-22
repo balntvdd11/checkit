@@ -12,6 +12,7 @@ import AdminLogin from "./pages/AdminLogin/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard/AdminDashboard";
 import InAppBrowserWarning from "./pages/InAppBrowserWarning/InAppBrowserWarning";
 import { StoreProvider, useStore } from "./state/store";
+import { useWebSocket } from "./hooks/useWebSocket";
 import { Toaster } from "./components/ui/sonner";
 import { fetchEvents } from "./services/events";
 import { fetchStudents } from "./services/students";
@@ -51,6 +52,7 @@ function AppInner() {
     return "landing";
   });
   const { state, dispatch } = useStore();
+  useWebSocket();
 
   // Student Flow State
   const [currentStudentEmail, setCurrentStudentEmail] = useState<string>("");
