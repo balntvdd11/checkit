@@ -20,15 +20,56 @@ export default function EVENTSCodeEntry({ student, events, onSubmit, onViewHisto
   const [loading, setLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const activeEvents = events.filter(e => e.status === "active");
-  const selectedEvent = activeEvents.find(e => e.id === selectedEventId);
-
   const handleRefresh = () => {
     setIsRefreshing(true);
     setTimeout(() => {
       window.location.reload();
     }, 400);
   };
+
+  const parseTimeToMinutes = (timeStr: string): number => {
+    if (!timeStr) return 0;
+    if (timeStr.includes("AM") || timeStr.includes("PM")) {
+      const match = timeStr.match(/(\d+):(\d+)\s*(AM|PM)/i);
+      if (match) {
+        let hrs = parseInt(match[1], 10);
+        const mins = parseInt(match[2], 10);
+        const ampm = match[3].toUpperCase();
+        if (ampm === "PM" && hrs < 12) hrs += 12;
+        if (ampm === "AM" && hrs === 12) hrs = 0;
+        return hrs * 60 + mins;
+      }
+    }
+    const [h, m] = timeStr.split(":").map(n => parseInt(n, 10));
+    return (h || 0) * 60 + (m || 0);
+  };
+
+  const activeEvents = events.filter(e => {
+    if (e.status !== "active") return false;
+
+    const now = new Date();
+    const todayStr = now.toISOString().split("T")[0];
+
+    // 1. Date check: if event has a date, it must match today's date
+    if (e.date && e.date !== todayStr) {
+      return false;
+    }
+
+    // 2. Time check: current time must be >= timeIn (and <= timeOut)
+    if (e.timeIn) {
+      const currentMinutes = now.getHours() * 60 + now.getMinutes();
+      const timeInMins = parseTimeToMinutes(e.timeIn);
+      const timeOutMins = e.timeOut ? parseTimeToMinutes(e.timeOut) : 24 * 60;
+
+      if (currentMinutes < timeInMins || currentMinutes > timeOutMins) {
+        return false;
+      }
+    }
+
+    return true;
+  });
+
+  const selectedEvent = activeEvents.find(e => e.id === selectedEventId);
 
   const handleSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
@@ -82,9 +123,9 @@ export default function EVENTSCodeEntry({ student, events, onSubmit, onViewHisto
               </div>
 
               {activeEvents.length === 0 ? (
-                <div className="p-4 text-center text-white/80 text-sm">
-                  <p>No active events available at this time.</p>
-                  <p className="text-xs mt-1">Please check with your instructor.</p>
+                <div className="p-4 text-center text-white/90 text-sm bg-white/10 rounded-xl border border-white/10">
+                  <p className="font-semibold text-amber-300 mb-1">No event scheduled at this time.</p>
+                  <p className="text-xs text-white/75">Events only appear on their scheduled date once Time In has started.</p>
                 </div>
               ) : (
                 <>
