@@ -83,7 +83,7 @@ export default function CreateEventTab() {
     setTimeout(() => setCopiedCode(false), 2000);
   };
 
-  const inputCls = "w-full px-4 py-2.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent transition-all";
+  const inputCls = "w-full px-4 py-2.5 text-sm bg-white border border-slate-300 rounded-xl shadow-sm font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 transition-all";
   const previewCheckItCode = eventForm.name ? generateCheckItCode(eventForm.name) : "—";
 
   return (
