@@ -27,9 +27,8 @@ export default function StudentDashboard({ student, onLogout, onGeneratePass }: 
       dispatch({ type: 'SET_ATTENDANCE', payload: attendanceData });
     } catch (error) {
       console.error('Failed to refresh attendance data', error);
-      window.location.reload();
     } finally {
-      setIsRefreshing(false);
+      setTimeout(() => setIsRefreshing(false), 500);
     }
   };
 

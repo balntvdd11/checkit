@@ -9,6 +9,8 @@ import type { Student, EventConfig } from "../../types";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
 import coaLogo from "../../../asset/coalogo.png";
 import DeveloperFooter from "../../components/shared/DeveloperFooter";
+import { useStore } from "../../state/store";
+import { fetchEvents } from "../../services/events";
 
 // ─── EVENTS Code Entry (renamed) ─────────────────────────────────────────────────────
 
@@ -19,12 +21,18 @@ export default function EVENTSCodeEntry({ student, events, onSubmit, onViewHisto
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const { dispatch } = useStore();
 
-  const handleRefresh = () => {
+  const handleRefresh = async () => {
     setIsRefreshing(true);
-    setTimeout(() => {
-      window.location.reload();
-    }, 400);
+    try {
+      const eventsData = await fetchEvents();
+      dispatch({ type: "SET_EVENTS", payload: eventsData });
+    } catch (e) {
+      console.error("Failed to refresh events:", e);
+    } finally {
+      setTimeout(() => setIsRefreshing(false), 500);
+    }
   };
 
   const parseTimeToMinutes = (timeStr: string): number => {
