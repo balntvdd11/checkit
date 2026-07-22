@@ -205,9 +205,12 @@
   }
 
   .hide-scrollbar {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
   }
+
   .hide-scrollbar::-webkit-scrollbar {
     display: none;
   }
@@ -339,39 +342,28 @@
     opacity: 0.46;
     transform: translate3d(0, 0, 0) scale(1.01);
     filter:
-      brightness(0) saturate(100%)
-      drop-shadow(0 0 5px var(--bloom-edge))
-      drop-shadow(0 0 12px var(--bloom-near))
-      blur(5px);
+      brightness(0) saturate(100%) drop-shadow(0 0 5px var(--bloom-edge)) drop-shadow(0 0 12px var(--bloom-near)) blur(5px);
   }
 
   .landing-emblem-bloom--near {
     opacity: 0.36;
     transform: translate3d(0, 0, 0) scale(1.045);
     filter:
-      brightness(0) saturate(100%)
-      drop-shadow(0 0 18px var(--bloom-near))
-      drop-shadow(0 0 34px var(--bloom-far))
-      blur(17px);
+      brightness(0) saturate(100%) drop-shadow(0 0 18px var(--bloom-near)) drop-shadow(0 0 34px var(--bloom-far)) blur(17px);
   }
 
   .landing-emblem-bloom--far {
     opacity: 0.24;
     transform: translate3d(0, 0, 0) scale(1.1);
     filter:
-      brightness(0) saturate(100%)
-      drop-shadow(0 0 42px var(--bloom-far))
-      drop-shadow(0 0 78px var(--bloom-haze))
-      blur(36px);
+      brightness(0) saturate(100%) drop-shadow(0 0 42px var(--bloom-far)) drop-shadow(0 0 78px var(--bloom-haze)) blur(36px);
   }
 
   .landing-emblem-bloom--haze {
     opacity: 0.18;
     transform: translate3d(0, 0, 0) scale(1.22);
     filter:
-      brightness(0) saturate(100%)
-      drop-shadow(0 0 90px var(--bloom-haze))
-      blur(62px);
+      brightness(0) saturate(100%) drop-shadow(0 0 90px var(--bloom-haze)) blur(62px);
   }
 
   .landing-emblem-glow--blue {
@@ -396,6 +388,7 @@
   }
 
   @keyframes landing-emblem-glow-breathe {
+
     0%,
     100% {
       transform: translate(-50%, -50%) translate3d(var(--glow-x), var(--glow-y), 0) scale(1);

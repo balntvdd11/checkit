@@ -34,7 +34,7 @@ export default function AdminLogin({ onSuccess, onBack }: { onSuccess: () => voi
   };
 
   return (
-    <div className="min-h-screen pb-[180px] sm:pb-[220px] landing-page-black flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-[100dvh] pb-[180px] sm:pb-[220px] landing-page-black flex items-center justify-center p-4 relative overflow-hidden">
       <AnimatedBackground />
       <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.35 }} className="w-full max-w-md relative z-10">
         <button onClick={onBack} className="flex items-center gap-1.5 text-sm font-bold text-[#0a2472] hover:text-[#123499] mb-8 transition-colors drop-shadow-sm">
@@ -44,10 +44,7 @@ export default function AdminLogin({ onSuccess, onBack }: { onSuccess: () => voi
         <Card className="p-8 bg-gradient-to-br from-[#0a2472]/85 via-[#123499]/90 to-[#72caec] border border-white/10 shadow-[0_32px_80px_rgba(0,0,0,0.35)] relative overflow-hidden group premium-border-card">
           <div className="relative z-10 flex flex-col items-center text-center mb-8">
             <COAccessLogo size="lg" inverted />
-            <div className="mt-6 w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center shadow-sm border border-white/10">
-              <KeyRound size={24} className="text-white" />
-            </div>
-            <h1 className="mt-4 text-xl font-bold text-white">Admin Access</h1>
+            <h1 className="mt-6 text-xl font-bold text-white">Admin Access</h1>
           </div>
 
           <form onSubmit={handleSubmit} className="relative z-10">

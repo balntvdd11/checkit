@@ -67,7 +67,7 @@ export default function StudentRegistration({ email, onSubmit, onBack }: { email
   );
 
   return (
-    <div className="min-h-screen pb-[180px] sm:pb-[220px] landing-page-black flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-[100dvh] pb-[180px] sm:pb-[220px] landing-page-black flex items-center justify-center p-4 relative overflow-hidden">
       <AnimatedBackground />
       <motion.div
         initial={{ opacity: 0, scale: 0.97 }}
@@ -83,10 +83,7 @@ export default function StudentRegistration({ email, onSubmit, onBack }: { email
 
           {/* Header */}
           <div className="relative z-10 flex flex-col items-center text-center mb-8">
-            <COAccessLogo size="md" inverted />
-            <div className="mt-7 w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center shadow-sm border border-white/10">
-              <ClipboardList size={28} className="text-white" />
-            </div>
+            <COAccessLogo size="lg" inverted />
             <h1 className="mt-4 text-xl font-bold text-white">Complete Registration</h1>
             <p className="mt-1.5 text-sm text-slate-300 leading-relaxed max-w-[280px]">
               Welcome, <span className="font-semibold text-white">{form.name || email}</span>
@@ -118,10 +115,10 @@ export default function StudentRegistration({ email, onSubmit, onBack }: { email
                 onChange={e => setForm({ ...form, section: e.target.value })}
                 className={cn(inputCls(errors.section), !form.section && "text-slate-500")}
               >
-                <option value="" className="bg-[#0B0F1A] text-slate-400">Select your section</option>
+                <option value="" className="bg-white text-slate-500">Select your section</option>
                 {sections.map(g => (
-                  <optgroup key={g.group} label={g.group} className="text-slate-400 font-semibold bg-[#0B0F1A]">
-                    {g.options.map(s => <option key={s} value={s} className="bg-[#0B0F1A] text-white font-normal">{s}</option>)}
+                  <optgroup key={g.group} label={g.group} className="bg-white text-slate-800 font-semibold">
+                    {g.options.map(s => <option key={s} value={s} className="bg-white text-slate-700 font-normal">{s}</option>)}
                   </optgroup>
                 ))}
               </select>

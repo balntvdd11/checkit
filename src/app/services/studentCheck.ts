@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_BASE || "http://127.0.0.1:8000";
+const API_BASE = import.meta.env.VITE_API_BASE || `http://${window.location.hostname}:8000`;
 
 export interface StudentData {
   id?: number;
@@ -9,6 +9,8 @@ export interface StudentData {
   registered: boolean;
   registeredAt: string;
   deviceFingerprint?: string;
+  browserFingerprint?: string;
+  browserPublicKey?: string;
 }
 
 /**

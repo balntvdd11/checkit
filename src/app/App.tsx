@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useClerk } from "@clerk/clerk-react";
+import { useClerk, useUser } from "@clerk/clerk-react";
 import LandingPage from "./pages/Landing/Landing";
 import StudentAuthGate from "./pages/StudentAuth/StudentAuth";
 import StudentRegistration from "./pages/StudentRegistration/StudentRegistration";
@@ -12,6 +12,7 @@ import AdminLogin from "./pages/AdminLogin/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard/AdminDashboard";
 import InAppBrowserWarning from "./pages/InAppBrowserWarning/InAppBrowserWarning";
 import { StoreProvider, useStore } from "./state/store";
+import { Toaster } from "./components/ui/sonner";
 import { fetchEvents } from "./services/events";
 import { fetchStudents } from "./services/students";
 import { fetchAttendance } from "./services/attendance";
@@ -36,15 +37,17 @@ export const isInAppBrowser = () => {
 function AppInner() {
   const [currentView, setCurrentView] = useState<View>(() => {
     // When the user successfully signs in with Clerk, they are redirected back to the
-    // origin with ?login=success in the URL. We catch this here so they instantly
-    // resolve their session and proceed to registration or dashboard, rather than
-    // being stuck on the landing page.
+    // origin. We catch this here so they instantly resolve their session and proceed 
+    // to registration or dashboard, rather than being stuck on the landing page.
     if (isInAppBrowser()) {
       return "in-app-browser-warning";
     }
-    if (window.location.search.includes("login=success")) {
+    
+    const url = window.location.href;
+    if (url.includes("login=success") || url.includes("__clerk")) {
       return "student-resolving";
     }
+    
     return "landing";
   });
   const { state, dispatch } = useStore();
@@ -55,6 +58,7 @@ function AppInner() {
   const [currentEVENTSCode, setCurrentEVENTSCode] = useState<string>("");
   const [lockedOS, setLockedOS] = useState<string | undefined>(undefined);
   const clerk = useClerk();
+  const { isLoaded, user } = useUser();
 
   const handleStudentLogout = () => {
     // "Sign Out" in COAccess only clears application state and returns to the
@@ -97,9 +101,7 @@ function AppInner() {
 
     const resolve = async () => {
       // Wait until Clerk has finished initialising its auth state
-      if (!clerk.loaded) return;
-
-      const user = clerk.user;
+      if (!isLoaded) return;
 
       if (!user) {
         // Not signed in — show the normal sign-in gate
@@ -130,26 +132,26 @@ function AppInner() {
           });
           
           const currentFingerprint = await generateDeviceFingerprint();
-          if (record.deviceFingerprint) {
-            const savedOS = record.deviceFingerprint.split("::")[0];
-            const currentOS = currentFingerprint.split("::")[0];
+          if (record.browserFingerprint) {
+            // Check if this browser's fingerprint matches the locked web browser
+            const isMatch = record.browserFingerprint === currentFingerprint;
 
-            if (savedOS && currentOS && savedOS !== currentOS) {
-              setLockedOS(savedOS);
+            if (!isMatch) {
+              // A different browser is already locked → show conflict immediately
               setCurrentView("student-device-conflict");
-            } else if (!hasStoredPrivateKey(normalizedEmail) || record.deviceFingerprint !== currentFingerprint) {
+            } else if (!hasStoredPrivateKey(normalizedEmail)) {
               setCurrentView("student-activation");
             } else {
               setCurrentView("student-dashboard");
             }
           } else {
+            // No browser registered yet → activate this browser
             setCurrentView("student-activation");
           }
         } else {
-          // Signed in but not yet registered — go to the auth gate which will
-          // detect the active session and route to registration
+          // Signed in but not yet registered — go straight to registration
           setCurrentStudentEmail(normalizedEmail);
-          setCurrentView("student-auth");
+          setCurrentView("student-register");
         }
       } catch {
         // Backend unreachable — fall back to the auth gate
@@ -158,18 +160,7 @@ function AppInner() {
     };
 
     resolve();
-
-    // If Clerk isn't loaded yet, poll until it is (it loads within ~200 ms)
-    if (!clerk.loaded) {
-      const interval = setInterval(() => {
-        if (clerk.loaded) {
-          clearInterval(interval);
-          resolve();
-        }
-      }, 50);
-      return () => clearInterval(interval);
-    }
-  }, [currentView, clerk]);
+  }, [currentView, isLoaded, user]);
 
   return (
     <>
@@ -185,7 +176,7 @@ function AppInner() {
       {/* Silent loading screen — shown while we wait for Clerk to initialise.
           Matches the app's dark theme so there is no visible flash. */}
       {currentView === "student-resolving" && (
-        <div className="min-h-screen landing-page-black flex items-center justify-center" aria-label="Loading…">
+        <div className="min-h-[100dvh] landing-page-black flex items-center justify-center" aria-label="Loading…">
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
             <svg
               width="36"
@@ -230,19 +221,20 @@ function AppInner() {
                 });
                 
                 const currentFingerprint = await generateDeviceFingerprint();
-                if (record.deviceFingerprint) {
-                  const savedOS = record.deviceFingerprint.split("::")[0];
-                  const currentOS = currentFingerprint.split("::")[0];
+                if (record.browserFingerprint) {
+                  // Check if this browser's fingerprint matches the locked web browser
+                  const isMatch = record.browserFingerprint === currentFingerprint;
 
-                  if (savedOS && currentOS && savedOS !== currentOS) {
-                    setLockedOS(savedOS);
+                  if (!isMatch) {
+                    // A different browser is already registered → device conflict
                     setCurrentView("student-device-conflict");
-                  } else if (!hasStoredPrivateKey(email) || record.deviceFingerprint !== currentFingerprint) {
+                  } else if (!hasStoredPrivateKey(email)) {
                     setCurrentView("student-activation");
                   } else {
                     setCurrentView("student-dashboard");
                   }
                 } else {
+                  // No browser registered yet → activate this browser
                   setCurrentView("student-activation");
                 }
               } else {
@@ -259,7 +251,9 @@ function AppInner() {
       {currentView === "student-register" && (
         <StudentRegistration
           email={currentStudentEmail}
-          onBack={() => setCurrentView("student-auth")}
+          onBack={() => {
+            clerk.signOut().then(() => setCurrentView("landing"));
+          }}
           onSubmit={(studentData) => {
             // Registration saved — now activate this browser with ECC keys
             setCurrentStudent(studentData);
@@ -273,6 +267,7 @@ function AppInner() {
           student={currentStudent!}
           onActivate={() => setCurrentView("student-dashboard")}
           onCancel={handleStudentLogout}
+          onConflict={() => setCurrentView("student-device-conflict")}
         />
       )}
 
@@ -309,6 +304,7 @@ function AppInner() {
         <QRPassGenerator
           student={currentStudent}
           EVENTSCode={currentEVENTSCode}
+          events={state.events}
           onLogout={handleStudentLogout}
           onBack={() => setCurrentView("student-EVENTS-code")}
         />
@@ -332,6 +328,7 @@ export default function App() {
   return (
     <StoreProvider>
       <AppInner />
+      <Toaster position="top-center" richColors />
     </StoreProvider>
   );
 }

@@ -1,16 +1,20 @@
 import { motion } from "motion/react";
-import coaLogo from "../../../asset/coalogo.png";
+import coaLogo from "../../../asset/coachromelogo.png";
 import studentPortalIcon from "../../../asset/studentportalICON.png";
 import adminPortalIcon from "../../../asset/adminportalICON.png";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
 import DeveloperFooter from "../../components/shared/DeveloperFooter";
+import COAccessLogo from "../../components/shared/COAccessLogo";
 
 // ─── Landing Page ─────────────────────────────────────────────────────────────
 
 export default function LandingPage({ onStudent, onAdmin }: { onStudent: () => void; onAdmin: () => void }) {
 
   return (
-    <div className="min-h-screen pb-[180px] sm:pb-[220px] landing-page-black flex flex-col items-center justify-center relative overflow-hidden">
+    <div className="min-h-[100dvh] pb-[180px] sm:pb-[220px] landing-page-black flex flex-col items-center justify-center relative overflow-hidden">
+      <div className="absolute top-6 left-6 sm:top-8 sm:left-8 z-50">
+        <COAccessLogo size="sm" clean />
+      </div>
       <AnimatedBackground />
       <div className="absolute inset-0 opacity-0 pointer-events-none" />
 
@@ -35,9 +39,8 @@ export default function LandingPage({ onStudent, onAdmin }: { onStudent: () => v
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-4xl">
           <motion.button
             initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }}
-            whileHover={{ y: -6, transition: { duration: 0.2 } }}
             onClick={onStudent}
-            className="group relative premium-border-card border-[1.5px] text-left rounded-2xl border border-[#7EEAF8]/24 bg-gradient-to-br from-[#0a2472]/85 via-[#123499]/90 to-[#72caec] hover:opacity-90 shadow-xl shadow-[#123499]/20 transition-all duration-300 p-6 sm:p-9 flex flex-col gap-4 sm:gap-6 cursor-pointer min-h-[200px] sm:min-h-[265px] h-auto overflow-hidden"
+            className="group relative premium-border-card border-[1.5px] text-left rounded-2xl border border-[#7EEAF8]/24 bg-gradient-to-br from-[#0a2472]/85 via-[#123499]/90 to-[#72caec] md:hover:opacity-90 md:hover:-translate-y-1.5 shadow-xl shadow-[#123499]/20 transition-all duration-300 p-6 sm:p-9 flex flex-col gap-4 sm:gap-6 cursor-pointer min-h-[200px] sm:min-h-[265px] h-auto overflow-hidden"
           >
 
             <img src={studentPortalIcon} alt="Student portal" className="w-16 h-16 sm:w-24 sm:h-24 object-contain drop-shadow-md" />
@@ -50,9 +53,8 @@ export default function LandingPage({ onStudent, onAdmin }: { onStudent: () => v
 
           <motion.button
             initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.35 }}
-            whileHover={{ y: -6, transition: { duration: 0.2 } }}
             onClick={onAdmin}
-            className="group relative premium-border-card border-[1.5px] text-left rounded-2xl border border-[#7EEAF8]/24 bg-gradient-to-br from-[#0a2472]/85 via-[#123499]/90 to-[#72caec] hover:opacity-90 shadow-xl shadow-[#123499]/20 transition-all duration-300 p-6 sm:p-9 flex flex-col gap-4 sm:gap-6 cursor-pointer min-h-[200px] sm:min-h-[265px] h-auto overflow-hidden"
+            className="group relative premium-border-card border-[1.5px] text-left rounded-2xl border border-[#7EEAF8]/24 bg-gradient-to-br from-[#0a2472]/85 via-[#123499]/90 to-[#72caec] md:hover:opacity-90 md:hover:-translate-y-1.5 shadow-xl shadow-[#123499]/20 transition-all duration-300 p-6 sm:p-9 flex flex-col gap-4 sm:gap-6 cursor-pointer min-h-[200px] sm:min-h-[265px] h-auto overflow-hidden"
           >
 
             <img src={adminPortalIcon} alt="Admin portal" className="w-24 h-24 object-contain drop-shadow-md" />

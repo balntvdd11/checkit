@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { Search, Filter, AlertCircle, RefreshCw, Trash2 } from "lucide-react";
 import Card from "../../../components/shared/Card";
+import { formatNameLastFirst } from "../../../lib/utils";
 import { useSelectors, useStore } from "../../../state/store";
 import { resetStudentDevice, deleteStudent } from "../../../services/students";
+import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "../../../components/ui/alert-dialog";
+import { toast } from "sonner";
 
 export default function StudentsTab() {
   const [searchStudents, setSearchStudents] = useState("");
@@ -12,32 +15,43 @@ export default function StudentsTab() {
   const { dispatch } = useStore();
   const [resettingId, setResettingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [confirmAction, setConfirmAction] = useState<{ type: 'reset' | 'delete', id: string } | null>(null);
 
-  const handleResetDevice = async (studentId: string) => {
-    if (!window.confirm("Are you sure you want to reset this student's device? They will need to re-verify their account on their next login.")) return;
-    setResettingId(studentId);
-    try {
-      await resetStudentDevice(studentId);
-      alert("Device successfully reset!");
-    } catch (e) {
-      alert("Failed to reset device.");
-    } finally {
-      setResettingId(null);
-    }
+  const confirmResetDevice = (studentId: string) => {
+    setConfirmAction({ type: "reset", id: studentId });
   };
 
-  const handleDeleteAccount = async (id: string | undefined) => {
+  const confirmDeleteAccount = (id: string | undefined) => {
     if (!id) return;
-    if (!window.confirm("Are you sure you want to permanently delete this student account? This will remove them from the database and Clerk completely.")) return;
-    setDeletingId(id);
-    try {
-      await deleteStudent(id);
-      dispatch({ type: "DELETE_STUDENT", payload: { id } });
-      alert("Account successfully deleted!");
-    } catch (e) {
-      alert("Failed to delete account.");
-    } finally {
-      setDeletingId(null);
+    setConfirmAction({ type: "delete", id });
+  };
+
+  const executeConfirmAction = async () => {
+    if (!confirmAction) return;
+    const { type, id } = confirmAction;
+    setConfirmAction(null);
+
+    if (type === "reset") {
+      setResettingId(id);
+      try {
+        await resetStudentDevice(id);
+        toast.success("Device successfully reset!");
+      } catch (e) {
+        toast.error("Failed to reset device.");
+      } finally {
+        setResettingId(null);
+      }
+    } else if (type === "delete") {
+      setDeletingId(id);
+      try {
+        await deleteStudent(id);
+        dispatch({ type: "DELETE_STUDENT", payload: { id } });
+        toast.success("Account successfully deleted!");
+      } catch (e) {
+        toast.error("Failed to delete account.");
+      } finally {
+        setDeletingId(null);
+      }
     }
   };
 
@@ -46,12 +60,12 @@ export default function StudentsTab() {
                         s.studentId.includes(searchStudents);
     const matchSection = sectionFilter === "All Sections" || s.section === sectionFilter;
     return matchSearch && matchSection;
-  });
+  }).sort((a, b) => formatNameLastFirst(a.name).localeCompare(formatNameLastFirst(b.name)));
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
-        <h2 className="text-xl font-bold text-white">Student Directory</h2>
+        <h2 className="text-xl font-bold text-[#123499]">Student Directory</h2>
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <div className="relative flex-1 sm:w-64">
             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -63,18 +77,18 @@ export default function StudentsTab() {
             <Filter size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <select value={sectionFilter} onChange={e => setSectionFilter(e.target.value)}
               className="pl-8 pr-8 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none appearance-none bg-white">
-              <option>All Sections</option>
-              <optgroup label="First Year">
-                <option>BSA 1A</option><option>BSA 1B</option><option>BSA 1C</option><option>BSA 1D</option>
+              <option className="bg-white text-slate-500">All Sections</option>
+              <optgroup label="First Year" className="bg-white text-slate-800 font-semibold">
+                <option className="bg-white text-slate-700 font-normal">BSA 1A</option><option className="bg-white text-slate-700 font-normal">BSA 1B</option><option className="bg-white text-slate-700 font-normal">BSA 1C</option><option className="bg-white text-slate-700 font-normal">BSA 1D</option>
               </optgroup>
-              <optgroup label="Second Year">
-                <option>BSA 2A</option><option>BSA 2B</option><option>BSAIS 2A</option>
+              <optgroup label="Second Year" className="bg-white text-slate-800 font-semibold">
+                <option className="bg-white text-slate-700 font-normal">BSA 2A</option><option className="bg-white text-slate-700 font-normal">BSA 2B</option><option className="bg-white text-slate-700 font-normal">BSAIS 2A</option>
               </optgroup>
-              <optgroup label="Third Year">
-                <option>BSA 3A</option><option>BSAIS 3A</option><option>BSAIS 3B</option>
+              <optgroup label="Third Year" className="bg-white text-slate-800 font-semibold">
+                <option className="bg-white text-slate-700 font-normal">BSA 3A</option><option className="bg-white text-slate-700 font-normal">BSAIS 3A</option><option className="bg-white text-slate-700 font-normal">BSAIS 3B</option>
               </optgroup>
-              <optgroup label="Fourth Year">
-                <option>BSA 4A</option><option>BSAIS 4A</option>
+              <optgroup label="Fourth Year" className="bg-white text-slate-800 font-semibold">
+                <option className="bg-white text-slate-700 font-normal">BSA 4A</option><option className="bg-white text-slate-700 font-normal">BSAIS 4A</option>
               </optgroup>
             </select>
           </div>
@@ -96,7 +110,7 @@ export default function StudentsTab() {
               {filteredStudents.map((student, idx) => (
                 <tr key={idx} className="hover:bg-slate-50/30 transition-colors whitespace-nowrap">
                   <td className="px-5 py-4">
-                    <p className="font-semibold text-slate-700">{student.name}</p>
+                    <p className="font-semibold text-slate-700">{formatNameLastFirst(student.name)}</p>
                     <p className="text-xs text-slate-400 mt-0.5">{student.email}</p>
                   </td>
                   <td className="px-5 py-4 font-mono text-slate-600">
@@ -117,7 +131,7 @@ export default function StudentsTab() {
                   <td className="px-5 py-4 text-right">
                     <div className="flex items-center justify-end gap-2">
                       <button 
-                        onClick={() => handleDeleteAccount(student.id)}
+                        onClick={() => confirmDeleteAccount(student.id)}
                         disabled={deletingId === student.id}
                         className="text-xs font-semibold text-slate-500 hover:text-rose-600 px-3 py-1.5 rounded-md hover:bg-rose-50 transition-colors flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed">
                         <Trash2 size={14} className={deletingId === student.id ? "animate-pulse" : ""} /> 
@@ -125,7 +139,7 @@ export default function StudentsTab() {
                       </button>
                       {student.registered && (
                         <button 
-                          onClick={() => handleResetDevice(student.studentId)}
+                          onClick={() => confirmResetDevice(student.studentId)}
                           disabled={resettingId === student.studentId}
                           className="text-xs font-semibold text-rose-600 hover:text-rose-700 px-3 py-1.5 rounded-md hover:bg-rose-50 transition-colors flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed">
                           <RefreshCw size={12} className={resettingId === student.studentId ? "animate-spin" : ""} /> 
@@ -147,6 +161,27 @@ export default function StudentsTab() {
           </table>
         </div>
       </Card>
+
+      <AlertDialog open={!!confirmAction} onOpenChange={(open) => !open && setConfirmAction(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {confirmAction?.type === "delete" ? "Delete Account" : "Reset Device"}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {confirmAction?.type === "delete" 
+                ? "Are you sure you want to permanently delete this student account? This will remove them from the database and Clerk completely." 
+                : "Are you sure you want to reset this student's device? They will need to re-verify their account on their next login."}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={executeConfirmAction} className={confirmAction?.type === 'delete' ? 'bg-rose-600 hover:bg-rose-700 focus:ring-rose-600' : ''}>
+              {confirmAction?.type === "delete" ? "Delete" : "Reset"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

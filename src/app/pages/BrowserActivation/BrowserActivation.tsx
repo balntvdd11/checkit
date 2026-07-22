@@ -24,12 +24,12 @@ export default function BrowserActivation({
   student,
   onActivate,
   onCancel,
-  hasConflict,
+  onConflict,
 }: {
   student: Student;
   onActivate: () => void;
   onCancel: () => void;
-  hasConflict?: boolean;
+  onConflict?: () => void;
 }) {
   const [phase, setPhase] = useState<Phase>("activating");
   const [error, setError] = useState<string | null>(null);
@@ -42,12 +42,8 @@ export default function BrowserActivation({
     const runActivation = async () => {
       const slowTimeout = setTimeout(() => setIsSlow(true), 4000);
       try {
-        // Step 1: ECC Browser Activation
+        // Step 1 & 2: ECC Browser Activation & Device Fingerprinting
         await activateBrowser(student.email);
-
-        // Step 2: Device Fingerprinting
-        const fingerprint = await generateDeviceFingerprint();
-        await sendFingerprintToBackend(student.email, fingerprint);
 
         if (mounted) {
           clearTimeout(slowTimeout);
@@ -56,6 +52,12 @@ export default function BrowserActivation({
       } catch (err) {
         if (mounted) {
           clearTimeout(slowTimeout);
+          if (err instanceof Error && err.message.includes("Device mismatch")) {
+            if (onConflict) {
+              onConflict();
+              return;
+            }
+          }
           setPhase("error");
           setError(err instanceof Error ? err.message : "Browser activation failed. Please try again.");
         }
@@ -80,37 +82,37 @@ export default function BrowserActivation({
   };
 
   return (
-    <div className="min-h-screen pb-[180px] sm:pb-[220px] landing-page-black flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-[100dvh] pb-[180px] sm:pb-[220px] landing-page-black flex items-center justify-center p-4 relative overflow-hidden">
       <AnimatedBackground />
       <motion.div
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.35 }}
-        className="w-full max-w-md relative z-10"
+        className="w-full max-w-sm relative z-10"
       >
-        <Card className="p-8 bg-gradient-to-br from-[#0a2472]/85 via-[#123499]/90 to-[#72caec] border border-white/10 shadow-[0_32px_80px_rgba(0,0,0,0.35)] relative overflow-hidden group premium-border-card">
+        <Card className="p-6 bg-gradient-to-br from-[#0a2472]/85 via-[#123499]/90 to-[#72caec] border border-white/10 shadow-[0_32px_80px_rgba(0,0,0,0.35)] relative overflow-hidden group premium-border-card">
           {/* Border tracer */}
 
 
           {/* Header */}
-          <div className="relative z-10 flex flex-col items-center text-center mb-8">
+          <div className="relative z-10 flex flex-col items-center text-center mb-6">
             <COAccessLogo size="md" inverted />
-            <div className="mt-7 relative">
-              <div className="w-20 h-20 rounded-2xl bg-[#0B2A4D] flex items-center justify-center shadow-[0_0_15px_rgba(10,42,77,0.35)]">
+            <div className="mt-6 relative">
+              <div className="w-16 h-16 rounded-2xl bg-[#0B2A4D] flex items-center justify-center shadow-[0_0_15px_rgba(10,42,77,0.35)]">
                 <AnimatePresence mode="wait">
                   {phase === "activating" && (
                     <motion.div key="activating" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                      <RefreshCw size={36} className="text-white animate-spin" />
+                      <RefreshCw size={28} className="text-white animate-spin" />
                     </motion.div>
                   )}
                   {phase === "done" && (
                     <motion.div key="done" initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: "spring", stiffness: 260, damping: 20 }}>
-                      <CheckCircle2 size={36} className="text-emerald-400" />
+                      <CheckCircle2 size={28} className="text-emerald-400" />
                     </motion.div>
                   )}
                   {phase === "error" && (
                     <motion.div key="error" initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
-                      <XCircle size={36} className="text-red-400" />
+                      <XCircle size={28} className="text-red-400" />
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -134,15 +136,13 @@ export default function BrowserActivation({
           </div>
 
           {/* Progress steps */}
-          <div className="relative z-10 mb-6 flex flex-col gap-3">
+          <div className="relative z-10 mb-5 flex flex-col gap-2.5">
             {[
-              { label: "Generate ECC key pair", desc: "P-256 via Web Crypto API" },
-              { label: "Store private key", desc: "Secured in this browser only" },
-              { label: "Register public key", desc: "Sent to COAccess backend" },
-              { label: "Bind device fingerprint", desc: "Hardware + Browser tied to account" },
+              { label: "Secure keys generated" },
+              { label: "Device verified" },
             ].map((step, i) => (
               <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-xs font-bold transition-all duration-500 ${
+                <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 transition-all duration-500 ${
                   phase === "activating"
                     ? "bg-white/10 text-white/40"
                     : phase === "done"
@@ -157,10 +157,7 @@ export default function BrowserActivation({
                     <XCircle size={14} />
                   )}
                 </div>
-                <div>
-                  <p className="text-xs font-semibold text-white">{step.label}</p>
-                  <p className="text-xs text-slate-400 mt-0.5">{step.desc}</p>
-                </div>
+                <p className="text-sm font-semibold text-white">{step.label}</p>
               </div>
             ))}
           </div>

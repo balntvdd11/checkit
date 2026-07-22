@@ -120,7 +120,7 @@ export async function sendPublicKeyToBackend(
   const response = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, publicKey: publicKeyPem }),
+    body: JSON.stringify({ email, publicKey: publicKeyPem, platform: 'web' }),
   });
 
   if (!response.ok) {
@@ -129,6 +129,9 @@ export async function sendPublicKeyToBackend(
     throw new Error(message);
   }
 }
+
+import { fetchStudentByEmail } from './studentCheck';
+import { generateDeviceFingerprint, sendFingerprintToBackend } from './fingerprint';
 
 /**
  * Full browser-activation sequence:
@@ -150,9 +153,13 @@ export async function activateBrowser(email: string): Promise<void> {
     storePublicKey(email, keys.publicKeyPem);
   }
 
-  // Sending this browser's public key (and later fingerprint) to the backend
-  // overwrites any other browser's data, effectively deactivating them globally
-  // while keeping them registered locally.
-  await sendPublicKeyToBackend(email, publicKeyPem);
+  const fingerprint = await generateDeviceFingerprint();
+  const record = await fetchStudentByEmail(email);
+
+  let finalPublicKey = publicKeyPem;
+  let finalFingerprint = fingerprint;
+
+  await sendPublicKeyToBackend(email, finalPublicKey);
+  await sendFingerprintToBackend(email, finalFingerprint);
 }
 

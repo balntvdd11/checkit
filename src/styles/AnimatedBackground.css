@@ -124,12 +124,11 @@
 }
 
 @media (max-width: 768px) {
-  .css-blob {
-    animation: none !important;
-  }
-
   .ambient-glow {
-    filter: blur(40px) !important;
+    filter: blur(20px) !important;
+  }
+  .ambient-layer {
+    display: none !important;
   }
 }
 

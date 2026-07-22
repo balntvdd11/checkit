@@ -17,7 +17,7 @@ export default function DashboardTab() {
           </div>
           <div>
             <p className="text-2xl font-bold text-slate-800">{activeEVENTSCount}</p>
-            <p className="text-xs text-slate-500 font-medium">Active EVENTS</p>
+            <p className="text-xs text-slate-500 font-medium">Active Events</p>
           </div>
         </Card>
         <Card className="p-5 border border-slate-100 flex items-center gap-4">
@@ -49,22 +49,20 @@ export default function DashboardTab() {
         </Card>
       </div>
 
-      <h3 className="text-lg font-bold text-white mt-8 mb-4">Today's EVENTS</h3>
+      <h3 className="text-lg font-bold text-[#123499] mt-8 mb-4">Today's Events</h3>
       <Card className="border border-slate-100 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead className="bg-slate-50/50 text-slate-500 font-semibold border-b border-slate-100">
               <tr>
-                <th className="px-5 py-4 whitespace-nowrap">Event Code</th>
                 <th className="px-5 py-4">Event Name</th>
                 <th className="px-5 py-4">Schedule</th>
                 <th className="px-5 py-4">Status</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
-              {events.map((evt, idx) => (
+              {events.filter(evt => evt.status === 'active').map((evt, idx) => (
                 <tr key={evt.id} className="hover:bg-slate-50/30 transition-colors">
-                  <td className="px-5 py-4 font-mono text-slate-600">{evt.checkItCode}</td>
                   <td className="px-5 py-4">
                     <p className="font-semibold text-slate-700">{evt.name}</p>
                     <p className="text-xs text-slate-400 font-mono mt-0.5">&nbsp;</p>

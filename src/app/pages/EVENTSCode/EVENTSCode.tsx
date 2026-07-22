@@ -41,7 +41,7 @@ export default function EVENTSCodeEntry({ student, events, onSubmit, onViewHisto
   };
 
   return (
-    <div className="min-h-screen pb-[180px] sm:pb-[220px] landing-page-black relative overflow-hidden">
+    <div className="min-h-[100dvh] pb-[180px] sm:pb-[220px] landing-page-black relative overflow-hidden">
       <AnimatedBackground />
       <div className="absolute inset-0 opacity-0 pointer-events-none" />
       <header className="relative z-10 bg-[var(--secondary)] px-5 py-3.5 flex items-center justify-between shrink-0">
@@ -61,7 +61,7 @@ export default function EVENTSCodeEntry({ student, events, onSubmit, onViewHisto
         </div>
       </header>
 
-      <div className="relative z-10 flex items-center justify-center min-h-[calc(100vh-57px)] p-4">
+      <div className="relative z-10 flex items-center justify-center min-h-[calc(100dvh-57px)] p-4">
         <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="w-full max-w-md">
           <button onClick={onViewHistory} className="flex items-center gap-1.5 text-sm text-[#0a2472]/70 hover:text-[#0a2472] mb-6 transition-colors font-medium">
             <ChevronRight size={15} className="rotate-180" /> Back to dashboard
@@ -97,7 +97,7 @@ export default function EVENTSCodeEntry({ student, events, onSubmit, onViewHisto
                     <option value="" className="text-black">Select an event...</option>
                     {activeEvents.map(event => (
                       <option key={event.id} value={event.id} className="text-black">
-                        {event.name} · {event.checkItCode}
+                        {event.name}
                       </option>
                     ))}
                   </select>
@@ -107,9 +107,6 @@ export default function EVENTSCodeEntry({ student, events, onSubmit, onViewHisto
                           <p className="text-xs uppercase tracking-wide text-white/70 font-semibold">Event</p>
                       <p className="text-sm font-semibold text-white mt-1">{selectedEvent.name}</p>
                       <div className="flex items-center gap-2 mt-2 pt-2 border-t border-white/10">
-                        <Hash size={13} className="text-white/70" />
-                        <span className="text-xs font-mono font-bold text-white">{selectedEvent.checkItCode}</span>
-                        <span className="text-xs text-slate-300">·</span>
                         <span className="text-xs text-slate-300">{formatTime12Hour(selectedEvent.timeIn)} – {formatTime12Hour(selectedEvent.timeOut)}</span>
                       </div>
                     </div>

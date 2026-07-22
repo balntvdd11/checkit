@@ -79,7 +79,7 @@ export default function StudentAuthGate({
   // we must render the UI so the user can see the error message.
   if (!userLoaded || (isSignedIn && checkingBackend) || (isSignedIn && user && !error)) {
     return (
-      <div className="min-h-screen pb-[180px] sm:pb-[220px] landing-page-black flex items-center justify-center" aria-label="Loading…">
+      <div className="min-h-[100dvh] pb-[180px] sm:pb-[220px] landing-page-black flex items-center justify-center" aria-label="Loading…">
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
           <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ animation: "spin 0.9s linear infinite" }}>
             <circle cx="18" cy="18" r="15" stroke="rgba(255,255,255,0.12)" strokeWidth="3" />
@@ -92,7 +92,7 @@ export default function StudentAuthGate({
   }
 
   return (
-    <div className="min-h-screen pb-[180px] sm:pb-[220px] landing-page-black flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-[100dvh] pb-[180px] sm:pb-[220px] landing-page-black flex items-center justify-center p-4 relative overflow-hidden">
       <AnimatedBackground />
       <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.35 }} className="w-full relative z-10 flex flex-col items-center justify-center min-h-[500px]">
         <div className="w-full max-w-[400px] mb-6">
@@ -107,24 +107,17 @@ export default function StudentAuthGate({
           appearance={{
             elements: {
               rootBox: "mx-auto",
-              cardBox: "shadow-[0_32px_80px_rgba(0,0,0,0.35)] rounded-2xl border border-white/10",
-              card: "bg-black",
-              headerTitle: "text-white",
-              headerSubtitle: "text-slate-300",
-              socialButtonsBlockButton: "border border-white/10 text-white hover:bg-white/5",
-              socialButtonsBlockButtonText: "text-white font-semibold",
-              dividerLine: "bg-white/10",
-              dividerText: "text-slate-400",
-              formFieldLabel: "text-slate-300",
-              formFieldInput: "bg-white/5 border border-white/10 text-white",
-              footerActionText: "text-slate-400",
-              footerActionLink: "text-blue-400 hover:text-blue-300",
-              identityPreviewText: "text-white",
-              identityPreviewEditButtonIcon: "text-slate-400 hover:text-white",
-              formButtonPrimary: "bg-[#0B2A4D] hover:bg-[#0E3A65] text-white border border-white/10",
+              // Temporarily kept the dark theme overrides if they exist, but the disclaimer is made light
             }
           }}
         />
+
+        <div className="mt-4 max-w-[400px] w-full text-center p-3.5 bg-white/90 border border-slate-200 shadow-sm rounded-xl flex items-start gap-3 mx-auto z-10 relative">
+          <Info size={18} className="text-[#123499] mt-0.5 shrink-0" />
+          <p className="text-sm text-slate-700 text-left leading-snug font-medium">
+            COAccess is restricted to users with a valid UA Google Workspace account.
+          </p>
+        </div>
 
         <AnimatePresence>
           {error && (
@@ -133,10 +126,10 @@ export default function StudentAuthGate({
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="mt-6 p-3 bg-red-500/10 border border-red-500/20 rounded-xl flex items-start gap-2.5 overflow-hidden w-full max-w-[400px]"
+              className="mt-4 p-3 bg-red-50 border border-red-200 shadow-sm rounded-xl flex items-start gap-2.5 overflow-hidden w-full max-w-[400px] mx-auto z-10 relative"
             >
-              <XCircle size={15} className="text-red-400 mt-0.5 shrink-0" />
-              <p className="text-sm text-red-200">{error}</p>
+              <XCircle size={15} className="text-red-500 mt-0.5 shrink-0" />
+              <p className="text-sm text-red-700">{error}</p>
             </motion.div>
           )}
         </AnimatePresence>
