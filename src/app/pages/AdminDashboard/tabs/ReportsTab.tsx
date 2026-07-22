@@ -137,27 +137,36 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
     return "—";
   };
 
+  // ── CSV Export ──────────────────────────────────────────────────────────────
+  const escapeCSV = (val: any): string => {
+    const str = String(val ?? "").trim();
+    if (str.includes(",") || str.includes('"') || str.includes("\n")) {
+      return `"${str.replace(/"/g, '""')}"`;
+    }
+    return str;
+  };
+
   const handleExportCSV = () => {
     if (sortedAttended.length === 0 && absentStudents.length === 0) { toast.error("No data to export."); return; }
     const headers = ["Student Name", "ID", "Email", "Section", "Date", "Time In", "Time Out", "Status"];
 
     let csvContent = "";
     if (selectedEvent) {
-      csvContent += `Event:,${selectedEvent.name}\n\n`;
+      csvContent += `Event:,${escapeCSV(selectedEvent.name)}\n\n`;
     }
-    csvContent += headers.join(",") + "\n";
+    csvContent += headers.map(escapeCSV).join(",") + "\n";
 
     // Present / Late rows first
     for (const r of sortedAttended) {
       csvContent += [
-        formatNameLastFirst(r.name),
-        r.studentId,
-        resolveStudentEmail(r.studentId, r.email, r.name),
-        r.section,
-        r.date,
-        formatTime12Hour(r.timeIn),
-        r.timeOut ? formatTime12Hour(r.timeOut) : "Did Not Time-out",
-        r.status,
+        escapeCSV(formatNameLastFirst(r.name)),
+        escapeCSV(r.studentId),
+        escapeCSV(resolveStudentEmail(r.studentId, r.email, r.name)),
+        escapeCSV(r.section),
+        escapeCSV(r.date),
+        escapeCSV(formatTime12Hour(r.timeIn)),
+        escapeCSV(r.timeOut ? formatTime12Hour(r.timeOut) : "Did Not Time-out"),
+        escapeCSV(r.status),
       ].join(",") + "\n";
     }
 
@@ -167,11 +176,11 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
       csvContent += "--- ABSENT STUDENTS ---\n";
       for (const s of absentStudents) {
         csvContent += [
-          formatNameLastFirst(s.name),
-          s.studentId,
-          resolveStudentEmail(s.studentId, s.email, s.name),
-          s.section,
-          reportDateFilter || new Date().toISOString().split("T")[0],
+          escapeCSV(formatNameLastFirst(s.name)),
+          escapeCSV(s.studentId),
+          escapeCSV(resolveStudentEmail(s.studentId, s.email, s.name)),
+          escapeCSV(s.section),
+          escapeCSV(reportDateFilter || new Date().toISOString().split("T")[0]),
           "",
           "",
           "Absent",
