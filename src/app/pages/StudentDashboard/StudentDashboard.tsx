@@ -128,8 +128,8 @@ export default function StudentDashboard({ student, onLogout, onGeneratePass }: 
               {studentAttendance.map((rec) => (
                 <div key={rec.id} className="flex items-center justify-between p-4 bg-slate-50 border border-slate-200/70 rounded-xl">
                   <div>
-                    <p className="text-sm font-bold text-slate-900">{rec.eventName}</p>
-                    <p className="text-xs text-slate-500 mt-0.5">{rec.date} · {formatTime12Hour(rec.timestamp)}</p>
+                    <p className="text-sm font-bold text-slate-900">{rec.subject}</p>
+                    <p className="text-xs text-slate-500 mt-0.5">{rec.date} · {formatTime12Hour(rec.timeIn)}</p>
                   </div>
                   <StatusBadge status={rec.status} />
                 </div>
