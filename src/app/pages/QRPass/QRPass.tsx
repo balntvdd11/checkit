@@ -226,9 +226,6 @@ export default function QRPassGenerator({ student, EVENTSCode, events, onBack, o
           <span className="text-white/50 text-sm">Student Portal</span>
         </div>
         <div className="flex items-center gap-3">
-          <button onClick={onBack} className="text-sm text-white/55 hover:text-white transition-colors flex items-center gap-1.5">
-            <ChevronRight size={14} className="rotate-180" /> Change Events
-          </button>
           <button onClick={handleManualRefresh} disabled={isRefreshing} className="flex items-center gap-1.5 text-white/55 hover:text-white text-sm transition-colors">
             <RefreshCw size={14} className={cn(isRefreshing && "animate-spin")} /> {isRefreshing ? "Refreshing..." : "Refresh"}
           </button>
