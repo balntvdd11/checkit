@@ -11,6 +11,7 @@ import { fetchAttendance } from "../../services/attendance";
 import { generateDeviceFingerprint } from "../../services/fingerprint";
 import { hasStoredPrivateKey } from "../../services/browserActivation";
 import DeveloperFooter from "../../components/shared/DeveloperFooter";
+import { useStore } from "../../state/store";
 
 // ─── QR Pass Generator ────────────────────────────────────────────────────────
 
