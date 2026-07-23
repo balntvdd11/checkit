@@ -92,9 +92,39 @@ export default function QRPassGenerator({ student, EVENTSCode, events, onBack, o
   // (Plus a fallback HTTP poll just in case the carrier/network blocks WebSockets)
   const { state } = useStore();
   const { attendance } = state;
+  const [readyToListen, setReadyToListen] = useState(false);
 
+  // 1. Initial lock-in: Fetch the exact current state before we start listening for changes.
+  // This prevents the animation from firing just because the global state finished loading.
   useEffect(() => {
     if (isActive !== true) return;
+    const today = new Date().toISOString().split("T")[0];
+
+    const init = async () => {
+      try {
+        const records = await fetchAttendance();
+        const currentRecord = records.find(
+          (r: any) => r.studentId === student.studentId && r.EVENTSCode === EVENTSCode && r.date === today
+        );
+        prevTimeInRef.current = currentRecord?.timeIn ?? null;
+        prevTimeOutRef.current = currentRecord?.timeOut ?? null;
+      } catch {
+        // Fallback to store if fetch fails
+        const wsRecord = attendance.find(
+          (r: any) => r.studentId === student.studentId && r.EVENTSCode === EVENTSCode && r.date === today
+        );
+        prevTimeInRef.current = wsRecord?.timeIn ?? null;
+        prevTimeOutRef.current = wsRecord?.timeOut ?? null;
+      } finally {
+        setReadyToListen(true);
+      }
+    };
+    init();
+  }, [isActive, student.studentId, EVENTSCode]); // Only run once on mount per event
+
+  // 2. Listen for changes and trigger animation ONLY on real diffs
+  useEffect(() => {
+    if (isActive !== true || !readyToListen) return;
     const today = new Date().toISOString().split("T")[0];
 
     const evaluateRecord = (myRecord: any) => {

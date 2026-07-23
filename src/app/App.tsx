@@ -83,8 +83,9 @@ function AppInner() {
     if (currentState?.view !== currentView) {
       const transientStates = ["student-resolving", "in-app-browser-warning"];
       
-      // If moving TO or FROM a transient state, or initial load, use replaceState
-      if (transientStates.includes(currentView) || transientStates.includes(prevView) || !currentState?.view) {
+      // If moving FROM a transient state, or initial load, use replaceState
+      // This preserves the non-transient origin (like landing) in the history stack.
+      if (transientStates.includes(prevView) || !currentState?.view) {
         window.history.replaceState({ view: currentView }, "", window.location.pathname);
       } else {
         // Normal navigation uses pushState
