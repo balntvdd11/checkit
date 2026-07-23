@@ -63,17 +63,7 @@ export default function EVENTSCodeEntry({ student, events, onSubmit, onViewHisto
       return false;
     }
 
-    // 2. Time check: current time must be >= timeIn (and <= timeOut)
-    if (e.timeIn) {
-      const currentMinutes = now.getHours() * 60 + now.getMinutes();
-      const timeInMins = parseTimeToMinutes(e.timeIn);
-      const timeOutMins = e.timeOut ? parseTimeToMinutes(e.timeOut) : 24 * 60;
-
-      if (currentMinutes < timeInMins || currentMinutes > timeOutMins) {
-        return false;
-      }
-    }
-
+    // 2. Time check removed per user request: events remain visible until deactivated by Admin
     return true;
   });
 
