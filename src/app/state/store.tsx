@@ -108,7 +108,8 @@ export function useSelectors() {
   const { state } = useStore();
   const activeEvents = state.events.filter(e => e.status === "active");
   const totalStudents = state.students.length;
-  const totalPresent = state.attendance.filter(a => a.status === "present").length;
-  const totalAbsent = state.attendance.filter(a => a.status === "absent").length;
-  return { ...state, activeEvents, totalStudents, totalPresent, totalAbsent };
+  const totalRecords = activeEvents.length > 0 
+    ? state.attendance.filter(a => activeEvents.some(e => e.checkItCode === a.EVENTSCode)).length
+    : state.attendance.length;
+  return { ...state, activeEvents, totalStudents, totalRecords };
 }
