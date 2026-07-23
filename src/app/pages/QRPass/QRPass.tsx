@@ -87,67 +87,59 @@ export default function QRPassGenerator({ student, EVENTSCode, events, onBack, o
     return () => clearInterval(interval);
   }, [isActive]);
 
-  // ── Poll attendance to detect when admin scans this student's QR ──────────
-  // This is purely additive: it only reads from the backend and shows a modal.
-  // It does NOT touch the QR seed, timer, navigation, or any other state.
+  // ── React instantly to WebSocket updates from the global store ──────────
+  // This is purely additive: it only reads from the backend state and shows a modal.
+  const { state } = useStore();
+  const { attendance } = state;
+
   useEffect(() => {
     if (isActive !== true) return;
     const today = new Date().toISOString().split("T")[0];
 
-    const poll = async () => {
-      try {
-        const records = await fetchAttendance();
-        const myRecord = records.find(
-          (r: any) =>
-            r.studentId === student.studentId &&
-            r.EVENTSCode === EVENTSCode &&
-            r.date === today
-        );
+    const myRecord = attendance.find(
+      (r: any) =>
+        r.studentId === student.studentId &&
+        r.EVENTSCode === EVENTSCode &&
+        r.date === today
+    );
 
-        const currentTimeIn = myRecord?.timeIn ?? null;
-        const currentTimeOut = (myRecord as any)?.timeOut ?? null;
+    const currentTimeIn = myRecord?.timeIn ?? null;
+    const currentTimeOut = (myRecord as any)?.timeOut ?? null;
 
-        // First run: just save current state, don't fire modal
-        if (prevTimeInRef.current === undefined) {
-          prevTimeInRef.current = currentTimeIn;
-          prevTimeOutRef.current = currentTimeOut;
-          return;
-        }
+    // First run: just save current state, don't fire modal
+    if (prevTimeInRef.current === undefined) {
+      prevTimeInRef.current = currentTimeIn;
+      prevTimeOutRef.current = currentTimeOut;
+      return;
+    }
 
-        // Detect new Time Out (must check before Time In so it takes priority)
-        if (
-          currentTimeOut &&
-          currentTimeOut.trim() !== "" &&
-          currentTimeOut !== prevTimeOutRef.current
-        ) {
-          prevTimeOutRef.current = currentTimeOut;
-          // Show Time Out modal
-          if (scanModalTimerRef.current) clearTimeout(scanModalTimerRef.current);
-          setScanModal("time-out");
-          scanModalTimerRef.current = setTimeout(() => setScanModal(null), 2800);
-          return;
-        }
+    // Detect new Time Out (must check before Time In so it takes priority)
+    if (
+      currentTimeOut &&
+      currentTimeOut.trim() !== "" &&
+      currentTimeOut !== prevTimeOutRef.current
+    ) {
+      prevTimeOutRef.current = currentTimeOut;
+      // Show Time Out modal
+      if (scanModalTimerRef.current) clearTimeout(scanModalTimerRef.current);
+      setScanModal("time-out");
+      scanModalTimerRef.current = setTimeout(() => setScanModal(null), 2800);
+      return;
+    }
 
-        // Detect new Time In
-        if (currentTimeIn && currentTimeIn !== prevTimeInRef.current) {
-          prevTimeInRef.current = currentTimeIn;
-          // Show Time In modal
-          if (scanModalTimerRef.current) clearTimeout(scanModalTimerRef.current);
-          setScanModal("time-in");
-          scanModalTimerRef.current = setTimeout(() => setScanModal(null), 3600);
-        }
-      } catch {
-        // Silent fail — never disrupt the QR
-      }
-    };
-
-    poll();
-    const pollInterval = setInterval(poll, 4000);
+    // Detect new Time In
+    if (currentTimeIn && currentTimeIn !== prevTimeInRef.current) {
+      prevTimeInRef.current = currentTimeIn;
+      // Show Time In modal
+      if (scanModalTimerRef.current) clearTimeout(scanModalTimerRef.current);
+      setScanModal("time-in");
+      scanModalTimerRef.current = setTimeout(() => setScanModal(null), 3600);
+    }
+    
     return () => {
-      clearInterval(pollInterval);
       if (scanModalTimerRef.current) clearTimeout(scanModalTimerRef.current);
     };
-  }, [isActive, student.studentId, EVENTSCode]);
+  }, [isActive, attendance, student.studentId, EVENTSCode]);
 
   const qrValue = `${student.studentId}:${EVENTSCode}:${qrSeed}`;
 
@@ -296,49 +288,73 @@ export default function QRPassGenerator({ student, EVENTSCode, events, onBack, o
       </div>
       <DeveloperFooter />
 
-      {/* ── Scan Success Modal (purely additive — does not affect QR/timer) ── */}
+      {/* ── Scan Success Modal (Fullscreen & Instant) ── */}
       <AnimatePresence>
         {scanModal && (
           <motion.div
-            key="scan-modal-backdrop"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
-            className="fixed inset-0 z-[9999] flex items-center justify-center"
-            style={{ backgroundColor: "rgba(0,0,0,0.25)" }}
+            key="scan-modal-fullscreen"
+            initial={{ opacity: 0, scale: 1.05 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+            className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-gradient-to-br from-emerald-500 to-emerald-700 px-6"
           >
             <motion.div
-              key="scan-modal-card"
-              initial={{ opacity: 0, scale: 0.92 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.92 }}
-              transition={{ type: "spring", stiffness: 340, damping: 28 }}
-              className="bg-white rounded-2xl shadow-2xl px-8 py-7 flex flex-col items-center text-center max-w-[280px] w-full mx-4"
+              initial={{ scale: 0, rotate: -180 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ type: "spring", stiffness: 400, damping: 20, delay: 0.1 }}
+              className="w-32 h-32 rounded-full bg-white/20 flex items-center justify-center mb-8 backdrop-blur-sm border border-white/30"
             >
-              {/* Animated check icon */}
-              <motion.div
-                initial={{ scale: 0.4, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ type: "spring", stiffness: 420, damping: 22, delay: 0.08 }}
-                className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center mb-4"
-              >
-                <CheckCircle2 size={34} className="text-emerald-500" strokeWidth={2.2} />
-              </motion.div>
-
-              {scanModal === "time-in" ? (
-                <>
-                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1">Welcome to</p>
-                  <p className="text-base font-bold text-slate-800 leading-snug mb-2">{eventName}</p>
-                  <p className="text-sm font-semibold text-emerald-600">Time In Recorded ✓</p>
-                </>
-              ) : (
-                <>
-                  <p className="text-base font-bold text-slate-800 leading-snug mb-2">Time Out Recorded ✓</p>
-                  <p className="text-sm text-slate-500">Thank you for attending!</p>
-                </>
-              )}
+              <CheckCircle2 size={72} className="text-white" strokeWidth={2.5} />
             </motion.div>
+
+            {scanModal === "time-in" ? (
+              <>
+                <motion.p 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="text-white/80 font-semibold uppercase tracking-[0.2em] mb-3 text-sm"
+                >
+                  Welcome to
+                </motion.p>
+                <motion.h2 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="text-3xl sm:text-4xl font-black text-white text-center leading-tight mb-4"
+                >
+                  {eventName}
+                </motion.h2>
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                  className="px-6 py-2 bg-white/20 backdrop-blur-md rounded-full border border-white/30"
+                >
+                  <p className="text-lg font-bold text-white">Time In Recorded ✓</p>
+                </motion.div>
+              </>
+            ) : (
+              <>
+                <motion.h2 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="text-3xl sm:text-4xl font-black text-white text-center leading-tight mb-4"
+                >
+                  Time Out Recorded ✓
+                </motion.h2>
+                <motion.p 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="text-xl text-white/90 font-medium"
+                >
+                  Thank you for attending!
+                </motion.p>
+              </>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
