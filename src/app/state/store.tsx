@@ -108,8 +108,11 @@ export function useSelectors() {
   const { state } = useStore();
   const activeEvents = state.events.filter(e => e.status === "active");
   const totalStudents = state.students.length;
-  const totalRecords = activeEvents.length > 0 
-    ? state.attendance.filter(a => activeEvents.some(e => e.checkItCode === a.EVENTSCode)).length
-    : state.attendance.length;
-  return { ...state, activeEvents, totalStudents, totalRecords };
+  const totalPresent = activeEvents.length > 0
+    ? state.attendance.filter(a => a.status === "present" && activeEvents.some(e => e.checkItCode === a.EVENTSCode)).length
+    : 0;
+  const totalAbsent = activeEvents.length > 0
+    ? state.attendance.filter(a => a.status === "absent" && activeEvents.some(e => e.checkItCode === a.EVENTSCode)).length
+    : 0;
+  return { ...state, activeEvents, totalStudents, totalPresent, totalAbsent };
 }

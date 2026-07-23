@@ -5,12 +5,12 @@ import { useSelectors } from "../../../state/store";
 import { formatTime12Hour } from "../../../lib/utils";
 
 export default function DashboardTab() {
-  const { activeEvents, totalStudents, totalRecords, events } = useSelectors();
+  const { activeEvents, totalStudents, totalPresent, totalAbsent, events } = useSelectors();
   const activeEVENTSCount = activeEvents.length;
   
   return (
     <div className="max-w-6xl mx-auto space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card className="p-5 border border-slate-100 flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center shrink-0">
             <LayoutDashboard size={24} className="text-indigo-600" />
@@ -34,8 +34,17 @@ export default function DashboardTab() {
             <Hash size={24} className="text-emerald-600" />
           </div>
           <div>
-            <p className="text-2xl font-bold text-slate-800">{totalRecords}</p>
-            <p className="text-xs text-slate-500 font-medium">Total Records</p>
+            <p className="text-2xl font-bold text-slate-800">{totalPresent}</p>
+            <p className="text-xs text-slate-500 font-medium">Total Present</p>
+          </div>
+        </Card>
+        <Card className="p-5 border border-slate-100 flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-rose-50 flex items-center justify-center shrink-0">
+            <BookOpen size={24} className="text-rose-600" />
+          </div>
+          <div>
+            <p className="text-2xl font-bold text-slate-800">{totalAbsent}</p>
+            <p className="text-xs text-slate-500 font-medium">Total Absent</p>
           </div>
         </Card>
       </div>
