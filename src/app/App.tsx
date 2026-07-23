@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useClerk, useUser } from "@clerk/clerk-react";
 import LandingPage from "./pages/Landing/Landing";
 import StudentAuthGate from "./pages/StudentAuth/StudentAuth";
@@ -61,6 +61,37 @@ function AppInner() {
   const [lockedOS, setLockedOS] = useState<string | undefined>(undefined);
   const clerk = useClerk();
   const { isLoaded, user } = useUser();
+
+  // ── Hardware Back Button Integration ─────────────────────────────────────
+  const prevViewRef = useRef<View>(currentView);
+  
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      if (event.state && event.state.view) {
+        setCurrentView(event.state.view);
+      }
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
+  useEffect(() => {
+    const prevView = prevViewRef.current;
+    prevViewRef.current = currentView;
+    
+    const currentState = window.history.state;
+    if (currentState?.view !== currentView) {
+      const transientStates = ["student-resolving", "in-app-browser-warning"];
+      
+      // If moving TO or FROM a transient state, or initial load, use replaceState
+      if (transientStates.includes(currentView) || transientStates.includes(prevView) || !currentState?.view) {
+        window.history.replaceState({ view: currentView }, "", window.location.pathname);
+      } else {
+        // Normal navigation uses pushState
+        window.history.pushState({ view: currentView }, "", window.location.pathname);
+      }
+    }
+  }, [currentView]);
 
   const handleStudentLogout = () => {
     // "Sign Out" in COAccess only clears application state and returns to the
