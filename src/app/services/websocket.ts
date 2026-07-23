@@ -7,11 +7,11 @@
 
 type MessageHandler = (payload: any) => void;
 
+const API_BASE = import.meta.env.VITE_API_BASE || "http://127.0.0.1:8000";
+
 const WS_BASE = import.meta.env.VITE_WS_BASE
   || (window.location.protocol === 'https:' ? 'wss://' : 'ws://')
-    + (import.meta.env.VITE_API_BASE
-      ? new URL(import.meta.env.VITE_API_BASE).host
-      : window.location.host);
+    + new URL(API_BASE).host;
 
 const WS_URL = `${WS_BASE}/ws/attendance/`;
 
