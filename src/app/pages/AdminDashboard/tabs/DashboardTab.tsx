@@ -1,4 +1,4 @@
-import { LayoutDashboard, Users, Hash, UsersRound, BookOpen } from "lucide-react";
+import { CalendarDays, UsersRound, CheckCircle2, XCircle } from "lucide-react";
 import Card from "../../../components/shared/Card";
 import StatusBadge from "../../../components/shared/StatusBadge";
 import { useSelectors } from "../../../state/store";
@@ -13,7 +13,7 @@ export default function DashboardTab() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card className="p-5 border border-slate-100 flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center shrink-0">
-            <LayoutDashboard size={24} className="text-indigo-600" />
+            <CalendarDays size={24} className="text-indigo-600" />
           </div>
           <div>
             <p className="text-2xl font-bold text-slate-800">{activeEVENTSCount}</p>
@@ -22,7 +22,7 @@ export default function DashboardTab() {
         </Card>
         <Card className="p-5 border border-slate-100 flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-sky-50 flex items-center justify-center shrink-0">
-            <Users size={24} className="text-sky-600" />
+            <UsersRound size={24} className="text-sky-600" />
           </div>
           <div>
             <p className="text-2xl font-bold text-slate-800">{totalStudents}</p>
@@ -31,7 +31,7 @@ export default function DashboardTab() {
         </Card>
         <Card className="p-5 border border-slate-100 flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0">
-            <Hash size={24} className="text-emerald-600" />
+            <CheckCircle2 size={24} className="text-emerald-600" />
           </div>
           <div>
             <p className="text-2xl font-bold text-slate-800">{totalPresent}</p>
@@ -40,7 +40,7 @@ export default function DashboardTab() {
         </Card>
         <Card className="p-5 border border-slate-100 flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-rose-50 flex items-center justify-center shrink-0">
-            <BookOpen size={24} className="text-rose-600" />
+            <XCircle size={24} className="text-rose-600" />
           </div>
           <div>
             <p className="text-2xl font-bold text-slate-800">{totalAbsent}</p>
