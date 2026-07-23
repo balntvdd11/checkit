@@ -111,7 +111,7 @@ export default function QRPassGenerator({ student, EVENTSCode, events, onBack, o
         prevTimeOutRef.current = currentTimeOut;
         if (scanModalTimerRef.current) clearTimeout(scanModalTimerRef.current);
         setScanModal("time-out");
-        scanModalTimerRef.current = setTimeout(() => setScanModal(null), 2800);
+        scanModalTimerRef.current = setTimeout(() => setScanModal(null), 4500);
         return;
       }
 
@@ -119,7 +119,7 @@ export default function QRPassGenerator({ student, EVENTSCode, events, onBack, o
         prevTimeInRef.current = currentTimeIn;
         if (scanModalTimerRef.current) clearTimeout(scanModalTimerRef.current);
         setScanModal("time-in");
-        scanModalTimerRef.current = setTimeout(() => setScanModal(null), 3600);
+        scanModalTimerRef.current = setTimeout(() => setScanModal(null), 4500);
       }
     };
 
@@ -305,13 +305,13 @@ export default function QRPassGenerator({ student, EVENTSCode, events, onBack, o
             initial={{ opacity: 0, scale: 1.05 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+            transition={{ type: "spring", stiffness: 280, damping: 30 }}
             className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-gradient-to-br from-emerald-500 to-emerald-700 px-6"
           >
             <motion.div
-              initial={{ scale: 0, rotate: -180 }}
+              initial={{ scale: 0, rotate: -90 }}
               animate={{ scale: 1, rotate: 0 }}
-              transition={{ type: "spring", stiffness: 400, damping: 20, delay: 0.1 }}
+              transition={{ type: "spring", stiffness: 350, damping: 24, delay: 0.1 }}
               className="w-32 h-32 rounded-full bg-white/20 flex items-center justify-center mb-8 backdrop-blur-sm border border-white/30"
             >
               <CheckCircle2 size={72} className="text-white" strokeWidth={2.5} />
