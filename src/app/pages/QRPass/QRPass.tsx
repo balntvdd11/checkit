@@ -89,7 +89,7 @@ export default function QRPassGenerator({ student, EVENTSCode, events, onBack, o
   }, [isActive]);
 
   // ── React instantly to WebSocket updates from the global store ──────────
-  // This is purely additive: it only reads from the backend state and shows a modal.
+  // (Plus a fallback HTTP poll just in case the carrier/network blocks WebSockets)
   const { state } = useStore();
   const { attendance } = state;
 
@@ -97,47 +97,55 @@ export default function QRPassGenerator({ student, EVENTSCode, events, onBack, o
     if (isActive !== true) return;
     const today = new Date().toISOString().split("T")[0];
 
-    const myRecord = attendance.find(
-      (r: any) =>
-        r.studentId === student.studentId &&
-        r.EVENTSCode === EVENTSCode &&
-        r.date === today
+    const evaluateRecord = (myRecord: any) => {
+      const currentTimeIn = myRecord?.timeIn ?? null;
+      const currentTimeOut = (myRecord as any)?.timeOut ?? null;
+
+      if (prevTimeInRef.current === undefined) {
+        prevTimeInRef.current = currentTimeIn;
+        prevTimeOutRef.current = currentTimeOut;
+        return;
+      }
+
+      if (currentTimeOut && currentTimeOut.trim() !== "" && currentTimeOut !== prevTimeOutRef.current) {
+        prevTimeOutRef.current = currentTimeOut;
+        if (scanModalTimerRef.current) clearTimeout(scanModalTimerRef.current);
+        setScanModal("time-out");
+        scanModalTimerRef.current = setTimeout(() => setScanModal(null), 2800);
+        return;
+      }
+
+      if (currentTimeIn && currentTimeIn !== prevTimeInRef.current) {
+        prevTimeInRef.current = currentTimeIn;
+        if (scanModalTimerRef.current) clearTimeout(scanModalTimerRef.current);
+        setScanModal("time-in");
+        scanModalTimerRef.current = setTimeout(() => setScanModal(null), 3600);
+      }
+    };
+
+    // Evaluate based on WebSocket state
+    const wsRecord = attendance.find(
+      (r: any) => r.studentId === student.studentId && r.EVENTSCode === EVENTSCode && r.date === today
     );
+    evaluateRecord(wsRecord);
 
-    const currentTimeIn = myRecord?.timeIn ?? null;
-    const currentTimeOut = (myRecord as any)?.timeOut ?? null;
+    // Fallback polling (HTTP)
+    const poll = async () => {
+      try {
+        const records = await fetchAttendance();
+        const httpRecord = records.find(
+          (r: any) => r.studentId === student.studentId && r.EVENTSCode === EVENTSCode && r.date === today
+        );
+        evaluateRecord(httpRecord);
+      } catch {
+        // silent fail
+      }
+    };
 
-    // First run: just save current state, don't fire modal
-    if (prevTimeInRef.current === undefined) {
-      prevTimeInRef.current = currentTimeIn;
-      prevTimeOutRef.current = currentTimeOut;
-      return;
-    }
+    const pollInterval = setInterval(poll, 3000);
 
-    // Detect new Time Out (must check before Time In so it takes priority)
-    if (
-      currentTimeOut &&
-      currentTimeOut.trim() !== "" &&
-      currentTimeOut !== prevTimeOutRef.current
-    ) {
-      prevTimeOutRef.current = currentTimeOut;
-      // Show Time Out modal
-      if (scanModalTimerRef.current) clearTimeout(scanModalTimerRef.current);
-      setScanModal("time-out");
-      scanModalTimerRef.current = setTimeout(() => setScanModal(null), 2800);
-      return;
-    }
-
-    // Detect new Time In
-    if (currentTimeIn && currentTimeIn !== prevTimeInRef.current) {
-      prevTimeInRef.current = currentTimeIn;
-      // Show Time In modal
-      if (scanModalTimerRef.current) clearTimeout(scanModalTimerRef.current);
-      setScanModal("time-in");
-      scanModalTimerRef.current = setTimeout(() => setScanModal(null), 3600);
-    }
-    
     return () => {
+      clearInterval(pollInterval);
       if (scanModalTimerRef.current) clearTimeout(scanModalTimerRef.current);
     };
   }, [isActive, attendance, student.studentId, EVENTSCode]);
