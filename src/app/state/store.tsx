@@ -109,7 +109,7 @@ export function useSelectors() {
   const activeEvents = state.events.filter(e => e.status === "active");
   const totalStudents = state.students.length;
   const totalPresent = activeEvents.length > 0
-    ? state.attendance.filter(a => a.status === "present" && activeEvents.some(e => e.checkItCode === a.EVENTSCode)).length
+    ? state.attendance.filter(a => (a.status === "present" || a.status === "late") && activeEvents.some(e => e.checkItCode === a.EVENTSCode)).length
     : 0;
   const totalAbsent = activeEvents.length > 0
     ? state.attendance.filter(a => a.status === "absent" && activeEvents.some(e => e.checkItCode === a.EVENTSCode)).length
