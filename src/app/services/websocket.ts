@@ -9,9 +9,10 @@ type MessageHandler = (payload: any) => void;
 
 const API_BASE = import.meta.env.VITE_API_BASE || "http://127.0.0.1:8000";
 
-const WS_BASE = import.meta.env.VITE_WS_BASE
-  || (window.location.protocol === 'https:' ? 'wss://' : 'ws://')
-    + new URL(API_BASE).host;
+// Automatically derive WebSocket URL from the REST API base URL
+const isHttps = API_BASE.startsWith('https://');
+const host = API_BASE.replace(/^https?:\/\//, '');
+const WS_BASE = `${isHttps ? 'wss://' : 'ws://'}${host}`;
 
 const WS_URL = `${WS_BASE}/ws/attendance/`;
 
