@@ -63,7 +63,15 @@ export default function EVENTSCodeEntry({ student, events, onSubmit, onViewHisto
       return false;
     }
 
-    // 2. Time check removed per user request: events remain visible until deactivated by Admin
+    // 2. Time check: event should only open at timeIn and close at timeOut
+    const nowMinutes = now.getHours() * 60 + now.getMinutes();
+    const timeInMinutes = parseTimeToMinutes(e.timeIn);
+    const timeOutMinutes = parseTimeToMinutes(e.timeOut);
+
+    if (nowMinutes < timeInMinutes || nowMinutes > timeOutMinutes) {
+      return false;
+    }
+
     return true;
   });
 
