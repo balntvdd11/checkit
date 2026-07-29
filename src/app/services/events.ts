@@ -14,6 +14,7 @@ export const createEvent = async (event: EventConfig): Promise<EventConfig> => {
   const payload = {
     name: event.name,
     checkItCode: event.checkItCode,
+    date: event.date,
     timeIn: event.timeIn,
     lateThreshold: event.lateThreshold,
     timeOut: event.timeOut,
@@ -29,6 +30,7 @@ export const updateEvent = async (event: EventConfig): Promise<EventConfig> => {
   const payload = {
     name: event.name,
     checkItCode: event.checkItCode,
+    date: event.date,
     timeIn: event.timeIn,
     lateThreshold: event.lateThreshold,
     timeOut: event.timeOut,
