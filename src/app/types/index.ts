@@ -24,9 +24,11 @@ export interface Student {
   section: string;
   studentId: string;
   email: string;
+  deviceOS?: string;
 }
 
 export interface AttendanceRecord {
+  id?: string;
   name: string;
   studentId: string;
   email?: string;

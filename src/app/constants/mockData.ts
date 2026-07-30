@@ -3,13 +3,13 @@ import type { AttendanceRecord, EVENTS, EventConfig, StudentRecord } from "../ty
 // ─── Mock Data ────────────────────────────────────────────────────────────────
 
 export const MOCK_ATTENDANCE: AttendanceRecord[] = [
-  { date: "Jul 3, 2025", subject: "Software Engineering", section: "BSIT 3A", status: "present", timeIn: "07:58 AM", EVENTSCode: "CIT-2025-041" },
-  { date: "Jul 2, 2025", subject: "Web Development",      section: "BSIT 3A", status: "late",    timeIn: "09:22 AM", EVENTSCode: "CIT-2025-040" },
-  { date: "Jul 1, 2025", subject: "Database Management",  section: "BSIT 3A", status: "present", timeIn: "08:02 AM", EVENTSCode: "CIT-2025-039" },
-  { date: "Jun 30, 2025", subject: "Software Engineering",section: "BSIT 3A", status: "absent",  timeIn: "—",        EVENTSCode: "CIT-2025-038" },
-  { date: "Jun 28, 2025", subject: "Web Development",     section: "BSIT 3A", status: "present", timeIn: "08:00 AM", EVENTSCode: "CIT-2025-037" },
-  { date: "Jun 27, 2025", subject: "Database Management", section: "BSIT 3A", status: "present", timeIn: "07:55 AM", EVENTSCode: "CIT-2025-036" },
-  { date: "Jun 26, 2025", subject: "Software Engineering",section: "BSIT 3A", status: "late",    timeIn: "08:19 AM", EVENTSCode: "CIT-2025-035" },
+  { name: "Maria Clara Santos", studentId: "2023001321", date: "Jul 3, 2025", subject: "Software Engineering", section: "BSIT 3A", status: "present", timeIn: "07:58 AM", EVENTSCode: "CIT-2025-041" },
+  { name: "Maria Clara Santos", studentId: "2023001321", date: "Jul 2, 2025", subject: "Web Development",      section: "BSIT 3A", status: "late",    timeIn: "09:22 AM", EVENTSCode: "CIT-2025-040" },
+  { name: "Maria Clara Santos", studentId: "2023001321", date: "Jul 1, 2025", subject: "Database Management",  section: "BSIT 3A", status: "present", timeIn: "08:02 AM", EVENTSCode: "CIT-2025-039" },
+  { name: "Maria Clara Santos", studentId: "2023001321", date: "Jun 30, 2025", subject: "Software Engineering",section: "BSIT 3A", status: "absent",  timeIn: "—",        EVENTSCode: "CIT-2025-038" },
+  { name: "Maria Clara Santos", studentId: "2023001321", date: "Jun 28, 2025", subject: "Web Development",     section: "BSIT 3A", status: "present", timeIn: "08:00 AM", EVENTSCode: "CIT-2025-037" },
+  { name: "Maria Clara Santos", studentId: "2023001321", date: "Jun 27, 2025", subject: "Database Management", section: "BSIT 3A", status: "present", timeIn: "07:55 AM", EVENTSCode: "CIT-2025-036" },
+  { name: "Maria Clara Santos", studentId: "2023001321", date: "Jun 26, 2025", subject: "Software Engineering",section: "BSIT 3A", status: "late",    timeIn: "08:19 AM", EVENTSCode: "CIT-2025-035" },
 ];
 
 

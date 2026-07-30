@@ -5,7 +5,7 @@ function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
 }
 
-export default function AnimatedBackground(): JSX.Element {
+export default function AnimatedBackground() {
   const glowRef = useRef<HTMLDivElement | null>(null);
   const targetOffset = useRef({ x: 0, y: 0 });
   const pointerRaw = useRef({ x: 0, y: 0 });

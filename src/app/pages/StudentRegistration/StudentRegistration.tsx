@@ -107,6 +107,21 @@ export default function StudentRegistration({ email, onSubmit, onBack }: { email
           </AnimatePresence>
 
           <form onSubmit={handleSubmit} className="relative z-10 flex flex-col gap-4">
+            {/* Full Name */}
+            <div>
+              <label className="block text-sm font-semibold text-slate-300 mb-1.5">Full Name</label>
+              <input
+                type="text"
+                placeholder="e.g., Juan Dela Cruz"
+                value={form.name}
+                onChange={e => setForm({ ...form, name: e.target.value })}
+                className={inputCls(errors.name)}
+              />
+              {errors.name && (
+                <p className="mt-1.5 text-xs text-red-400">{errors.name}</p>
+              )}
+            </div>
+
             {/* Section */}
             <div>
               <label className="block text-sm font-semibold text-slate-300 mb-1.5">Section</label>
