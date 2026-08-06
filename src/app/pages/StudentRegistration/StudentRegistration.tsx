@@ -14,7 +14,8 @@ import DeveloperFooter from "../../components/shared/DeveloperFooter";
 
 export default function StudentRegistration({ email, onSubmit, onBack }: { email: string; onSubmit: (s: Student) => void; onBack: () => void }) {
   const { user } = useUser();
-  const [form, setForm] = useState({ name: user?.fullName || "", section: "", studentId: "" });
+  const clerkName = user?.fullName || [user?.firstName, user?.lastName].filter(Boolean).join(" ") || "";
+  const [form, setForm] = useState({ name: clerkName, section: "", studentId: "" });
   const [errors, setErrors] = useState<Partial<typeof form>>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -28,7 +29,6 @@ export default function StudentRegistration({ email, onSubmit, onBack }: { email
 
   const validate = () => {
     const e: Partial<typeof form> = {};
-    if (!form.name.trim()) e.name = "Full name is required";
     if (!form.section) e.section = "Please select a section";
     if (!form.studentId.trim()) e.studentId = "Student ID is required";
     else if (!/^\d{10}$/.test(form.studentId)) e.studentId = "Student ID must be 10 digits (e.g., 2023001321)";
@@ -44,7 +44,7 @@ export default function StudentRegistration({ email, onSubmit, onBack }: { email
     setSubmitting(true);
     try {
       await registerStudent({
-        name: form.name,
+        name: form.name || email,
         studentId: form.studentId,
         section: form.section,
         email,
@@ -107,21 +107,6 @@ export default function StudentRegistration({ email, onSubmit, onBack }: { email
           </AnimatePresence>
 
           <form onSubmit={handleSubmit} className="relative z-10 flex flex-col gap-4">
-            {/* Full Name */}
-            <div>
-              <label className="block text-sm font-semibold text-slate-300 mb-1.5">Full Name</label>
-              <input
-                type="text"
-                placeholder="e.g., Juan Dela Cruz"
-                value={form.name}
-                onChange={e => setForm({ ...form, name: e.target.value })}
-                className={inputCls(errors.name)}
-              />
-              {errors.name && (
-                <p className="mt-1.5 text-xs text-red-400">{errors.name}</p>
-              )}
-            </div>
-
             {/* Section */}
             <div>
               <label className="block text-sm font-semibold text-slate-300 mb-1.5">Section</label>

@@ -57,8 +57,11 @@ function reducer(state: State, action: Action): State {
       return { ...state, attendance: action.payload };
     case "ADD_ATTENDANCE":
       return { ...state, attendance: [action.payload, ...state.attendance] };
-    case "ADD_ATTENDANCE_RECORD":
+    case "ADD_ATTENDANCE_RECORD": {
+      const exists = state.attendance.some(a => (a as any).id === (action.payload as any).id);
+      if (exists) return state;
       return { ...state, attendance: [action.payload, ...state.attendance] };
+    }
     case "UPDATE_ATTENDANCE_RECORD":
       return { ...state, attendance: state.attendance.map(a => (a as any).id === (action.payload as any).id ? action.payload : a) };
     // ── WebSocket-pushed actions ──────────────────────────────────────
