@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { Download, Filter, FileText, Calendar, Building2, Search } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+import { Download, Filter, FileText, Calendar, Building2, Search, X } from "lucide-react";
 import Card from "../../../components/shared/Card";
 import StatusBadge from "../../../components/shared/StatusBadge";
 import type { EventConfig } from "../../../types";
 import { useStore, useSelectors } from "../../../state/store";
 import { formatTime12Hour, formatNameLastFirst } from "../../../lib/utils";
 import { toast } from "sonner";
+import { updateAttendanceRecord } from "../../../services/attendance";
 import uaLogoUrl from "../../../../asset/UALOGO.png";
 import jpiaLogoUrl from "../../../../asset/JPIALOGO.png";
 
@@ -20,6 +22,8 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
   const [reportSectionFilter, setReportSectionFilter] = useState("All");
   const [reportDateFilter, setReportDateFilter] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [earlyOutModal, setEarlyOutModal] = useState<{ visible: boolean; record: any; reason: string }>({ visible: false, record: null, reason: "" });
+  const [submittingEarlyOut, setSubmittingEarlyOut] = useState(false);
   const { attendance, students } = useSelectors();
   const { dispatch } = useStore();
 
@@ -183,8 +187,29 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
     document.body.removeChild(link);
   };
 
+  const handleEarlyOutSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!earlyOutModal.record || !earlyOutModal.reason.trim()) return;
+
+    setSubmittingEarlyOut(true);
+    try {
+      const updated = await updateAttendanceRecord((earlyOutModal.record as any).id, { 
+        timeOut: `Early out - ${earlyOutModal.reason.trim()}` 
+      });
+      dispatch({ type: "UPDATE_ATTENDANCE_RECORD", payload: updated });
+      toast.success("Early out recorded successfully");
+      setEarlyOutModal({ visible: false, record: null, reason: "" });
+    } catch (err) {
+      toast.error("Failed to record early out");
+    } finally {
+      setSubmittingEarlyOut(false);
+    }
+  };
+
   // ── PDF Export ──────────────────────────────────────────────────────────────
   const handleExportPDF = async () => {
+    // PDF export logic omitted for brevity, keeping existing body intact
+
     if (sortedAttended.length === 0 && absentStudents.length === 0) { toast.error("No data to export."); return; }
     if (!window.jspdf) { toast.error("PDF generator is still loading. Please try again in a moment."); return; }
 
@@ -473,19 +498,27 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
           </div>
 
           <Card className="border border-slate-100 overflow-hidden">
-            <div className="px-5 py-4 border-b border-slate-100 bg-slate-50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="px-5 py-4 border-b border-slate-100 bg-slate-50 flex flex-col md:flex-row md:items-center justify-between gap-4">
               <h3 className="font-bold text-slate-800 flex items-center gap-2 shrink-0">
                 <FileText size={16} className="text-indigo-600" /> Detailed Records
               </h3>
-              <div className="relative w-full sm:w-72">
-                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input 
-                  type="text" 
-                  placeholder="Search name or ID..." 
-                  value={searchQuery}
-                  onChange={e => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
-                />
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto shrink-0">
+                <button 
+                  type="button"
+                  className="px-4 py-2 bg-[var(--primary)] hover:bg-[#A61831] text-white text-sm font-semibold rounded-lg shadow-sm transition-colors whitespace-nowrap shrink-0"
+                >
+                  Attendance Exception
+                </button>
+                <div className="relative w-full sm:w-64 md:w-72">
+                  <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <input 
+                    type="text" 
+                    placeholder="Search name or ID..." 
+                    value={searchQuery}
+                    onChange={e => setSearchQuery(e.target.value)}
+                    className="w-full pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                  />
+                </div>
               </div>
             </div>
             <div className="overflow-x-auto">
@@ -511,7 +544,21 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
                       </td>
                       <td className="px-5 py-3 text-slate-600">{r.date}</td>
                       <td className="px-5 py-3 font-mono text-slate-600">{formatTime12Hour(r.timeIn)}</td>
-                      <td className="px-5 py-3 font-mono text-slate-600">{r.timeOut ? formatTime12Hour(r.timeOut) : "Did Not Time-out"}</td>
+                      <td className="px-5 py-3 font-mono text-slate-600">
+                        {r.timeOut ? (
+                          formatTime12Hour(r.timeOut)
+                        ) : (
+                          <div className="flex items-center gap-2">
+                            <span className="text-slate-400 italic">Did Not Time-out</span>
+                            <button 
+                              onClick={() => setEarlyOutModal({ visible: true, record: r, reason: "" })}
+                              className="px-2 py-1 bg-amber-100 hover:bg-amber-200 text-amber-700 text-[10px] font-bold rounded uppercase tracking-wider transition-colors"
+                            >
+                              Timeout
+                            </button>
+                          </div>
+                        )}
+                      </td>
                       <td className="px-5 py-3"><StatusBadge status={r.status} /></td>
                     </tr>
                   ))}
@@ -559,6 +606,75 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
           <p className="text-slate-500 text-sm max-w-sm mx-auto">Please select a specific event from the dropdown above to view its attendance statistics and detailed student records.</p>
         </Card>
       )}
+
+      {/* Early Out Modal */}
+      <AnimatePresence>
+        {earlyOutModal.visible && (
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+              onClick={() => !submittingEarlyOut && setEarlyOutModal(prev => ({ ...prev, visible: false }))}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden"
+            >
+              <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+                <h3 className="font-bold text-slate-800 text-lg">Record Early Out</h3>
+                <button 
+                  onClick={() => !submittingEarlyOut && setEarlyOutModal(prev => ({ ...prev, visible: false }))}
+                  className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-200 rounded-lg transition-colors"
+                  disabled={submittingEarlyOut}
+                >
+                  <X size={18} />
+                </button>
+              </div>
+              <form onSubmit={handleEarlyOutSubmit} className="p-6">
+                <p className="text-sm text-slate-600 mb-4">
+                  Please provide a reason for the early timeout for <span className="font-bold text-slate-800">{earlyOutModal.record?.name}</span>.
+                </p>
+                
+                <div className="space-y-1.5 mb-6">
+                  <label className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Reason</label>
+                  <input
+                    type="text"
+                    value={earlyOutModal.reason}
+                    onChange={(e) => setEarlyOutModal(prev => ({ ...prev, reason: e.target.value }))}
+                    placeholder="e.g., Medical emergency, Family matters..."
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                    autoFocus
+                    required
+                    disabled={submittingEarlyOut}
+                  />
+                </div>
+
+                <div className="flex gap-3 justify-end">
+                  <button
+                    type="button"
+                    onClick={() => setEarlyOutModal(prev => ({ ...prev, visible: false }))}
+                    disabled={submittingEarlyOut}
+                    className="px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-lg transition-colors disabled:opacity-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={submittingEarlyOut || !earlyOutModal.reason.trim()}
+                    className="px-6 py-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold rounded-lg shadow-sm transition-colors disabled:opacity-50 flex items-center gap-2"
+                  >
+                    {submittingEarlyOut ? "Saving..." : "Submit Timeout"}
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
