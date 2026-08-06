@@ -63,12 +63,11 @@ export default function EVENTSCodeEntry({ student, events, onSubmit, onViewHisto
       return false;
     }
 
-    // 2. Time check: event should only open at timeIn and close at timeOut
+    // 2. Time check: event should only open at timeIn (stays visible after timeOut until deactivated)
     const nowMinutes = now.getHours() * 60 + now.getMinutes();
     const timeInMinutes = parseTimeToMinutes(e.timeIn);
-    const timeOutMinutes = parseTimeToMinutes(e.timeOut);
 
-    if (nowMinutes < timeInMinutes || nowMinutes > timeOutMinutes) {
+    if (nowMinutes < timeInMinutes) {
       return false;
     }
 
