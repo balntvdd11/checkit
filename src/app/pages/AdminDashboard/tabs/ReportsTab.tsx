@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Download, Filter, FileText, Calendar, Building2, Search, X } from "lucide-react";
+import { Download, Filter, FileText, Calendar, Building2, Search, X, LogOut } from "lucide-react";
 import Card from "../../../components/shared/Card";
 import StatusBadge from "../../../components/shared/StatusBadge";
 import type { EventConfig } from "../../../types";
@@ -552,8 +552,9 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
                             <span className="text-slate-400 italic">Did Not Time-out</span>
                             <button 
                               onClick={() => setEarlyOutModal({ visible: true, record: r, reason: "" })}
-                              className="px-2 py-1 bg-amber-100 hover:bg-amber-200 text-amber-700 text-[10px] font-bold rounded uppercase tracking-wider transition-colors"
+                              className="px-2.5 py-1.5 bg-white hover:bg-slate-50 text-slate-600 hover:text-indigo-600 border border-slate-200 hover:border-indigo-300 text-xs font-semibold rounded-md shadow-sm transition-all flex items-center gap-1.5 whitespace-nowrap"
                             >
+                              <LogOut size={12} />
                               Timeout
                             </button>
                           </div>
