@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Download, Filter, FileText, Calendar, Building2, Search, X, LogOut } from "lucide-react";
+import { Download, Filter, FileText, Calendar, Building2, Search, X, LogOut, AlertTriangle, UserCheck } from "lucide-react";
 import Card from "../../../components/shared/Card";
 import StatusBadge from "../../../components/shared/StatusBadge";
 import type { EventConfig } from "../../../types";
 import { useStore, useSelectors } from "../../../state/store";
 import { formatTime12Hour, formatNameLastFirst } from "../../../lib/utils";
 import { toast } from "sonner";
-import { updateAttendanceRecord } from "../../../services/attendance";
+import { updateAttendanceRecord, createAttendanceRecord } from "../../../services/attendance";
 import uaLogoUrl from "../../../../asset/UALOGO.png";
 import jpiaLogoUrl from "../../../../asset/JPIALOGO.png";
 
@@ -24,6 +24,9 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [earlyOutModal, setEarlyOutModal] = useState<{ visible: boolean; record: any; reason: string }>({ visible: false, record: null, reason: "" });
   const [submittingEarlyOut, setSubmittingEarlyOut] = useState(false);
+  const [exceptionModal, setExceptionModal] = useState(false);
+  const [exceptionStudentId, setExceptionStudentId] = useState("");
+  const [exceptionConfirmModal, setExceptionConfirmModal] = useState<{ visible: boolean; student: any }>({ visible: false, student: null });
   const { attendance, students } = useSelectors();
   const { dispatch } = useStore();
 
@@ -185,6 +188,66 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  const handleExceptionSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedEvent) {
+      toast.error("Please select an event first");
+      return;
+    }
+    const student = students.find(s => s.studentId === exceptionStudentId);
+    if (!student) {
+      toast.error("Student ID not found in the system");
+      return;
+    }
+    const today = reportDateFilter || new Date().toISOString().split("T")[0];
+    const existing = attendance.find(a => a.studentId === student.studentId && a.EVENTSCode === selectedEvent.checkItCode && a.date === today);
+    if (existing) {
+      toast.error("Student has already timed in for this event today");
+      return;
+    }
+    setExceptionModal(false);
+    setExceptionConfirmModal({ visible: true, student });
+  };
+
+  const handleExceptionConfirm = async () => {
+    const student = exceptionConfirmModal.student;
+    if (!student || !selectedEvent) return;
+    
+    setSubmittingEarlyOut(true);
+    try {
+      const now = new Date();
+      const time24 = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
+      const today = reportDateFilter || now.toISOString().split("T")[0];
+
+      let scanStatus: "present" | "late" = "present";
+      if (selectedEvent.lateThreshold && time24 > selectedEvent.lateThreshold) {
+        scanStatus = "late";
+      }
+
+      const record = {
+        name: student.name,
+        studentId: student.studentId,
+        email: student.email || "", 
+        date: today,
+        subject: selectedEvent.name,
+        section: student.section,
+        status: scanStatus, 
+        timeIn: time24,
+        EVENTSCode: selectedEvent.checkItCode,
+      };
+
+      const saved = await createAttendanceRecord(record as any);
+      dispatch({ type: "ADD_ATTENDANCE_RECORD", payload: saved });
+      toast.success("Attendance exception recorded successfully");
+      setExceptionConfirmModal({ visible: false, student: null });
+      setExceptionStudentId("");
+    } catch (err) {
+      toast.error("Failed to record attendance exception");
+    } finally {
+      setSubmittingEarlyOut(false);
+    }
   };
 
   const handleEarlyOutSubmit = async (e: React.FormEvent) => {
@@ -505,6 +568,14 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto shrink-0">
                 <button 
                   type="button"
+                  onClick={() => {
+                    if (!selectedEvent) {
+                      toast.error("Please select an event first");
+                      return;
+                    }
+                    setExceptionModal(true);
+                    setExceptionStudentId("");
+                  }}
                   className="px-4 py-2 bg-[var(--primary)] hover:bg-[#A61831] text-white text-sm font-semibold rounded-lg shadow-sm transition-colors whitespace-nowrap shrink-0"
                 >
                   Attendance Exception
@@ -672,6 +743,88 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
                   </button>
                 </div>
               </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Exception Modals */}
+      <AnimatePresence>
+        {exceptionModal && (
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+              onClick={() => setExceptionModal(false)}
+            />
+            <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden"
+            >
+              <div className="px-6 py-4 border-b border-amber-100 flex items-center justify-between bg-amber-50">
+                <h3 className="font-bold text-amber-800 text-lg flex items-center gap-2">
+                  <AlertTriangle size={20} className="text-amber-600" />
+                  Manual Time In
+                </h3>
+                <button type="button" onClick={() => setExceptionModal(false)} className="p-2 text-amber-700 hover:bg-amber-100 rounded-lg transition-colors">
+                  <X size={18} />
+                </button>
+              </div>
+              <form onSubmit={handleExceptionSubmit} className="p-6">
+                <p className="text-sm text-slate-600 mb-4">
+                  Enter the Student ID to manually time in the student for the current event.
+                </p>
+                <div className="space-y-1.5 mb-6">
+                  <label className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Student ID</label>
+                  <input
+                    type="text"
+                    value={exceptionStudentId}
+                    onChange={(e) => setExceptionStudentId(e.target.value)}
+                    placeholder="e.g. 2023000123"
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50"
+                    autoFocus
+                    required
+                  />
+                </div>
+                <div className="flex gap-3 justify-end">
+                  <button type="button" onClick={() => setExceptionModal(false)}
+                    className="px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-lg transition-colors">
+                    Cancel
+                  </button>
+                  <button type="submit" disabled={!exceptionStudentId.trim()}
+                    className="px-6 py-2 bg-amber-600 hover:bg-amber-700 text-white text-sm font-bold rounded-lg shadow-sm transition-colors disabled:opacity-50">
+                    Yes
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
+        )}
+
+        {exceptionConfirmModal.visible && exceptionConfirmModal.student && (
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+              onClick={() => !submittingEarlyOut && setExceptionConfirmModal({ visible: false, student: null })}
+            />
+            <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative w-full max-w-sm bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden text-center p-6"
+            >
+              <div className="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <UserCheck size={24} />
+              </div>
+              <h3 className="font-bold text-slate-800 text-lg mb-2">Are you sure?</h3>
+              <p className="text-sm text-slate-600 mb-6">
+                Do you want to record time in for <b>{exceptionConfirmModal.student.name}</b> ({exceptionConfirmModal.student.studentId})?
+              </p>
+              <div className="flex gap-3 justify-center">
+                <button type="button" onClick={() => setExceptionConfirmModal({ visible: false, student: null })} disabled={submittingEarlyOut}
+                  className="px-6 py-2 text-sm font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors">
+                  Cancel
+                </button>
+                <button type="button" onClick={handleExceptionConfirm} disabled={submittingEarlyOut}
+                  className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-lg shadow-sm transition-colors flex items-center gap-2 disabled:opacity-50">
+                  {submittingEarlyOut ? "Recording..." : "Confirm"}
+                </button>
+              </div>
             </motion.div>
           </div>
         )}
