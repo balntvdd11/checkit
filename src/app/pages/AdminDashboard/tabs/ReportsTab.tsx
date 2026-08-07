@@ -204,9 +204,9 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
       return;
     }
     const today = reportDateFilter || new Date().toISOString().split("T")[0];
-    const existing = attendance.find(a => a.studentId === student.studentId && a.EVENTSCode === selectedEvent.checkItCode && a.date === today);
+    const existing = attendance.find(a => a.studentId === student.studentId && a.EVENTSCode === selectedEvent.checkItCode);
     if (existing) {
-      toast.error("Student has already timed in for this event today");
+      toast.error("Student has already timed in for this event");
       return;
     }
     setExceptionModal(false);

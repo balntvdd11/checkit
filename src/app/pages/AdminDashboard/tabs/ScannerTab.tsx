@@ -79,8 +79,7 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
               const today = new Date().toISOString().split('T')[0];
               const existingRecord = latestAttendance.find(a => 
                 a.studentId === student.studentId && 
-                a.EVENTSCode === activeEvent.checkItCode && 
-                a.date === today
+                a.EVENTSCode === activeEvent.checkItCode
               );
 
               if (existingRecord) {
