@@ -40,21 +40,35 @@ function DrumColumn({
   const startY = useRef(0);
   const startScroll = useRef(0);
 
+  const MULTIPLIER = 30; // 30 before, 1 center, 30 after = 61 copies
+  const MIDDLE_OFFSET = items.length * MULTIPLIER;
+  const TOTAL_ITEMS = items.length * (MULTIPLIER * 2 + 1);
+
   // Sync scroll to selectedIndex
   useEffect(() => {
     const el = listRef.current;
     if (!el) return;
-    el.scrollTop = selectedIndex * ITEM_H;
-  }, [selectedIndex]);
+    const currentIdx = Math.round(el.scrollTop / ITEM_H);
+    const currentModulo = currentIdx % items.length;
+    
+    // Only snap if we are completely out of sync (initial mount or external change)
+    if (currentModulo !== selectedIndex) {
+      el.scrollTop = (MIDDLE_OFFSET + selectedIndex) * ITEM_H;
+    }
+  }, [selectedIndex, items.length, MIDDLE_OFFSET]);
 
   // Snap on scroll end
   const handleScroll = useCallback(() => {
     const el = listRef.current;
     if (!el || isDragging.current) return;
     const idx = Math.round(el.scrollTop / ITEM_H);
-    const clamped = Math.max(0, Math.min(items.length - 1, idx));
-    if (clamped !== selectedIndex) onSelect(clamped);
-  }, [items.length, selectedIndex, onSelect]);
+    const clamped = Math.max(0, Math.min(TOTAL_ITEMS - 1, idx));
+    const moduloIdx = clamped % items.length;
+    
+    if (moduloIdx !== selectedIndex) {
+      onSelect(moduloIdx);
+    }
+  }, [items.length, selectedIndex, onSelect, TOTAL_ITEMS]);
 
   // Mouse drag support
   const onMouseDown = (e: React.MouseEvent) => {
@@ -69,6 +83,14 @@ function DrumColumn({
   const onMouseUp = () => {
     isDragging.current = false;
     handleScroll();
+    
+    // Recenter gently when interaction finishes
+    const el = listRef.current;
+    if (el) {
+      const idx = Math.round(el.scrollTop / ITEM_H);
+      const moduloIdx = idx % items.length;
+      el.scrollTop = (MIDDLE_OFFSET + moduloIdx) * ITEM_H;
+    }
   };
 
   return (
@@ -120,25 +142,38 @@ function DrumColumn({
         >
           {/* top padding */}
           <li style={{ height: ITEM_H, flexShrink: 0 }} />
-          {items.map((item, i) => (
-            <li
-              key={i}
-              onClick={() => onSelect(i)}
-              style={{
-                height: ITEM_H,
-                scrollSnapAlign: "center",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: "pointer",
-                fontWeight: i === selectedIndex ? 700 : 400,
-                fontSize: i === selectedIndex ? 20 : 15,
-                color: i === selectedIndex ? "#123499" : "#94a3b8",
-                transition: "font-size 0.15s, color 0.15s, font-weight 0.15s",
-              }}
-            >
-              {item}
-            </li>
+          {Array.from({ length: MULTIPLIER * 2 + 1 }).map((_, blockIdx) => (
+            <div key={blockIdx} style={{ display: "contents" }}>
+              {items.map((item, i) => {
+                const absoluteIdx = blockIdx * items.length + i;
+                const isSelected = i === selectedIndex;
+                return (
+                  <li
+                    key={absoluteIdx}
+                    onClick={() => {
+                      if (listRef.current) {
+                        listRef.current.scrollTop = absoluteIdx * ITEM_H;
+                      }
+                      onSelect(i);
+                    }}
+                    style={{
+                      height: ITEM_H,
+                      scrollSnapAlign: "center",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      cursor: "pointer",
+                      fontWeight: isSelected ? 700 : 400,
+                      fontSize: isSelected ? 20 : 15,
+                      color: isSelected ? "#123499" : "#94a3b8",
+                      transition: "font-size 0.15s, color 0.15s, font-weight 0.15s",
+                    }}
+                  >
+                    {item}
+                  </li>
+                );
+              })}
+            </div>
           ))}
           {/* bottom padding */}
           <li style={{ height: ITEM_H, flexShrink: 0 }} />
