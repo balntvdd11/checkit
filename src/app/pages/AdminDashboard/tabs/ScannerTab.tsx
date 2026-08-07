@@ -15,16 +15,16 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
   const [scanResults, setScanResults] = useState<{ id: string; name: string; status: "success" | "invalid" | "duplicate"; action?: "present" | "late" | "time-out" | "early-timeout"; time: string }[]>([]);
   const [scanAlert, setScanAlert] = useState<{ name: string; visible: boolean } | null>(null);
   const { state, dispatch } = useStore();
-
+  
   // Refs for current state to avoid scanner restart on every scan
   const stateRef = useRef(state);
   const eventsRef = useRef(events);
-
+  
   useEffect(() => {
     stateRef.current = state;
     eventsRef.current = events;
   }, [state, events]);
-
+  
   // Keep track of recently scanned QR codes to prevent rapid duplicates
   const recentlyScanned = useRef<Set<string>>(new Set());
 
@@ -46,14 +46,14 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
             try {
               const parts = decodedText.split(":");
               if (parts.length < 2) throw new Error("Invalid format");
-
+              
               const [studentId, code, seed] = parts;
               const scanKey = `${studentId}-${code}-${seed}`;
-
+              
               // Prevent rapid duplicate processing of the exact same QR frame
               if (recentlyScanned.current.has(scanKey)) return;
               recentlyScanned.current.add(scanKey);
-
+              
               // Cleanup memory after 5 seconds
               setTimeout(() => recentlyScanned.current.delete(scanKey), 5000);
 
@@ -77,8 +77,8 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
 
               // Check if student already has attendance for this event today
               const today = getLocalDateStr();
-              const existingRecord = latestAttendance.find(a =>
-                a.studentId === student.studentId &&
+              const existingRecord = latestAttendance.find(a => 
+                a.studentId === student.studentId && 
                 a.EVENTSCode === activeEvent.checkItCode
               );
 
@@ -103,15 +103,15 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
                   const recordId = (existingRecord as any).id;
                   if (recordId) {
                     const updated = await updateAttendanceRecord(recordId, { timeOut: time24 });
-                    dispatch({ type: "UPDATE_ATTENDANCE_RECORD", payload: updated });
-
+                    dispatch({ type: "UPDATE_ATTENDANCE_RECORD", payload: updated }); 
+                    
                     setScanResults(prev => [{ id: `scan-${Date.now()}`, name: student.name, status: "success", action: "time-out", time: displayTime }, ...prev]);
                     setScanAlert({ name: `${student.name} (Timed Out)`, visible: true });
                     setTimeout(() => {
                       setScanAlert(prev => prev ? { ...prev, visible: false } : null);
                     }, 3000);
                   } else {
-                    setScanResults(prev => [{ id: `scan-${Date.now()}`, name: student.name, status: "duplicate", time: displayTime }, ...prev]);
+                     setScanResults(prev => [{ id: `scan-${Date.now()}`, name: student.name, status: "duplicate", time: displayTime }, ...prev]);
                   }
                   return;
                 }
@@ -130,7 +130,7 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
                 date: today,
                 subject: activeEvent.name,
                 section: student.section,
-                status: scanStatus,
+                status: scanStatus, 
                 timeIn: time24,
                 EVENTSCode: activeEvent.checkItCode,
               };
@@ -138,7 +138,7 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
               const saved = await createAttendanceRecord(record as any);
               dispatch({ type: "ADD_ATTENDANCE_RECORD", payload: saved });
               setScanResults(prev => [{ id: `scan-${Date.now()}`, name: student.name, status: "success", action: scanStatus, time: displayTime }, ...prev]);
-
+              
               setScanAlert({ name: `${student.name} (${scanStatus === 'late' ? 'Late' : 'Time In'})`, visible: true });
               setTimeout(() => {
                 setScanAlert(prev => prev ? { ...prev, visible: false } : null);
@@ -174,7 +174,7 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
           <h2 className="text-xl font-bold text-[#123499]">Scanner Station</h2>
         </div>
         {!scanning && (
-          <select value={selectedScanEVENTS} onChange={e => { setSelectedScanEVENTS(e.target.value); setScanResults([]); }}
+            <select value={selectedScanEVENTS} onChange={e => { setSelectedScanEVENTS(e.target.value); setScanResults([]); }}
             className="w-full sm:w-auto px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[var(--primary)] bg-white shadow-sm">
             <option value="">Select Events</option>
             {events.filter(s => s.status === "active").map(s => (
@@ -195,10 +195,10 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
                   </div>
                   <h3 className="font-bold text-slate-800">{activeScanEVENTS?.name}</h3>
                 </div>
-
+                
                 <div className="w-full max-w-sm relative rounded-2xl overflow-hidden bg-slate-50 mb-8 border border-slate-200">
                   <div id="qr-reader" className="w-full relative z-0" />
-
+                  
                   <AnimatePresence>
                     {scanAlert?.visible && (
                       <motion.div
@@ -260,11 +260,11 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
                     <div className="flex items-center gap-3">
                       <div className={cn("w-8 h-8 rounded-full flex items-center justify-center shrink-0",
                         res.status === "success" ? "bg-emerald-50 text-emerald-600" :
-                          res.status === "invalid" ? "bg-rose-50 text-rose-600" :
-                            "bg-amber-50 text-amber-600")}>
+                        res.status === "invalid" ? "bg-rose-50 text-rose-600" :
+                        "bg-amber-50 text-amber-600")}>
                         {res.status === "success" ? <CheckCircle2 size={16} /> :
-                          res.status === "invalid" ? <UserX size={16} /> :
-                            <UserCheck size={16} />}
+                         res.status === "invalid" ? <UserX size={16} /> :
+                         <UserCheck size={16} />}
                       </div>
                       <div>
                         <p className="text-sm font-bold text-slate-700">{res.name}</p>
@@ -272,15 +272,15 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
                           {res.status === "success" ? (
                             <span className={res.action === "late" ? "text-amber-600" : res.action === "time-out" ? "text-blue-600" : "text-emerald-600"}>
                               {res.action === "time-out" ? "Time Out Recorded" :
-                                res.action === "late" ? "Marked Late" : "Marked Present"}
+                               res.action === "late" ? "Marked Late" : "Marked Present"}
                             </span>
                           ) :
-                            res.status === "invalid" ? (
-                              <span className="text-rose-600">
-                                {res.action === "early-timeout" ? "Too Early to Time Out" : "Invalid / Spoofed QR"}
-                              </span>
-                            ) :
-                              <span className="text-amber-600">Already Scanned</span>}
+                           res.status === "invalid" ? (
+                             <span className="text-rose-600">
+                               {res.action === "early-timeout" ? "Too Early to Time Out" : "Invalid / Spoofed QR"}
+                             </span>
+                           ) :
+                           <span className="text-amber-600">Already Scanned</span>}
                         </p>
                       </div>
                     </div>
