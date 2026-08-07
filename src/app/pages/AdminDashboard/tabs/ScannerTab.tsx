@@ -17,11 +17,17 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
   const [scanAlert, setScanAlert] = useState<{ name: string; visible: boolean } | null>(null);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const { state, dispatch } = useStore();
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  
+  useEffect(() => {
+    audioRef.current = new Audio(successSoundFile);
+  }, []);
   
   const playSuccessSound = () => {
-    if (soundEnabled) {
-      const audio = new Audio(successSoundFile);
-      audio.play().catch(e => console.error("Audio play blocked", e));
+    if (soundEnabled && audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      audioRef.current.play().catch(e => console.error("Audio play blocked", e));
     }
   };
   
