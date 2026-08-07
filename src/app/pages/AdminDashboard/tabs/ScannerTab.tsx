@@ -117,16 +117,15 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
                   // but we might need to handle if it's missing. Assuming record has `id` if fetched from API.
                   const recordId = (existingRecord as any).id;
                   if (recordId) {
-                    const updated = await updateAttendanceRecord(recordId, { timeOut: time24 });
-                    dispatch({ type: "UPDATE_ATTENDANCE_RECORD", payload: updated }); 
-                    
                     playSuccessSound();
-                    
                     setScanResults(prev => [{ id: `scan-${Date.now()}`, name: student.name, status: "success", action: "time-out", time: displayTime }, ...prev]);
                     setScanAlert({ name: `${student.name} (Timed Out)`, visible: true });
                     setTimeout(() => {
                       setScanAlert(prev => prev ? { ...prev, visible: false } : null);
                     }, 3000);
+                    
+                    const updated = await updateAttendanceRecord(recordId, { timeOut: time24 });
+                    dispatch({ type: "UPDATE_ATTENDANCE_RECORD", payload: updated }); 
                   } else {
                      setScanResults(prev => [{ id: `scan-${Date.now()}`, name: student.name, status: "duplicate", time: displayTime }, ...prev]);
                   }
@@ -152,17 +151,15 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
                 EVENTSCode: activeEvent.checkItCode,
               };
 
-              const saved = await createAttendanceRecord(record as any);
-              dispatch({ type: "ADD_ATTENDANCE_RECORD", payload: saved });
-              
               playSuccessSound();
-              
               setScanResults(prev => [{ id: `scan-${Date.now()}`, name: student.name, status: "success", action: scanStatus, time: displayTime }, ...prev]);
-              
               setScanAlert({ name: `${student.name} (${scanStatus === 'late' ? 'Late' : 'Time In'})`, visible: true });
               setTimeout(() => {
                 setScanAlert(prev => prev ? { ...prev, visible: false } : null);
               }, 3000);
+              
+              const saved = await createAttendanceRecord(record as any);
+              dispatch({ type: "ADD_ATTENDANCE_RECORD", payload: saved });
 
             } catch (err) {
               const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
