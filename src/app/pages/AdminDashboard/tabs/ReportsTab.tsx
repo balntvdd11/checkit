@@ -734,41 +734,59 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
                   />
                 </div>
 
-                {selectedEvent?.timeOut && earlyOutModal.currentTime && earlyOutModal.currentTime < selectedEvent.timeOut ? (
-                  <>
-                    <div className="bg-amber-50 border border-amber-200 p-4 rounded-xl mb-5 flex items-start gap-3">
-                      <AlertTriangle className="text-amber-500 shrink-0 mt-0.5" size={20} />
-                      <div>
-                        <h4 className="text-amber-800 font-bold text-sm mb-1">Early Timeout Detected</h4>
-                        <p className="text-xs text-amber-700 leading-relaxed">
-                          The scheduled timeout is <span className="font-bold">{formatTime12Hour(selectedEvent.timeOut)}</span>, but the selected time is <span className="font-bold">{formatTime12Hour(earlyOutModal.currentTime)}</span>.
-                        </p>
+                <AnimatePresence mode="wait">
+                  {selectedEvent?.timeOut && earlyOutModal.currentTime && earlyOutModal.currentTime < selectedEvent.timeOut ? (
+                    <motion.div
+                      key="early"
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="bg-amber-50 border border-amber-200 p-4 rounded-xl mb-5 flex items-start gap-3 mt-1">
+                        <AlertTriangle className="text-amber-500 shrink-0 mt-0.5" size={20} />
+                        <div>
+                          <h4 className="text-amber-800 font-bold text-sm mb-1">Early Timeout Detected</h4>
+                          <p className="text-xs text-amber-700 leading-relaxed">
+                            The scheduled timeout is <span className="font-bold">{formatTime12Hour(selectedEvent.timeOut)}</span>, but the selected time is <span className="font-bold">{formatTime12Hour(earlyOutModal.currentTime)}</span>.
+                          </p>
+                        </div>
                       </div>
-                    </div>
 
-                    <p className="text-sm text-slate-600 mb-4">
-                      You are recording an early timeout for <span className="font-bold text-slate-800">{earlyOutModal.record?.name}</span>. Please provide a reason below.
-                    </p>
-                    
-                    <div className="space-y-1.5 mb-6">
-                      <label className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Reason</label>
-                      <input
-                        type="text"
-                        value={earlyOutModal.reason}
-                        onChange={(e) => setEarlyOutModal(prev => ({ ...prev, reason: e.target.value }))}
-                        placeholder="e.g., Medical emergency, Family matters..."
-                        className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
-                        autoFocus
-                        required
-                        disabled={submittingEarlyOut}
-                      />
-                    </div>
-                  </>
-                ) : (
-                  <p className="text-sm text-slate-600 mb-6">
-                    You are recording a timeout for <span className="font-bold text-slate-800">{earlyOutModal.record?.name}</span>. The selected time is valid and on schedule.
-                  </p>
-                )}
+                      <p className="text-sm text-slate-600 mb-4">
+                        You are recording an early timeout for <span className="font-bold text-slate-800">{earlyOutModal.record?.name}</span>. Please provide a reason below.
+                      </p>
+                      
+                      <div className="space-y-1.5 mb-6">
+                        <label className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Reason</label>
+                        <input
+                          type="text"
+                          value={earlyOutModal.reason}
+                          onChange={(e) => setEarlyOutModal(prev => ({ ...prev, reason: e.target.value }))}
+                          placeholder="e.g., Medical emergency, Family matters..."
+                          className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                          autoFocus
+                          required
+                          disabled={submittingEarlyOut}
+                        />
+                      </div>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="valid"
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="overflow-hidden"
+                    >
+                      <p className="text-sm text-slate-600 mb-6 mt-1">
+                        You are recording a timeout for <span className="font-bold text-slate-800">{earlyOutModal.record?.name}</span>. The selected time is valid and on schedule.
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
 
                 <div className="flex gap-3 justify-end">
                   <button
