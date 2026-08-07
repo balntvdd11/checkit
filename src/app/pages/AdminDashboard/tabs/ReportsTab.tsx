@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { Download, Filter, FileText, Calendar, Building2, Search, X, LogOut, AlertTriangle, UserCheck } from "lucide-react";
 import Card from "../../../components/shared/Card";
@@ -695,9 +696,10 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
       )}
 
       {/* Early Out Modal */}
-      <AnimatePresence>
-        {earlyOutModal.visible && (
-          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+      {typeof document !== 'undefined' && createPortal(
+        <AnimatePresence>
+          {earlyOutModal.visible && (
+            <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -806,13 +808,16 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
               </form>
             </motion.div>
           </div>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
 
       {/* Exception Modals */}
-      <AnimatePresence>
-        {exceptionModal && (
-          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+      {typeof document !== 'undefined' && createPortal(
+        <AnimatePresence>
+          {exceptionModal && (
+            <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
               onClick={() => setExceptionModal(false)}
@@ -858,10 +863,15 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
               </form>
             </motion.div>
           </div>
-        )}
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
 
-        {exceptionConfirmModal.visible && exceptionConfirmModal.student && (
-          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+      {typeof document !== 'undefined' && createPortal(
+        <AnimatePresence>
+          {exceptionConfirmModal.visible && exceptionConfirmModal.student && (
+            <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
               onClick={() => !submittingEarlyOut && setExceptionConfirmModal({ visible: false, student: null })}
@@ -888,8 +898,10 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
               </div>
             </motion.div>
           </div>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </div>
   );
 }
