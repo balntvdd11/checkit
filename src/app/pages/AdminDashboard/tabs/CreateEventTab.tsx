@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Copy, CheckCircle2, Clock, MapPin, Hash, Building2, Ticket, Archive, Trash2, ArrowLeft, Calendar } from "lucide-react";
 import Card from "../../../components/shared/Card";
-import { generateCheckItCode, cn, formatTime12Hour } from "../../../lib/utils";
+import { generateCheckItCode, cn, formatTime12Hour, getLocalDateStr } from "../../../lib/utils";
 import type { EventConfig } from "../../../types";
 import { createEvent, updateEvent } from "../../../services/events";
 import { useStore, useSelectors } from "../../../state/store";
@@ -11,7 +11,7 @@ import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, A
 export default function CreateEventTab() {
   const [eventForm, setEventForm] = useState<{ name: string; date: string; timeIn: string; lateThreshold: string; timeOut: string; status: EventConfig["status"] }>({
     name: "",
-    date: new Date().toISOString().split("T")[0],
+    date: getLocalDateStr(),
     timeIn: "08:00",
     lateThreshold: "08:15",
     timeOut: "17:00",
@@ -72,7 +72,7 @@ export default function CreateEventTab() {
       });
       setEditingEventId(null);
       setShowEventForm(false);
-      setEventForm({ name: "", date: new Date().toISOString().split("T")[0], timeIn: "08:00", lateThreshold: "08:15", timeOut: "17:00", status: "active" });
+      setEventForm({ name: "", date: getLocalDateStr(), timeIn: "08:00", lateThreshold: "08:15", timeOut: "17:00", status: "active" });
       return;
     }
 
@@ -88,7 +88,7 @@ export default function CreateEventTab() {
     };
     createEvent(newEvent).then(res => dispatch({ type: "ADD_EVENT", payload: res }));
     setShowEventForm(false);
-    setEventForm({ name: "", date: new Date().toISOString().split("T")[0], timeIn: "08:00", lateThreshold: "08:15", timeOut: "17:00", status: "active" });
+    setEventForm({ name: "", date: getLocalDateStr(), timeIn: "08:00", lateThreshold: "08:15", timeOut: "17:00", status: "active" });
   };
 
   const copyToClipboard = (text: string) => {
@@ -216,7 +216,7 @@ export default function CreateEventTab() {
                     <button onClick={() => {
                       // start editing
                       setEditingEventId(evt.id);
-                      setEventForm({ name: evt.name, date: evt.date || new Date().toISOString().split("T")[0], timeIn: evt.timeIn, lateThreshold: evt.lateThreshold, timeOut: evt.timeOut, status: evt.status });
+                      setEventForm({ name: evt.name, date: evt.date || getLocalDateStr(), timeIn: evt.timeIn, lateThreshold: evt.lateThreshold, timeOut: evt.timeOut, status: evt.status });
                       setShowEventForm(true);
                     }}
                       className="px-3 py-1 text-xs font-semibold rounded-lg border transition-colors bg-[var(--primary)] text-white hover:bg-[#A61831]">

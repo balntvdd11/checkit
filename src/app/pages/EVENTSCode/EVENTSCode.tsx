@@ -3,8 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { ChevronRight, Hash, RefreshCw, QrCode } from "lucide-react";
 import COAccessLogo from "../../components/shared/COAccessLogo";
 import Card from "../../components/shared/Card";
-import { cn } from "../../lib/utils";
-import { formatTime12Hour } from "../../lib/utils";
+import { cn, formatTime12Hour, getLocalDateStr } from "../../lib/utils";
 import type { Student, EventConfig } from "../../types";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
 import coaLogo from "../../../asset/coalogo.png";
@@ -56,7 +55,7 @@ export default function EVENTSCodeEntry({ student, events, onSubmit, onViewHisto
     if (e.status !== "active") return false;
 
     const now = new Date();
-    const todayStr = now.toISOString().split("T")[0];
+    const todayStr = getLocalDateStr(now);
 
     // 1. Date check: if event has a date, it must match today's date
     if (e.date && e.date !== todayStr) {

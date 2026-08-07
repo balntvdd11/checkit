@@ -7,7 +7,7 @@ import StatusBadge from "../../../components/shared/StatusBadge";
 import type { EventConfig } from "../../../types";
 import { createAttendanceRecord, updateAttendanceRecord } from "../../../services/attendance";
 import { useStore } from "../../../state/store";
-import { cn } from "../../../lib/utils";
+import { formatTime12Hour, getLocalDateStr } from "../../../lib/utils";
 
 export default function ScannerTab({ events }: { events: EventConfig[] }) {
   const [selectedScanEVENTS, setSelectedScanEVENTS] = useState("");
@@ -76,7 +76,7 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
               const latestAttendance = stateRef.current.attendance;
 
               // Check if student already has attendance for this event today
-              const today = new Date().toISOString().split('T')[0];
+              const today = getLocalDateStr();
               const existingRecord = latestAttendance.find(a => 
                 a.studentId === student.studentId && 
                 a.EVENTSCode === activeEvent.checkItCode

@@ -6,7 +6,7 @@ import Card from "../../../components/shared/Card";
 import StatusBadge from "../../../components/shared/StatusBadge";
 import type { EventConfig } from "../../../types";
 import { useStore, useSelectors } from "../../../state/store";
-import { formatTime12Hour, formatNameLastFirst } from "../../../lib/utils";
+import { formatTime12Hour, formatNameLastFirst, getLocalDateStr } from "../../../lib/utils";
 import { toast } from "sonner";
 import { updateAttendanceRecord, createAttendanceRecord } from "../../../services/attendance";
 import uaLogoUrl from "../../../../asset/UALOGO.png";
@@ -38,7 +38,7 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
   /** Build the file-name stem: COAccess_EVENTNAME_YYYY-MM-DD */
   const buildFileName = (ext: string) => {
     const eventPart = selectedEvent ? selectedEvent.name.replace(/[^a-zA-Z0-9]+/g, "_") : "AllEvents";
-    const datePart = reportDateFilter || new Date().toISOString().split("T")[0];
+    const datePart = reportDateFilter || getLocalDateStr();
     return `COAccess_${eventPart}_${datePart}${ext}`;
   };
 
@@ -174,7 +174,7 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
           escapeCSV(s.studentId),
           escapeCSV(resolveStudentEmail(s.studentId, s.email, s.name)),
           escapeCSV(s.section),
-          escapeCSV(reportDateFilter || new Date().toISOString().split("T")[0]),
+          escapeCSV(reportDateFilter || getLocalDateStr()),
           escapeCSV("—"),
           escapeCSV("—"),
           escapeCSV("Absent"),
@@ -203,7 +203,7 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
       toast.error("Student ID not found in the system");
       return;
     }
-    const today = reportDateFilter || new Date().toISOString().split("T")[0];
+    const today = reportDateFilter || getLocalDateStr();
     const existing = attendance.find(a => a.studentId === student.studentId && a.EVENTSCode === selectedEvent.checkItCode);
     if (existing) {
       toast.error("Student has already timed in for this event");
@@ -221,7 +221,7 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
     try {
       const now = new Date();
       const time24 = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
-      const today = reportDateFilter || now.toISOString().split("T")[0];
+      const today = reportDateFilter || getLocalDateStr();
 
       let scanStatus: "present" | "late" = "present";
       if (selectedEvent.lateThreshold && time24 > selectedEvent.lateThreshold) {
@@ -368,7 +368,7 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
       doc.text(`Section: ${reportSectionFilter}`, 14, cursorY);
       cursorY += 5;
     }
-    doc.text(`Date: ${reportDateFilter || new Date().toISOString().split("T")[0]}`, 14, cursorY);
+    doc.text(`Date: ${reportDateFilter || getLocalDateStr()}`, 14, cursorY);
     doc.text(`Generated: ${new Date().toLocaleString()}`, pageW - 14, cursorY, { align: "right" });
     cursorY += 4;
 

@@ -4,7 +4,7 @@ import { GraduationCap, Hash, RefreshCw, ChevronRight, AlertTriangle, Download, 
 import COAccessLogo from "../../components/shared/COAccessLogo";
 import QRCodeDisplay from "../../components/shared/QRCodeDisplay";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
-import { cn } from "../../lib/utils";
+import { cn, getLocalDateStr } from "../../lib/utils";
 import type { Student, EventConfig } from "../../types";
 import { fetchStudentByEmail } from "../../services/studentCheck";
 import { fetchAttendance } from "../../services/attendance";
@@ -98,7 +98,7 @@ export default function QRPassGenerator({ student, EVENTSCode, events, onBack, o
   // This prevents the animation from firing just because the global state finished loading.
   useEffect(() => {
     if (isActive !== true) return;
-    const today = new Date().toISOString().split("T")[0];
+    const today = getLocalDateStr();
 
     const init = async () => {
       try {
@@ -125,7 +125,7 @@ export default function QRPassGenerator({ student, EVENTSCode, events, onBack, o
   // 2. Listen for changes and trigger animation ONLY on real diffs
   useEffect(() => {
     if (isActive !== true || !readyToListen) return;
-    const today = new Date().toISOString().split("T")[0];
+    const today = getLocalDateStr();
 
     const evaluateRecord = (myRecord: any) => {
       const currentTimeIn = myRecord?.timeIn ?? null;
