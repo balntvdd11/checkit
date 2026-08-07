@@ -25,13 +25,18 @@ export function generateCheckItCode(eventName: string): string {
 
 export function formatTime12Hour(time24: string | undefined | null): string {
   if (!time24) return "";
-  const [hoursStr, minutesStr] = time24.split(":");
-  if (!hoursStr || !minutesStr) return time24;
-  let hours = parseInt(hoursStr, 10);
+  const match = time24.match(/^(\d{2}):(\d{2})\s*(.*)$/);
+  if (!match) return time24;
+  
+  let hours = parseInt(match[1], 10);
+  const minutes = match[2];
+  const extra = match[3];
+  
   const ampm = hours >= 12 ? 'PM' : 'AM';
   hours = hours % 12;
   hours = hours ? hours : 12; 
-  return `${hours}:${minutesStr} ${ampm}`;
+  
+  return `${hours}:${minutes} ${ampm}${extra ? ` ${extra}` : ''}`;
 }
 
 export function formatNameLastFirst(fullName: string): string {

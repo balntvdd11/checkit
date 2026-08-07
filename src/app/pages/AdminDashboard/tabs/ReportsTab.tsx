@@ -22,7 +22,7 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
   const [reportSectionFilter, setReportSectionFilter] = useState("All");
   const [reportDateFilter, setReportDateFilter] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-  const [earlyOutModal, setEarlyOutModal] = useState<{ visible: boolean; record: any; reason: string }>({ visible: false, record: null, reason: "" });
+  const [earlyOutModal, setEarlyOutModal] = useState<{ visible: boolean; record: any; reason: string; currentTime?: string }>({ visible: false, record: null, reason: "", currentTime: "" });
   const [submittingEarlyOut, setSubmittingEarlyOut] = useState(false);
   const [exceptionModal, setExceptionModal] = useState(false);
   const [exceptionStudentId, setExceptionStudentId] = useState("");
@@ -250,6 +250,29 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
     }
   };
 
+  const handleTimeoutClick = async (record: any) => {
+    if (!selectedEvent) return;
+    const now = new Date();
+    const time24 = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
+
+    if (selectedEvent.timeOut && time24 < selectedEvent.timeOut) {
+      setEarlyOutModal({ visible: true, record, reason: "", currentTime: time24 });
+    } else {
+      setSubmittingEarlyOut(true);
+      try {
+        const updated = await updateAttendanceRecord(record.id, { 
+          timeOut: time24
+        });
+        dispatch({ type: "UPDATE_ATTENDANCE_RECORD", payload: updated });
+        toast.success("Timeout recorded successfully");
+      } catch (err) {
+        toast.error("Failed to record timeout");
+      } finally {
+        setSubmittingEarlyOut(false);
+      }
+    }
+  };
+
   const handleEarlyOutSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!earlyOutModal.record || !earlyOutModal.reason.trim()) return;
@@ -257,11 +280,11 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
     setSubmittingEarlyOut(true);
     try {
       const updated = await updateAttendanceRecord((earlyOutModal.record as any).id, { 
-        timeOut: `Early out - ${earlyOutModal.reason.trim()}` 
+        timeOut: `${earlyOutModal.currentTime} (Early Out: ${earlyOutModal.reason.trim()})` 
       });
       dispatch({ type: "UPDATE_ATTENDANCE_RECORD", payload: updated });
       toast.success("Early out recorded successfully");
-      setEarlyOutModal({ visible: false, record: null, reason: "" });
+      setEarlyOutModal({ visible: false, record: null, reason: "", currentTime: "" });
     } catch (err) {
       toast.error("Failed to record early out");
     } finally {
@@ -622,8 +645,8 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
                           <div className="flex items-center gap-2">
                             <span className="text-slate-400 italic">Did Not Time-out</span>
                             <button 
-                              onClick={() => setEarlyOutModal({ visible: true, record: r, reason: "" })}
-                              className="px-2.5 py-1.5 bg-white hover:bg-slate-50 text-slate-600 hover:text-indigo-600 border border-slate-200 hover:border-indigo-300 text-xs font-semibold rounded-md shadow-sm transition-all flex items-center gap-1.5 whitespace-nowrap"
+                              onClick={() => handleTimeoutClick(r)}
+                              className="px-2.5 py-1.5 bg-white hover:bg-indigo-50 text-indigo-600 border border-indigo-200 hover:border-indigo-300 text-xs font-bold rounded-md shadow-sm transition-all flex items-center gap-1.5 whitespace-nowrap"
                             >
                               <LogOut size={12} />
                               Timeout
@@ -707,8 +730,18 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
                 </button>
               </div>
               <form onSubmit={handleEarlyOutSubmit} className="p-6">
+                <div className="bg-amber-50 border border-amber-200 p-4 rounded-xl mb-5 flex items-start gap-3">
+                  <AlertTriangle className="text-amber-500 shrink-0 mt-0.5" size={20} />
+                  <div>
+                    <h4 className="text-amber-800 font-bold text-sm mb-1">Early Timeout Detected</h4>
+                    <p className="text-xs text-amber-700 leading-relaxed">
+                      The scheduled timeout is <span className="font-bold">{selectedEvent?.timeOut ? formatTime12Hour(selectedEvent.timeOut) : 'not set'}</span>, but it's currently <span className="font-bold">{formatTime12Hour(earlyOutModal.currentTime)}</span>.
+                    </p>
+                  </div>
+                </div>
+
                 <p className="text-sm text-slate-600 mb-4">
-                  Please provide a reason for the early timeout for <span className="font-bold text-slate-800">{earlyOutModal.record?.name}</span>.
+                  You are recording an early timeout for <span className="font-bold text-slate-800">{earlyOutModal.record?.name}</span>. Please provide a reason below.
                 </p>
                 
                 <div className="space-y-1.5 mb-6">
@@ -737,7 +770,7 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
                   <button
                     type="submit"
                     disabled={submittingEarlyOut || !earlyOutModal.reason.trim()}
-                    className="px-6 py-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold rounded-lg shadow-sm transition-colors disabled:opacity-50 flex items-center gap-2"
+                    className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-lg shadow-sm transition-colors disabled:opacity-50 flex items-center gap-2"
                   >
                     {submittingEarlyOut ? "Saving..." : "Submit Timeout"}
                   </button>
