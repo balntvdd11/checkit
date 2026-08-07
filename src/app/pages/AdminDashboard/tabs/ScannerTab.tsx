@@ -7,7 +7,7 @@ import StatusBadge from "../../../components/shared/StatusBadge";
 import type { EventConfig } from "../../../types";
 import { createAttendanceRecord, updateAttendanceRecord } from "../../../services/attendance";
 import { useStore } from "../../../state/store";
-import { formatTime12Hour, getLocalDateStr } from "../../../lib/utils";
+import { formatTime12Hour, getLocalDateStr, cn } from "../../../lib/utils";
 import successSoundFile from "../../../../public/sounds/sucess.mp3";
 
 export default function ScannerTab({ events }: { events: EventConfig[] }) {
