@@ -174,13 +174,18 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
           <h2 className="text-xl font-bold text-[#123499]">Scanner Station</h2>
         </div>
         {!scanning && (
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <button className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium rounded-lg transition-colors border border-slate-200 shadow-sm flex-shrink-0">
+              Sound Effects
+            </button>
             <select value={selectedScanEVENTS} onChange={e => { setSelectedScanEVENTS(e.target.value); setScanResults([]); }}
-            className="w-full sm:w-auto px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[var(--primary)] bg-white shadow-sm">
-            <option value="">Select Events</option>
-            {events.filter(s => s.status === "active").map(s => (
-              <option key={s.id} value={s.id}>{s.name}</option>
-            ))}
-          </select>
+              className="w-full sm:w-auto px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[var(--primary)] bg-white shadow-sm">
+              <option value="">Select Events</option>
+              {events.filter(s => s.status === "active").map(s => (
+                <option key={s.id} value={s.id}>{s.name}</option>
+              ))}
+            </select>
+          </div>
         )}
       </div>
 
