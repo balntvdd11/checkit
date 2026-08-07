@@ -711,24 +711,24 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               className="relative w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden"
             >
-              <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
-                <h3 className="font-bold text-slate-800 text-lg">Record Timeout</h3>
+              <div className="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 backdrop-blur-sm">
+                <h3 className="font-bold text-slate-800 text-[15px]">Record Timeout</h3>
                 <button 
                   onClick={() => !submittingEarlyOut && setEarlyOutModal(prev => ({ ...prev, visible: false }))}
-                  className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-200 rounded-lg transition-colors"
+                  className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-200/50 rounded-lg transition-colors"
                   disabled={submittingEarlyOut}
                 >
-                  <X size={18} />
+                  <X size={16} />
                 </button>
               </div>
-              <form onSubmit={handleEarlyOutSubmit} className="p-6">
-                <div className="space-y-1.5 mb-5">
-                  <label className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Select Timeout Time</label>
+              <form onSubmit={handleEarlyOutSubmit} className="p-5">
+                <div className="space-y-1.5 mb-4">
+                  <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Select Time</label>
                   <input
                     type="time"
                     value={earlyOutModal.currentTime || ""}
                     onChange={(e) => setEarlyOutModal(prev => ({ ...prev, currentTime: e.target.value }))}
-                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                    className="w-full px-3 py-2 bg-slate-50/50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all shadow-sm"
                     required
                     disabled={submittingEarlyOut}
                   />
@@ -744,28 +744,25 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
                       transition={{ duration: 0.2 }}
                       className="overflow-hidden"
                     >
-                      <div className="bg-amber-50 border border-amber-200 p-4 rounded-xl mb-5 flex items-start gap-3 mt-1">
-                        <AlertTriangle className="text-amber-500 shrink-0 mt-0.5" size={20} />
+                      <div className="bg-amber-50/80 border border-amber-200/60 p-3 rounded-lg mb-4 flex items-start gap-2.5 mt-1 shadow-sm">
+                        <AlertTriangle className="text-amber-500 shrink-0 mt-0.5" size={16} />
                         <div>
-                          <h4 className="text-amber-800 font-bold text-sm mb-1">Early Timeout Detected</h4>
-                          <p className="text-xs text-amber-700 leading-relaxed">
-                            The scheduled timeout is <span className="font-bold">{formatTime12Hour(selectedEvent.timeOut)}</span>, but the selected time is <span className="font-bold">{formatTime12Hour(earlyOutModal.currentTime)}</span>.
+                          <h4 className="text-amber-800 font-bold text-[13px] mb-0.5">Early Timeout Detected</h4>
+                          <p className="text-[11px] text-amber-700/90 leading-snug">
+                            Scheduled: <span className="font-bold">{formatTime12Hour(selectedEvent.timeOut)}</span> <br/>
+                            Selected: <span className="font-bold">{formatTime12Hour(earlyOutModal.currentTime)}</span>
                           </p>
                         </div>
                       </div>
-
-                      <p className="text-sm text-slate-600 mb-4">
-                        You are recording an early timeout for <span className="font-bold text-slate-800">{earlyOutModal.record?.name}</span>. Please provide a reason below.
-                      </p>
                       
-                      <div className="space-y-1.5 mb-6">
-                        <label className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Reason</label>
+                      <div className="space-y-1.5 mb-5">
+                        <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Reason for early timeout</label>
                         <input
                           type="text"
                           value={earlyOutModal.reason}
                           onChange={(e) => setEarlyOutModal(prev => ({ ...prev, reason: e.target.value }))}
-                          placeholder="e.g., Medical emergency, Family matters..."
-                          className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                          placeholder="e.g., Medical emergency..."
+                          className="w-full px-3 py-2 bg-slate-50/50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all shadow-sm"
                           autoFocus
                           required
                           disabled={submittingEarlyOut}
@@ -781,28 +778,29 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
                       transition={{ duration: 0.2 }}
                       className="overflow-hidden"
                     >
-                      <p className="text-sm text-slate-600 mb-6 mt-1">
-                        You are recording a timeout for <span className="font-bold text-slate-800">{earlyOutModal.record?.name}</span>. The selected time is valid and on schedule.
+                      <p className="text-xs text-emerald-600 font-medium mb-5 mt-1 bg-emerald-50/50 p-2.5 rounded-lg border border-emerald-100 flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        Valid timeout time selected.
                       </p>
                     </motion.div>
                   )}
                 </AnimatePresence>
 
-                <div className="flex gap-3 justify-end">
+                <div className="flex gap-2.5 justify-end pt-2 border-t border-slate-100">
                   <button
                     type="button"
                     onClick={() => setEarlyOutModal(prev => ({ ...prev, visible: false }))}
                     disabled={submittingEarlyOut}
-                    className="px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-lg transition-colors disabled:opacity-50"
+                    className="px-4 py-1.5 text-[13px] font-semibold text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors disabled:opacity-50"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={submittingEarlyOut || (selectedEvent?.timeOut && earlyOutModal.currentTime && earlyOutModal.currentTime < selectedEvent.timeOut && !earlyOutModal.reason.trim())}
-                    className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-lg shadow-sm transition-colors disabled:opacity-50 flex items-center gap-2"
+                    className="px-5 py-1.5 bg-[#123499] hover:bg-[#123499]/90 text-white text-[13px] font-semibold rounded-lg shadow-sm transition-all disabled:opacity-50 disabled:hover:bg-[#123499] flex items-center gap-2 active:scale-[0.98]"
                   >
-                    {submittingEarlyOut ? "Saving..." : "Submit Timeout"}
+                    {submittingEarlyOut ? "Saving..." : "Confirm"}
                   </button>
                 </div>
               </form>
