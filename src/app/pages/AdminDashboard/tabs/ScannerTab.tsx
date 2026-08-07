@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { ScanLine, History, CheckCircle2, UserX, UserCheck } from "lucide-react";
+import { ScanLine, History, CheckCircle2, UserX, UserCheck, Volume2, VolumeX } from "lucide-react";
 import { Html5Qrcode } from "html5-qrcode";
 import { motion, AnimatePresence } from "motion/react";
 import Card from "../../../components/shared/Card";
@@ -8,13 +8,22 @@ import type { EventConfig } from "../../../types";
 import { createAttendanceRecord, updateAttendanceRecord } from "../../../services/attendance";
 import { useStore } from "../../../state/store";
 import { formatTime12Hour, getLocalDateStr } from "../../../lib/utils";
+import successSoundFile from "../../../../public/sounds/sucess.mp3";
 
 export default function ScannerTab({ events }: { events: EventConfig[] }) {
   const [selectedScanEVENTS, setSelectedScanEVENTS] = useState("");
   const [scanning, setScanning] = useState(false);
   const [scanResults, setScanResults] = useState<{ id: string; name: string; status: "success" | "invalid" | "duplicate"; action?: "present" | "late" | "time-out" | "early-timeout"; time: string }[]>([]);
   const [scanAlert, setScanAlert] = useState<{ name: string; visible: boolean } | null>(null);
+  const [soundEnabled, setSoundEnabled] = useState(true);
   const { state, dispatch } = useStore();
+  
+  const playSuccessSound = () => {
+    if (soundEnabled) {
+      const audio = new Audio(successSoundFile);
+      audio.play().catch(e => console.error("Audio play blocked", e));
+    }
+  };
   
   // Refs for current state to avoid scanner restart on every scan
   const stateRef = useRef(state);
@@ -105,6 +114,8 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
                     const updated = await updateAttendanceRecord(recordId, { timeOut: time24 });
                     dispatch({ type: "UPDATE_ATTENDANCE_RECORD", payload: updated }); 
                     
+                    playSuccessSound();
+                    
                     setScanResults(prev => [{ id: `scan-${Date.now()}`, name: student.name, status: "success", action: "time-out", time: displayTime }, ...prev]);
                     setScanAlert({ name: `${student.name} (Timed Out)`, visible: true });
                     setTimeout(() => {
@@ -137,6 +148,9 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
 
               const saved = await createAttendanceRecord(record as any);
               dispatch({ type: "ADD_ATTENDANCE_RECORD", payload: saved });
+              
+              playSuccessSound();
+              
               setScanResults(prev => [{ id: `scan-${Date.now()}`, name: student.name, status: "success", action: scanStatus, time: displayTime }, ...prev]);
               
               setScanAlert({ name: `${student.name} (${scanStatus === 'late' ? 'Late' : 'Time In'})`, visible: true });
@@ -175,8 +189,16 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
         </div>
         {!scanning && (
           <div className="flex items-center gap-2 w-full sm:w-auto">
-            <button className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium rounded-lg transition-colors border border-slate-200 shadow-sm flex-shrink-0">
-              Sound Effects
+            <button 
+              onClick={() => setSoundEnabled(!soundEnabled)}
+              className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors border shadow-sm flex items-center gap-2 flex-shrink-0 ${
+                soundEnabled 
+                  ? 'bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border-emerald-200' 
+                  : 'bg-slate-50 hover:bg-slate-100 text-slate-500 border-slate-200'
+              }`}
+            >
+              {soundEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
+              <span className="hidden sm:inline">Sound: {soundEnabled ? 'ON' : 'OFF'}</span>
             </button>
             <select value={selectedScanEVENTS} onChange={e => { setSelectedScanEVENTS(e.target.value); setScanResults([]); }}
               className="w-full sm:w-auto px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[var(--primary)] bg-white shadow-sm">
