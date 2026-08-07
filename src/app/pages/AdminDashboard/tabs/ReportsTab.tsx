@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { updateAttendanceRecord, createAttendanceRecord } from "../../../services/attendance";
 import uaLogoUrl from "../../../../asset/UALOGO.png";
 import jpiaLogoUrl from "../../../../asset/JPIALOGO.png";
+import TimePicker from "../../../components/shared/TimePicker";
 
 declare global {
   interface Window {
@@ -714,7 +715,12 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
               className="relative w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden"
             >
               <div className="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 backdrop-blur-sm">
-                <h3 className="font-bold text-slate-800 text-[15px]">Record Timeout</h3>
+                <div>
+                  <h3 className="font-bold text-slate-800 text-[15px]">Record Timeout</h3>
+                  {earlyOutModal.record && (
+                    <p className="text-xs text-slate-500 font-medium mt-0.5">{(earlyOutModal.record as any).name}</p>
+                  )}
+                </div>
                 <button 
                   onClick={() => !submittingEarlyOut && setEarlyOutModal(prev => ({ ...prev, visible: false }))}
                   className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-200/50 rounded-lg transition-colors"
@@ -724,15 +730,12 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
                 </button>
               </div>
               <form onSubmit={handleEarlyOutSubmit} className="p-5">
-                <div className="space-y-1.5 mb-4">
-                  <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Select Time</label>
-                  <input
-                    type="time"
+                <div className="mb-4">
+                  <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1.5">Select Time</label>
+                  <TimePicker
+                    label="Timeout"
                     value={earlyOutModal.currentTime || ""}
-                    onChange={(e) => setEarlyOutModal(prev => ({ ...prev, currentTime: e.target.value }))}
-                    className="w-full px-3 py-2 bg-slate-50/50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all shadow-sm"
-                    required
-                    disabled={submittingEarlyOut}
+                    onChange={(v) => setEarlyOutModal(prev => ({ ...prev, currentTime: v }))}
                   />
                 </div>
 
