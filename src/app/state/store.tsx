@@ -39,55 +39,64 @@ function reducer(state: State, action: Action): State {
       return { ...state, students: action.payload.students, events: action.payload.events, attendance: action.payload.attendance, loading: false };
     case "SET_EVENTS":
       return { ...state, events: action.payload };
-    case "ADD_EVENT":
+    case "ADD_EVENT": {
+      const exists = state.events.some(e => String(e.id) === String(action.payload.id));
+      if (exists) return state;
       return { ...state, events: [action.payload, ...state.events] };
+    }
     case "UPDATE_EVENT":
-      return { ...state, events: state.events.map(e => e.id === action.payload.id ? action.payload : e) };
+      return { ...state, events: state.events.map(e => String(e.id) === String(action.payload.id) ? action.payload : e) };
     case "TOGGLE_EVENT_STATUS":
-      return { ...state, events: state.events.map(e => e.id === action.payload.id ? { ...e, status: e.status === "active" ? "inactive" : "active" } : e) };
+      return { ...state, events: state.events.map(e => String(e.id) === String(action.payload.id) ? { ...e, status: e.status === "active" ? "inactive" : "active" } : e) };
     case "SET_STUDENTS":
       return { ...state, students: action.payload };
-    case "ADD_STUDENT":
+    case "ADD_STUDENT": {
+      const exists = state.students.some(s => String(s.id) === String(action.payload.id));
+      if (exists) return state;
       return { ...state, students: [action.payload, ...state.students] };
+    }
     case "UPDATE_STUDENT":
-      return { ...state, students: state.students.map(s => s.studentId === action.payload.studentId ? action.payload : s) };
+      return { ...state, students: state.students.map(s => String(s.studentId) === String(action.payload.studentId) ? action.payload : s) };
     case "DELETE_STUDENT":
-      return { ...state, students: state.students.filter(s => s.id !== action.payload.id) };
+      return { ...state, students: state.students.filter(s => String(s.id) !== String(action.payload.id)) };
     case "SET_ATTENDANCE":
       return { ...state, attendance: action.payload };
-    case "ADD_ATTENDANCE":
+    case "ADD_ATTENDANCE": {
+      const exists = state.attendance.some(a => String((a as any).id) === String((action.payload as any).id));
+      if (exists) return state;
       return { ...state, attendance: [action.payload, ...state.attendance] };
+    }
     case "ADD_ATTENDANCE_RECORD": {
-      const exists = state.attendance.some(a => (a as any).id === (action.payload as any).id);
+      const exists = state.attendance.some(a => String((a as any).id) === String((action.payload as any).id));
       if (exists) return state;
       return { ...state, attendance: [action.payload, ...state.attendance] };
     }
     case "UPDATE_ATTENDANCE_RECORD":
-      return { ...state, attendance: state.attendance.map(a => (a as any).id === (action.payload as any).id ? action.payload : a) };
+      return { ...state, attendance: state.attendance.map(a => String((a as any).id) === String((action.payload as any).id) ? action.payload : a) };
     // ── WebSocket-pushed actions ──────────────────────────────────────
     case "WS_ATTENDANCE_CREATED": {
-      const exists = state.attendance.some(a => (a as any).id === (action.payload as any).id);
+      const exists = state.attendance.some(a => String((a as any).id) === String((action.payload as any).id));
       if (exists) return state;
       return { ...state, attendance: [action.payload, ...state.attendance] };
     }
     case "WS_ATTENDANCE_UPDATED":
-      return { ...state, attendance: state.attendance.map(a => (a as any).id === (action.payload as any).id ? action.payload : a) };
+      return { ...state, attendance: state.attendance.map(a => String((a as any).id) === String((action.payload as any).id) ? action.payload : a) };
     case "WS_EVENT_UPDATED": {
-      const idx = state.events.findIndex(e => e.id === action.payload.id);
+      const idx = state.events.findIndex(e => String(e.id) === String(action.payload.id));
       if (idx >= 0) {
-        return { ...state, events: state.events.map(e => e.id === action.payload.id ? action.payload : e) };
+        return { ...state, events: state.events.map(e => String(e.id) === String(action.payload.id) ? action.payload : e) };
       }
       return { ...state, events: [action.payload, ...state.events] };
     }
     case "WS_STUDENT_CREATED": {
-      const exists = state.students.some(s => s.id === action.payload.id);
+      const exists = state.students.some(s => String(s.id) === String(action.payload.id));
       if (exists) return state;
       return { ...state, students: [action.payload, ...state.students] };
     }
     case "WS_STUDENT_UPDATED":
-      return { ...state, students: state.students.map(s => s.id === action.payload.id ? action.payload : s) };
+      return { ...state, students: state.students.map(s => String(s.id) === String(action.payload.id) ? action.payload : s) };
     case "WS_STUDENT_DELETED":
-      return { ...state, students: state.students.filter(s => s.id !== action.payload.id) };
+      return { ...state, students: state.students.filter(s => String(s.id) !== String(action.payload.id)) };
     default:
       return state;
   }
