@@ -28,7 +28,7 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
   const [submittingEarlyOut, setSubmittingEarlyOut] = useState(false);
   const [exceptionModal, setExceptionModal] = useState(false);
   const [exceptionStudentId, setExceptionStudentId] = useState("");
-  const [exceptionConfirmModal, setExceptionConfirmModal] = useState<{ visible: boolean; student: any }>({ visible: false, student: null });
+  const [exceptionConfirmModal, setExceptionConfirmModal] = useState<{ visible: boolean; student: any; timeIn: string }>({ visible: false, student: null, timeIn: "" });
   const { attendance, students } = useSelectors();
   const { dispatch } = useStore();
 
@@ -210,7 +210,12 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
       return;
     }
     setExceptionModal(false);
-    setExceptionConfirmModal({ visible: true, student });
+
+    const now = new Date();
+    const now24 = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+    const defaultTime = selectedEvent.timeIn || now24;
+
+    setExceptionConfirmModal({ visible: true, student, timeIn: defaultTime });
   };
 
   const handleExceptionConfirm = async () => {
@@ -220,7 +225,8 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
     setSubmittingEarlyOut(true);
     try {
       const now = new Date();
-      const time24 = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
+      const now24 = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+      const time24 = exceptionConfirmModal.timeIn || selectedEvent.timeIn || now24;
       const today = reportDateFilter || getLocalDateStr();
 
       let scanStatus: "present" | "late" = "present";
@@ -243,7 +249,7 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
       const saved = await createAttendanceRecord(record as any);
       dispatch({ type: "ADD_ATTENDANCE_RECORD", payload: saved });
       toast.success("Attendance exception recorded successfully");
-      setExceptionConfirmModal({ visible: false, student: null });
+      setExceptionConfirmModal({ visible: false, student: null, timeIn: "" });
       setExceptionStudentId("");
     } catch (err) {
       toast.error("Failed to record attendance exception");
@@ -860,7 +866,7 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
                   </button>
                   <button type="submit" disabled={!exceptionStudentId.trim()}
                     className="px-6 py-2 bg-amber-600 hover:bg-amber-700 text-white text-sm font-bold rounded-lg shadow-sm transition-colors disabled:opacity-50">
-                    Yes
+                    Next
                   </button>
                 </div>
               </form>
@@ -877,26 +883,59 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
             <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
-              onClick={() => !submittingEarlyOut && setExceptionConfirmModal({ visible: false, student: null })}
+              onClick={() => !submittingEarlyOut && setExceptionConfirmModal({ visible: false, student: null, timeIn: "" })}
             />
             <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }}
               className="relative w-full max-w-sm bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden text-center p-6"
             >
-              <div className="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-3">
                 <UserCheck size={24} />
               </div>
-              <h3 className="font-bold text-slate-800 text-lg mb-2">Are you sure?</h3>
-              <p className="text-sm text-slate-600 mb-6">
-                Do you want to record time in for <b>{exceptionConfirmModal.student.name}</b> ({exceptionConfirmModal.student.studentId})?
+              <h3 className="font-bold text-slate-800 text-lg mb-1">Manual Time In</h3>
+              <p className="text-xs text-slate-500 mb-4">
+                Recording for <b className="text-slate-700">{exceptionConfirmModal.student.name}</b> ({exceptionConfirmModal.student.studentId})
               </p>
+
+              <div className="mb-4 text-left">
+                <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1.5">
+                  Select Time In
+                </label>
+                <TimePicker
+                  label="Time In"
+                  value={exceptionConfirmModal.timeIn}
+                  onChange={(v) => setExceptionConfirmModal(prev => ({ ...prev, timeIn: v }))}
+                />
+              </div>
+
+              {(() => {
+                const t = exceptionConfirmModal.timeIn;
+                const isLate = Boolean(selectedEvent?.lateThreshold && t && t > selectedEvent.lateThreshold);
+                return (
+                  <div className={cn(
+                    "p-3 rounded-xl mb-5 flex items-center justify-between text-xs font-semibold border transition-colors",
+                    isLate 
+                      ? "bg-amber-50 text-amber-800 border-amber-200" 
+                      : "bg-emerald-50 text-emerald-800 border-emerald-200"
+                  )}>
+                    <span>Computed Status:</span>
+                    <span className={cn(
+                      "px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider text-[11px]",
+                      isLate ? "bg-amber-100 text-amber-700" : "bg-emerald-100 text-emerald-700"
+                    )}>
+                      {isLate ? "Late" : "Present"}
+                    </span>
+                  </div>
+                );
+              })()}
+
               <div className="flex gap-3 justify-center">
-                <button type="button" onClick={() => setExceptionConfirmModal({ visible: false, student: null })} disabled={submittingEarlyOut}
-                  className="px-6 py-2 text-sm font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors">
+                <button type="button" onClick={() => setExceptionConfirmModal({ visible: false, student: null, timeIn: "" })} disabled={submittingEarlyOut}
+                  className="px-5 py-2.5 text-sm font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">
                   Cancel
                 </button>
                 <button type="button" onClick={handleExceptionConfirm} disabled={submittingEarlyOut}
-                  className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-lg shadow-sm transition-colors flex items-center gap-2 disabled:opacity-50">
-                  {submittingEarlyOut ? "Recording..." : "Confirm"}
+                  className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl shadow-sm transition-colors flex items-center gap-2 disabled:opacity-50">
+                  {submittingEarlyOut ? "Recording..." : "Confirm Time In"}
                 </button>
               </div>
             </motion.div>
