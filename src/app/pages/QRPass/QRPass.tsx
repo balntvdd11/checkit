@@ -1,10 +1,21 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { GraduationCap, Hash, RefreshCw, ChevronRight, AlertTriangle, Download, CheckCircle2 } from "lucide-react";
+import {
+  GraduationCap,
+  Hash,
+  RefreshCw,
+  ChevronRight,
+  AlertTriangle,
+  Download,
+  CheckCircle2,
+  QrCode,
+  Lock,
+  Clock,
+} from "lucide-react";
 import COAccessLogo from "../../components/shared/COAccessLogo";
 import QRCodeDisplay from "../../components/shared/QRCodeDisplay";
 import AnimatedBackground from "../../components/common/AnimatedBackground";
-import { cn, getLocalDateStr } from "../../lib/utils";
+import { cn, getLocalDateStr, formatTime12Hour } from "../../lib/utils";
 import type { Student, EventConfig } from "../../types";
 import { fetchStudentByEmail } from "../../services/studentCheck";
 import { fetchAttendance } from "../../services/attendance";
@@ -13,12 +24,44 @@ import { hasStoredPrivateKey } from "../../services/browserActivation";
 import DeveloperFooter from "../../components/shared/DeveloperFooter";
 import { useStore } from "../../state/store";
 
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+const parseTimeToMinutes = (timeStr?: string): number => {
+  if (!timeStr) return 0;
+  if (timeStr.includes("AM") || timeStr.includes("PM")) {
+    const match = timeStr.match(/(\d+):(\d+)\s*(AM|PM)/i);
+    if (match) {
+      let hrs = parseInt(match[1], 10);
+      const mins = parseInt(match[2], 10);
+      const ampm = match[3].toUpperCase();
+      if (ampm === "PM" && hrs < 12) hrs += 12;
+      if (ampm === "AM" && hrs === 12) hrs = 0;
+      return hrs * 60 + mins;
+    }
+  }
+  const [h, m] = timeStr.split(":").map((n) => parseInt(n, 10));
+  return (h || 0) * 60 + (m || 0);
+};
+
 // ─── QR Pass Generator ────────────────────────────────────────────────────────
 
-const REFRESH_INTERVAL = 15;
+const QR_VALIDITY_SECONDS = 12;
+const QR_COOLDOWN_SECONDS = 15;
 
-export default function QRPassGenerator({ student, EVENTSCode, events, onBack, onGoToDashboard, onLogout }: {
-  student: Student; EVENTSCode: string; events: EventConfig[]; onBack: () => void; onGoToDashboard?: () => void; onLogout?: () => void;
+export default function QRPassGenerator({
+  student,
+  EVENTSCode,
+  events,
+  onBack,
+  onGoToDashboard,
+  onLogout,
+}: {
+  student: Student;
+  EVENTSCode: string;
+  events: EventConfig[];
+  onBack: () => void;
+  onGoToDashboard?: () => void;
+  onLogout?: () => void;
 }) {
   const getInitials = (name: string) => {
     if (!name) return "";
@@ -29,29 +72,61 @@ export default function QRPassGenerator({ student, EVENTSCode, events, onBack, o
   const initials = getInitials(student.name);
   const activeEvent = events?.find((e) => e.checkItCode === EVENTSCode);
   const eventName = activeEvent?.name || "Event";
-  const [timeLeft, setTimeLeft] = useState(REFRESH_INTERVAL);
-  const [qrSeed, setQrSeed] = useState(Date.now().toString());
-  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  // Security check state
   const [isActive, setIsActive] = useState<boolean | null>(null);
 
-  const handleManualRefresh = () => {
-    setIsRefreshing(true);
-    setTimeout(() => {
-      setQrSeed(Date.now().toString());
-      setTimeLeft(REFRESH_INTERVAL);
-      setIsRefreshing(false);
-    }, 450);
+  // QR State machine: "idle" | "active" | "expired"
+  const [qrState, setQrState] = useState<"idle" | "active" | "expired">("idle");
+  const [qrPayload, setQrPayload] = useState<string | null>(null);
+  const [timeLeft, setTimeLeft] = useState<number>(0);
+  const [cooldownLeft, setCooldownLeft] = useState<number>(0);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  // Current minute tracker to re-evaluate timeOut gate dynamically
+  const [currentMinutes, setCurrentMinutes] = useState(() => {
+    const n = new Date();
+    return n.getHours() * 60 + n.getMinutes();
+  });
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const n = new Date();
+      setCurrentMinutes(n.getHours() * 60 + n.getMinutes());
+    }, 10000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const isTimeOutWindowOpen = (): boolean => {
+    if (!activeEvent?.timeOut) return true;
+    const timeoutMinutes = parseTimeToMinutes(activeEvent.timeOut);
+    return currentMinutes >= timeoutMinutes;
   };
+
+  // ── Global Store & Attendance Status ────────────────────────────────────────
+  const { state, dispatch } = useStore();
+  const { attendance } = state;
+  const today = getLocalDateStr();
+
+  const currentRecord = attendance.find(
+    (r: any) =>
+      (r.studentId === student.studentId || r.email === student.email) &&
+      r.EVENTSCode === EVENTSCode &&
+      r.date === today
+  );
+
+  const hasTimedIn = Boolean(currentRecord?.timeIn && currentRecord.timeIn.trim() !== "");
+  const hasTimedOut = Boolean(currentRecord?.timeOut && currentRecord.timeOut.trim() !== "");
 
   // ── Scan success modal (read-only: never touches QR/timer/nav) ────────────
   type ScanModalType = "time-in" | "time-out" | null;
   const [scanModal, setScanModal] = useState<ScanModalType>(null);
   const scanModalTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  // Track what we've already seen so we only fire once per transition
   const prevTimeInRef = useRef<string | null | undefined>(undefined);
   const prevTimeOutRef = useRef<string | null | undefined>(undefined);
-  const ringSize = 264;
+  const [readyToListen, setReadyToListen] = useState(false);
 
+  // Security check
   useEffect(() => {
     let mounted = true;
     const checkActiveStatus = async () => {
@@ -70,48 +145,32 @@ export default function QRPassGenerator({ student, EVENTSCode, events, onBack, o
       }
     };
     checkActiveStatus();
-    return () => { mounted = false; };
+    return () => {
+      mounted = false;
+    };
   }, [student.email]);
 
+  // Initial attendance fetch on mount (only once)
   useEffect(() => {
     if (isActive !== true) return;
-    const interval = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev <= 1) {
-          setIsRefreshing(true);
-          setTimeout(() => { setQrSeed(Date.now().toString()); setIsRefreshing(false); }, 450);
-          return REFRESH_INTERVAL;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [isActive]);
-
-  // ── React instantly to WebSocket updates from the global store ──────────
-  // (Plus a fallback HTTP poll just in case the carrier/network blocks WebSockets)
-  const { state } = useStore();
-  const { attendance } = state;
-  const [readyToListen, setReadyToListen] = useState(false);
-
-  // 1. Initial lock-in: Fetch the exact current state before we start listening for changes.
-  // This prevents the animation from firing just because the global state finished loading.
-  useEffect(() => {
-    if (isActive !== true) return;
-    const today = getLocalDateStr();
-
     const init = async () => {
       try {
         const records = await fetchAttendance();
-        const currentRecord = records.find(
-          (r: any) => r.studentId === student.studentId && r.EVENTSCode === EVENTSCode && r.date === today
+        dispatch({ type: "SET_ATTENDANCE", payload: records });
+        const record = records.find(
+          (r: any) =>
+            (r.studentId === student.studentId || r.email === student.email) &&
+            r.EVENTSCode === EVENTSCode &&
+            r.date === today
         );
-        prevTimeInRef.current = currentRecord?.timeIn ?? null;
-        prevTimeOutRef.current = currentRecord?.timeOut ?? null;
+        prevTimeInRef.current = record?.timeIn ?? null;
+        prevTimeOutRef.current = record?.timeOut ?? null;
       } catch {
-        // Fallback to store if fetch fails
         const wsRecord = attendance.find(
-          (r: any) => r.studentId === student.studentId && r.EVENTSCode === EVENTSCode && r.date === today
+          (r: any) =>
+            (r.studentId === student.studentId || r.email === student.email) &&
+            r.EVENTSCode === EVENTSCode &&
+            r.date === today
         );
         prevTimeInRef.current = wsRecord?.timeIn ?? null;
         prevTimeOutRef.current = wsRecord?.timeOut ?? null;
@@ -120,67 +179,91 @@ export default function QRPassGenerator({ student, EVENTSCode, events, onBack, o
       }
     };
     init();
-  }, [isActive, student.studentId, EVENTSCode]); // Only run once on mount per event
+  }, [isActive, student.studentId, student.email, EVENTSCode]);
 
-  // 2. Listen for changes and trigger animation ONLY on real diffs
+  // Reactive listener to WebSocket attendance pushes in global store
   useEffect(() => {
-    if (isActive !== true || !readyToListen) return;
-    const today = getLocalDateStr();
+    if (!readyToListen) return;
+    const currentTimeIn = currentRecord?.timeIn ?? null;
+    const currentTimeOut = currentRecord?.timeOut ?? null;
 
-    const evaluateRecord = (myRecord: any) => {
-      const currentTimeIn = myRecord?.timeIn ?? null;
-      const currentTimeOut = (myRecord as any)?.timeOut ?? null;
+    if (prevTimeInRef.current === undefined) {
+      prevTimeInRef.current = currentTimeIn;
+      prevTimeOutRef.current = currentTimeOut;
+      return;
+    }
 
-      if (prevTimeInRef.current === undefined) {
-        prevTimeInRef.current = currentTimeIn;
-        prevTimeOutRef.current = currentTimeOut;
-        return;
-      }
-
-      if (currentTimeOut && currentTimeOut.trim() !== "" && currentTimeOut !== prevTimeOutRef.current) {
-        prevTimeOutRef.current = currentTimeOut;
-        if (scanModalTimerRef.current) clearTimeout(scanModalTimerRef.current);
-        setScanModal("time-out");
-        scanModalTimerRef.current = setTimeout(() => setScanModal(null), 4500);
-        return;
-      }
-
-      if (currentTimeIn && currentTimeIn !== prevTimeInRef.current) {
-        prevTimeInRef.current = currentTimeIn;
-        if (scanModalTimerRef.current) clearTimeout(scanModalTimerRef.current);
-        setScanModal("time-in");
-        scanModalTimerRef.current = setTimeout(() => setScanModal(null), 4500);
-      }
-    };
-
-    // Evaluate based on WebSocket state
-    const wsRecord = attendance.find(
-      (r: any) => r.studentId === student.studentId && r.EVENTSCode === EVENTSCode && r.date === today
-    );
-    evaluateRecord(wsRecord);
-
-    // Fallback polling (HTTP)
-    const poll = async () => {
-      try {
-        const records = await fetchAttendance();
-        const httpRecord = records.find(
-          (r: any) => r.studentId === student.studentId && r.EVENTSCode === EVENTSCode && r.date === today
-        );
-        evaluateRecord(httpRecord);
-      } catch {
-        // silent fail
-      }
-    };
-
-    const pollInterval = setInterval(poll, 3000);
-
-    return () => {
-      clearInterval(pollInterval);
+    if (currentTimeOut && currentTimeOut.trim() !== "" && currentTimeOut !== prevTimeOutRef.current) {
+      prevTimeOutRef.current = currentTimeOut;
+      setQrState("idle");
+      setQrPayload(null);
       if (scanModalTimerRef.current) clearTimeout(scanModalTimerRef.current);
-    };
-  }, [isActive, attendance, student.studentId, EVENTSCode]);
+      setScanModal("time-out");
+      scanModalTimerRef.current = setTimeout(() => setScanModal(null), 4500);
+      return;
+    }
 
-  const qrValue = `${student.studentId}:${EVENTSCode}:${qrSeed}`;
+    if (currentTimeIn && currentTimeIn !== prevTimeInRef.current) {
+      prevTimeInRef.current = currentTimeIn;
+      setQrState("idle");
+      setQrPayload(null);
+      if (scanModalTimerRef.current) clearTimeout(scanModalTimerRef.current);
+      setScanModal("time-in");
+      scanModalTimerRef.current = setTimeout(() => setScanModal(null), 4500);
+    }
+  }, [currentRecord, readyToListen]);
+
+  // QR Validity (12s) and Cooldown (15s) countdown interval
+  useEffect(() => {
+    if (qrState !== "active" && cooldownLeft <= 0) return;
+
+    const timer = setInterval(() => {
+      // 12s validity countdown
+      if (qrState === "active") {
+        setTimeLeft((prev) => {
+          if (prev <= 1) {
+            setQrState("expired");
+            setQrPayload(null);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }
+
+      // 15s generation cooldown countdown
+      setCooldownLeft((prev) => {
+        if (prev <= 1) return 0;
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [qrState, cooldownLeft]);
+
+  // Generate QR handler
+  const handleGenerateQR = () => {
+    if (cooldownLeft > 0) return;
+    const now = Date.now();
+    const expiresAt = now + QR_VALIDITY_SECONDS * 1000;
+    const payload = `${student.studentId}:${EVENTSCode}:${now}:${expiresAt}`;
+    setQrPayload(payload);
+    setTimeLeft(QR_VALIDITY_SECONDS);
+    setCooldownLeft(QR_COOLDOWN_SECONDS);
+    setQrState("active");
+  };
+
+  // Manual refresh of attendance state (user triggered only, no polling)
+  const handleManualRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      const records = await fetchAttendance();
+      dispatch({ type: "SET_ATTENDANCE", payload: records });
+    } catch (e) {
+      console.error("Failed to refresh attendance", e);
+    } finally {
+      setTimeout(() => setIsRefreshing(false), 500);
+    }
+  };
 
   const handleDownloadQR = () => {
     const svg = document.getElementById("qr-code-svg");
@@ -206,7 +289,14 @@ export default function QRPassGenerator({ student, EVENTSCode, events, onBack, o
     return (
       <div className="min-h-[100dvh] pb-[180px] sm:pb-[220px] landing-page-black flex items-center justify-center">
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
-          <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ animation: "spin 0.9s linear infinite" }}>
+          <svg
+            width="36"
+            height="36"
+            viewBox="0 0 36 36"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            style={{ animation: "spin 0.9s linear infinite" }}
+          >
             <circle cx="18" cy="18" r="15" stroke="rgba(255,255,255,0.12)" strokeWidth="3" />
             <path d="M18 3 A15 15 0 0 1 33 18" stroke="rgba(255,255,255,0.75)" strokeWidth="3" strokeLinecap="round" />
           </svg>
@@ -226,17 +316,24 @@ export default function QRPassGenerator({ student, EVENTSCode, events, onBack, o
           <span className="text-white/50 text-sm">Student Portal</span>
         </div>
         <div className="flex items-center gap-3">
-          <button onClick={handleManualRefresh} disabled={isRefreshing} className="flex items-center gap-1.5 text-white/55 hover:text-white text-sm transition-colors">
-            <RefreshCw size={14} className={cn(isRefreshing && "animate-spin")} /> {isRefreshing ? "Refreshing..." : "Refresh"}
+          <button
+            onClick={handleManualRefresh}
+            disabled={isRefreshing}
+            className="flex items-center gap-1.5 text-white/55 hover:text-white text-sm transition-colors"
+          >
+            <RefreshCw size={14} className={cn(isRefreshing && "animate-spin")} />{" "}
+            {isRefreshing ? "Refreshing..." : "Refresh"}
           </button>
         </div>
       </header>
 
       <div className="flex items-center justify-center min-h-[calc(100dvh-57px)] p-4 relative z-10">
         <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-sm">
-
           {onGoToDashboard && (
-            <button onClick={onGoToDashboard} className="flex items-center gap-1.5 text-sm text-[#0a2472]/70 hover:text-[#0a2472] mb-4 transition-colors font-medium">
+            <button
+              onClick={onGoToDashboard}
+              className="flex items-center gap-1.5 text-sm text-[#0a2472]/70 hover:text-[#0a2472] mb-4 transition-colors font-medium"
+            >
               <ChevronRight size={15} className="rotate-180" /> Back to Dashboard
             </button>
           )}
@@ -246,7 +343,7 @@ export default function QRPassGenerator({ student, EVENTSCode, events, onBack, o
             {isActive ? (
               <>
                 <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                <span className="text-sm font-semibold text-emerald-600">Live — Ready to scan</span>
+                <span className="text-sm font-semibold text-emerald-600">Live — Device Verified</span>
               </>
             ) : (
               <>
@@ -257,8 +354,6 @@ export default function QRPassGenerator({ student, EVENTSCode, events, onBack, o
           </div>
 
           <div className="bg-gradient-to-br from-[#0a2472]/85 via-[#123499]/90 to-[#72caec] border border-white/10 rounded-2xl shadow-[0_32px_80px_rgba(0,0,0,0.35)] relative overflow-hidden group premium-border-card">
-
-
             {/* Student header */}
             <div className="bg-black/20 px-6 py-5 relative z-10">
               <div className="flex items-center gap-3">
@@ -267,43 +362,177 @@ export default function QRPassGenerator({ student, EVENTSCode, events, onBack, o
                 </div>
                 <div className="min-w-0">
                   <p className="font-bold text-white text-sm leading-tight truncate">{student.name}</p>
-                  <p className="text-white/55 text-xs mt-0.5 font-mono">{student.studentId} · {student.section}</p>
+                  <p className="text-white/55 text-xs mt-0.5 font-mono">
+                    {student.studentId} · {student.section}
+                  </p>
                 </div>
               </div>
-              <div className="mt-3 pt-3 border-t border-white/10 flex items-center gap-2">
+              <div className="mt-3 pt-3 border-t border-white/10 flex items-center justify-between">
                 <span className="text-xs font-semibold text-white/80">{eventName}</span>
+                {activeEvent?.timeIn && activeEvent?.timeOut && (
+                  <span className="text-[11px] text-white/60">
+                    {formatTime12Hour(activeEvent.timeIn)} - {formatTime12Hour(activeEvent.timeOut)}
+                  </span>
+                )}
               </div>
             </div>
 
             {isActive ? (
               <div className="flex flex-col items-center pt-6 pb-7 px-6 relative z-10">
-                <div className="flex justify-center items-center py-4 w-full">
-                  <motion.div
-                    animate={{ opacity: isRefreshing ? 0.15 : 1, scale: isRefreshing ? 0.92 : 1 }}
-                    transition={{ duration: 0.35 }}
-                  >
-                    <div className="p-6 bg-white rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
-                      <QRCodeDisplay value={qrValue} size={220} />
+                {/* ── CASE 1: Attendance fully completed ────────────────── */}
+                {hasTimedOut ? (
+                  <div className="w-full flex flex-col items-center text-center py-4">
+                    <div className="w-16 h-16 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center mb-4 shadow-inner">
+                      <CheckCircle2 size={36} className="text-emerald-400" />
                     </div>
-                  </motion.div>
-                </div>
+                    <h3 className="text-xl font-black text-white mb-1">Attendance Completed</h3>
+                    <p className="text-xs text-emerald-300 font-semibold mb-5">
+                      Both Time In and Time Out Recorded ✓
+                    </p>
 
-                <div className="mt-3 flex flex-col items-center gap-2 w-full max-w-[200px]">
-                  <div className="flex items-center gap-1.5 text-sm text-slate-300">
-                    <RefreshCw size={13} className={cn(isRefreshing && "animate-spin")} />
-                    <span>{isRefreshing ? "Refreshing…" : `Refreshes in ${timeLeft}s`}</span>
-                  </div>
-                  <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-[var(--primary)] transition-all duration-1000 ease-linear"
-                      style={{ width: `${(timeLeft / REFRESH_INTERVAL) * 100}%` }}
-                    />
-                  </div>
-                </div>
+                    <div className="w-full grid grid-cols-2 gap-2 p-3 bg-black/30 rounded-xl border border-white/10 mb-6">
+                      <div className="text-center">
+                        <p className="text-[11px] text-white/60 font-semibold uppercase">Time In</p>
+                        <p className="text-sm font-bold text-white mt-0.5">
+                          {formatTime12Hour(currentRecord?.timeIn)}
+                        </p>
+                      </div>
+                      <div className="text-center border-l border-white/10">
+                        <p className="text-[11px] text-white/60 font-semibold uppercase">Time Out</p>
+                        <p className="text-sm font-bold text-white mt-0.5">
+                          {formatTime12Hour(currentRecord?.timeOut)}
+                        </p>
+                      </div>
+                    </div>
 
-                <p className="mt-4 text-xs text-center text-white leading-relaxed max-w-[200px]">
-                  Show this QR to your admin's scanner. Keep this screen active.
-                </p>
+                    {onGoToDashboard && (
+                      <button
+                        onClick={onGoToDashboard}
+                        className="w-full py-3 bg-white/20 hover:bg-white/30 text-white font-semibold rounded-xl transition-colors shadow-sm"
+                      >
+                        Back to Dashboard
+                      </button>
+                    )}
+                  </div>
+                ) : hasTimedIn && !isTimeOutWindowOpen() ? (
+                  /* ── CASE 2: State 4 — Time In Recorded (Locked) ────────── */
+                  <div className="w-full flex flex-col items-center text-center py-4">
+                    <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold tracking-wide uppercase mb-4">
+                      <CheckCircle2 size={13} />
+                      RECORDED
+                    </div>
+
+                    <div className="w-16 h-16 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center mb-4">
+                      <CheckCircle2 size={36} className="text-emerald-400" />
+                    </div>
+
+                    <h3 className="text-lg font-bold text-white mb-1">Time In Successful</h3>
+                    <p className="text-xs text-slate-300 max-w-[250px] leading-relaxed mb-4">
+                      QR generation is now locked until the scheduled Time Out window.
+                    </p>
+
+                    {activeEvent?.timeOut && (
+                      <div className="w-full p-3 bg-black/30 rounded-xl border border-white/10 mb-5">
+                        <p className="text-[11px] text-white/60 uppercase tracking-wider font-semibold">
+                          Scheduled Time Out
+                        </p>
+                        <p className="text-base font-bold text-white mt-0.5">
+                          {formatTime12Hour(activeEvent.timeOut)}
+                        </p>
+                      </div>
+                    )}
+
+                    <button
+                      disabled
+                      className="w-full py-3.5 bg-white/10 text-white/50 font-bold rounded-xl border border-white/10 cursor-not-allowed flex items-center justify-center gap-2"
+                    >
+                      <Lock size={16} />
+                      QR Generation Locked
+                    </button>
+                  </div>
+                ) : qrState === "active" && qrPayload ? (
+                  /* ── CASE 3: State 2 — QR Generated (Active) ──────────── */
+                  <div className="w-full flex flex-col items-center py-2">
+                    <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold tracking-wide uppercase mb-3">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      ACTIVE
+                    </div>
+
+                    <div className="p-5 bg-white rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.3)] my-2">
+                      <QRCodeDisplay value={qrPayload} size={210} />
+                    </div>
+
+                    <div className="mt-3 flex flex-col items-center gap-1 w-full max-w-[210px]">
+                      <div className="text-2xl font-black font-mono text-white tracking-wider">
+                        00:{String(timeLeft).padStart(2, "0")}
+                      </div>
+                      <p className="text-xs text-white/80 font-medium">
+                        QR expires in {timeLeft} {timeLeft === 1 ? "second" : "seconds"}
+                      </p>
+                      <div className="w-full h-1.5 bg-black/40 rounded-full overflow-hidden mt-1">
+                        <div
+                          className="h-full bg-emerald-400 transition-all duration-1000 ease-linear rounded-full"
+                          style={{ width: `${(timeLeft / QR_VALIDITY_SECONDS) * 100}%` }}
+                        />
+                      </div>
+                    </div>
+
+                    <p className="mt-4 text-xs text-center text-white/80 leading-relaxed max-w-[220px]">
+                      Show this QR to your admin's scanner. Keep this screen active.
+                    </p>
+                  </div>
+                ) : qrState === "expired" ? (
+                  /* ── CASE 4: State 3 — QR Expired ───────────────────────── */
+                  <div className="w-full flex flex-col items-center text-center py-4">
+                    <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30 text-xs font-bold tracking-wide uppercase mb-4">
+                      <Clock size={12} />
+                      QR Expired
+                    </div>
+
+                    <div className="w-48 h-48 rounded-3xl bg-black/25 border border-dashed border-white/20 flex flex-col items-center justify-center p-5 text-center mb-4">
+                      <AlertTriangle size={36} className="text-amber-400 mb-2" />
+                      <p className="text-white font-bold text-sm">QR Code Expired</p>
+                      <p className="text-white/60 text-xs mt-1.5 leading-relaxed">
+                        Your QR code has expired. Generate a new one to continue.
+                      </p>
+                    </div>
+
+                    <button
+                      onClick={handleGenerateQR}
+                      disabled={cooldownLeft > 0}
+                      className="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold rounded-xl shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    >
+                      <RefreshCw size={16} className={cn(cooldownLeft > 0 && "animate-spin")} />
+                      {cooldownLeft > 0 ? `Generate New QR (${cooldownLeft}s)` : "Generate New QR"}
+                    </button>
+                  </div>
+                ) : (
+                  /* ── CASE 5: State 1 — Ready to Time In / Time Out ───────── */
+                  <div className="w-full flex flex-col items-center text-center py-4">
+                    <div className="w-48 h-48 rounded-3xl bg-black/20 border border-dashed border-white/20 flex flex-col items-center justify-center p-6 text-center mb-4">
+                      <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center mb-3">
+                        <QrCode size={30} className="text-white" />
+                      </div>
+                      <p className="text-white font-bold text-sm">
+                        {hasTimedIn ? "Ready to Time Out" : "Generate your attendance QR"}
+                      </p>
+                      <p className="text-white/60 text-xs mt-1.5 leading-relaxed">
+                        {hasTimedIn
+                          ? "Generate a QR code when you're ready to scan for Time Out."
+                          : "Generate a QR code when you're ready to scan."}
+                      </p>
+                    </div>
+
+                    <button
+                      onClick={handleGenerateQR}
+                      disabled={cooldownLeft > 0}
+                      className="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold rounded-xl shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    >
+                      <QrCode size={18} />
+                      {cooldownLeft > 0 ? `Generate QR (${cooldownLeft}s)` : "Generate QR"}
+                    </button>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center pt-10 pb-12 px-6 relative z-10 text-center">
@@ -346,7 +575,7 @@ export default function QRPassGenerator({ student, EVENTSCode, events, onBack, o
 
             {scanModal === "time-in" ? (
               <>
-                <motion.p 
+                <motion.p
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
@@ -354,7 +583,7 @@ export default function QRPassGenerator({ student, EVENTSCode, events, onBack, o
                 >
                   Welcome to
                 </motion.p>
-                <motion.h2 
+                <motion.h2
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
@@ -362,7 +591,7 @@ export default function QRPassGenerator({ student, EVENTSCode, events, onBack, o
                 >
                   {eventName}
                 </motion.h2>
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
@@ -373,7 +602,7 @@ export default function QRPassGenerator({ student, EVENTSCode, events, onBack, o
               </>
             ) : (
               <>
-                <motion.h2 
+                <motion.h2
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
@@ -381,7 +610,7 @@ export default function QRPassGenerator({ student, EVENTSCode, events, onBack, o
                 >
                   Time Out Recorded ✓
                 </motion.h2>
-                <motion.p 
+                <motion.p
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
@@ -394,7 +623,6 @@ export default function QRPassGenerator({ student, EVENTSCode, events, onBack, o
           </motion.div>
         )}
       </AnimatePresence>
-
-      </div>
+    </div>
   );
 }
