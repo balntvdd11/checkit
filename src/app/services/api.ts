@@ -19,6 +19,18 @@ export function updateServerOffset(serverDateStr?: string | null) {
   }
 }
 
+// Background sync on app boot
+if (typeof window !== "undefined") {
+  fetch(`${API_BASE}/api/time/`, { cache: "no-store" })
+    .then((r) => r.json())
+    .then((d) => {
+      if (d?.serverTime) {
+        serverTimeOffset = d.serverTime - Date.now();
+      }
+    })
+    .catch(() => {});
+}
+
 function getToken(): string | null {
   return typeof window !== 'undefined' ? localStorage.getItem('checkit_admin_token') : null;
 }
