@@ -106,14 +106,14 @@ export default function QRPassGenerator({
     const interval = setInterval(() => {
       const n = new Date(getServerTime());
       setCurrentMinutes(n.getHours() * 60 + n.getMinutes());
-    }, 10000);
+    }, 1000);
     return () => clearInterval(interval);
   }, []);
 
   const isTimeOutWindowOpen = (): boolean => {
     if (!activeEvent?.timeOut) return true;
-    const timeoutMinutes = parseTimeToMinutes(activeEvent.timeOut);
-    return currentMinutes >= timeoutMinutes;
+    const n = new Date(getServerTime());
+    return n.getHours() * 60 + n.getMinutes() >= parseTimeToMinutes(activeEvent.timeOut);
   };
 
   // ── Global Store & Attendance Status ────────────────────────────────────────
