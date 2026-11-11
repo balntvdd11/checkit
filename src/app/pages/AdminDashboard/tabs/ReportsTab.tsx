@@ -6,9 +6,10 @@ import Card from "../../../components/shared/Card";
 import StatusBadge from "../../../components/shared/StatusBadge";
 import type { EventConfig } from "../../../types";
 import { useStore, useSelectors } from "../../../state/store";
-import { formatTime12Hour, formatNameLastFirst, getLocalDateStr } from "../../../lib/utils";
+import { formatTime12Hour, formatNameLastFirst, getLocalDateStr, cn } from "../../../lib/utils";
 import { toast } from "sonner";
 import { updateAttendanceRecord, createAttendanceRecord } from "../../../services/attendance";
+import { getServerTime } from "../../../services/api";
 import uaLogoUrl from "../../../../asset/UALOGO.png";
 import jpiaLogoUrl from "../../../../asset/JPIALOGO.png";
 import TimePicker from "../../../components/shared/TimePicker";
@@ -211,7 +212,7 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
     }
     setExceptionModal(false);
 
-    const now = new Date();
+    const now = new Date(getServerTime());
     const now24 = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
     const defaultTime = selectedEvent.timeIn || now24;
 
@@ -224,7 +225,7 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
     
     setSubmittingEarlyOut(true);
     try {
-      const now = new Date();
+      const now = new Date(getServerTime());
       const now24 = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
       const time24 = exceptionConfirmModal.timeIn || selectedEvent.timeIn || now24;
       const today = reportDateFilter || getLocalDateStr();
@@ -897,14 +898,46 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
               </p>
 
               <div className="mb-4 text-left">
-                <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1.5">
-                  Select Time In
-                </label>
-                <TimePicker
-                  label="Time In"
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                    Time In
+                  </label>
+                  {selectedEvent?.timeIn && (
+                    <span className="text-[11px] text-slate-500 font-medium">
+                      Event: {formatTime12Hour(selectedEvent.timeIn)}
+                      {selectedEvent.lateThreshold ? ` (Late after ${formatTime12Hour(selectedEvent.lateThreshold)})` : ""}
+                    </span>
+                  )}
+                </div>
+                <input
+                  type="time"
                   value={exceptionConfirmModal.timeIn}
-                  onChange={(v) => setExceptionConfirmModal(prev => ({ ...prev, timeIn: v }))}
+                  onChange={(e) => setExceptionConfirmModal(prev => ({ ...prev, timeIn: e.target.value }))}
+                  className="w-full px-4 py-2.5 text-base font-semibold text-slate-800 bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 transition-all"
+                  required
                 />
+                <div className="flex gap-2 mt-2">
+                  {selectedEvent?.timeIn && (
+                    <button
+                      type="button"
+                      onClick={() => setExceptionConfirmModal(prev => ({ ...prev, timeIn: selectedEvent.timeIn }))}
+                      className="px-2.5 py-1 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-lg transition-colors"
+                    >
+                      Start ({formatTime12Hour(selectedEvent.timeIn)})
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const sNow = new Date(getServerTime());
+                      const sTime = `${String(sNow.getHours()).padStart(2, "0")}:${String(sNow.getMinutes()).padStart(2, "0")}`;
+                      setExceptionConfirmModal(prev => ({ ...prev, timeIn: sTime }));
+                    }}
+                    className="px-2.5 py-1 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-lg transition-colors"
+                  >
+                    Current Time
+                  </button>
+                </div>
               </div>
 
               {(() => {
@@ -917,10 +950,15 @@ export default function ReportsTab({ events }: { events: EventConfig[] }) {
                       ? "bg-amber-50 text-amber-800 border-amber-200" 
                       : "bg-emerald-50 text-emerald-800 border-emerald-200"
                   )}>
-                    <span>Computed Status:</span>
+                    <div className="text-left">
+                      <span className="block font-bold">Computed Status:</span>
+                      <span className="text-[11px] font-normal opacity-80">
+                        {t ? formatTime12Hour(t) : "—"} {selectedEvent?.lateThreshold ? `(Cutoff: ${formatTime12Hour(selectedEvent.lateThreshold)})` : ""}
+                      </span>
+                    </div>
                     <span className={cn(
-                      "px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider text-[11px]",
-                      isLate ? "bg-amber-100 text-amber-700" : "bg-emerald-100 text-emerald-700"
+                      "px-3 py-1 rounded-full font-bold uppercase tracking-wider text-xs",
+                      isLate ? "bg-amber-100 text-amber-700 border border-amber-300" : "bg-emerald-100 text-emerald-700 border border-emerald-300"
                     )}>
                       {isLate ? "Late" : "Present"}
                     </span>
