@@ -7,6 +7,7 @@ import StatusBadge from "../../../components/shared/StatusBadge";
 import type { EventConfig } from "../../../types";
 import { createAttendanceRecord, updateAttendanceRecord } from "../../../services/attendance";
 import { fetchStudents } from "../../../services/students";
+import { getServerTime } from "../../../services/api";
 import { useStore } from "../../../state/store";
 import { formatTime12Hour, getLocalDateStr, cn } from "../../../lib/utils";
 import successSoundFile from "../../../../public/sounds/sucess.mp3";
@@ -90,7 +91,7 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
               // Cleanup memory after 4 seconds
               setTimeout(() => recentlyScanned.current.delete(scanKey), 4000);
 
-              const now = new Date();
+              const now = new Date(getServerTime());
               const time24 = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
               const displayTime = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
@@ -111,8 +112,10 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
               // 1. Validate expiration (if QR contains expiresAt)
               if (expiresAtStr) {
                 const expiresAt = Number(expiresAtStr);
-                const GRACE_PERIOD_MS = 5000; // 5-second buffer for slight clock offset
-                if (!isNaN(expiresAt) && Date.now() > expiresAt + GRACE_PERIOD_MS) {
+                const currentServerTime = getServerTime();
+                // 25-second buffer covers 1 previous rolling cycle (15s) + camera focus/lighting delay (10s)
+                const GRACE_PERIOD_MS = 25000;
+                if (!isNaN(expiresAt) && currentServerTime > expiresAt + GRACE_PERIOD_MS) {
                   const displayName = student ? student.name : studentId;
                   setScanResults((prev) => [
                     { id: `scan-${Date.now()}`, name: displayName, status: "invalid", action: "expired", time: displayTime },
@@ -122,7 +125,7 @@ export default function ScannerTab({ events }: { events: EventConfig[] }) {
                     name: displayName,
                     visible: true,
                     type: "error",
-                    message: "QR Code Expired. Please ask student to generate a new QR.",
+                    message: "QR Code Expired. Please ask student to present a fresh QR.",
                   });
                   setTimeout(() => setScanAlert((prev) => (prev ? { ...prev, visible: false } : null)), 3500);
                   return;
